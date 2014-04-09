@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
-  has_many :games
+  has_many :black_games, :class_name => 'Game', :foreign_key => 'black_id'
+  has_many :red_games, :class_name => 'Game', :foreign_key => 'red_id'
+
   #has_many :matches
   #has_many :games, through: :matches
   before_save { self.name = name.downcase }
@@ -28,6 +30,10 @@ class User < ActiveRecord::Base
   #  Game.count_losses(self)
   #end
   
+  def games
+    black_games + red_games
+  end
+
   def User.new_remember_token
     SecureRandom.urlsafe_base64
   end

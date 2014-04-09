@@ -1,4 +1,4 @@
 class Game < ActiveRecord::Base
-  has_one :black, class_name: 'User'
-  has_one :red,  class_name: 'User'
+  belongs_to :black, class_name: 'User', :foreign_key => 'black_id'
+  belongs_to :red,  class_name: 'User', :foreign_key => 'red_id'
 end
