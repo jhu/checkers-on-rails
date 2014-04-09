@@ -18,7 +18,15 @@ class User < ActiveRecord::Base
   #validates :password, length: { within: 6..40 }
   validates :password, format: { with: VALID_PW_REGEX, 
   								 message: "must be between 6 and 20 characters that contains at least one of each type of character: lowercase alpha, uppercase alpha, and a numeric value."}
+  
+  def getWinCount
+    Game.count_wins(self)
+  end
 
+  def getLossCount
+    Game.count_losses(self)
+  end
+  
   def User.new_remember_token
     SecureRandom.urlsafe_base64
   end
