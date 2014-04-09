@@ -1,11 +1,14 @@
 class User < ActiveRecord::Base
+  has_many :matches
+  has_many :games, through: :matches
   before_save { self.name = name.downcase }
   before_create :create_remember_token
-  VALID_USERNAME_REGEX = /\A([a-zA-Z])\w{2,24}\z/
-  #\A([a-zA-Z])[a-zA-Z\d]{2,24}\z
+  #VALID_USERNAME_REGEX = /\A([a-zA-Z])\w{2,24}\z/
+  #VALID_USERNAME_REGEX = \A[a-zA-Z][a-zA-Z\d]{2,24}\z
+  VALID_USERNAME_REGEX = /\A\w\z/
   validates :name, presence: true,
-                    format: { with: VALID_USERNAME_REGEX, 
-                      message: "must be between 3 and 25 characters that must begin with alpha"},
+                    #format: { with: VALID_USERNAME_REGEX, 
+                     # message: "must be between 3 and 25 characters that must begin with alpha"},
                     uniqueness: { case_sensitive: false }
   #VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   #validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }

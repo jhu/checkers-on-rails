@@ -5,12 +5,15 @@
       <h1>
         <%= @user.name %>
       </h1>
-      <h2>
-      	Game History
-      </h2>
-      <h2>
-      	Game History
-      </h2>
     </section>
   </aside>
+  <div class="span8">
+    <% if @user.games.any? %>
+      <h3>Game History (<%= @user.games.count %>)</h3>
+      <ol class="games">
+        <%= render @games %>
+      </ol>
+      <%= will_paginate @games %>
+    <% end %>
+  </div>
 </div>

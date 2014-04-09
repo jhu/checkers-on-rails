@@ -13,5 +13,10 @@ namespace :db do
                    password: password,
                    password_confirmation: password)
     end
+    users = User.all(limit: 6)
+    20.times do
+      #content = Faker::Lorem.sentence(5)
+      users.each { |user| user.games.create!() }
+    end
   end
 end
