@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
-  has_many :matches
-  has_many :games, through: :matches
+  has_many :games
+  #has_many :matches
+  #has_many :games, through: :matches
   before_save { self.name = name.downcase }
   before_create :create_remember_token
   #VALID_USERNAME_REGEX = /\A([a-zA-Z])\w{2,24}\z/
