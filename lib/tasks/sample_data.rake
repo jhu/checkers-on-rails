@@ -25,7 +25,10 @@ namespace :db do
     #end
     users = User.all(limit: 6)
     50.times do
-      users.each { |user| user.games.create!() }
+      users.each { |user| 
+        user.black_games.create!()
+        user.red_games.create!()
+      }
     end
   end
 end

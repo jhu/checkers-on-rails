@@ -6,6 +6,9 @@
         <%= @user.name %>
       </h1>
     </section>
+    <section>
+      <%= render 'shared/stats' %>
+    </section>
   </aside>
   <div class="span8">
     <% if @user.games.any? %>
@@ -13,7 +16,7 @@
       <ol class="games">
         <%= render @games %>
       </ol>
-      <%= will_paginate @games %>
+
     <% end %>
   </div>
 </div>

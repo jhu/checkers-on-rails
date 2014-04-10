@@ -1,8 +1,20 @@
+<% if signed_in? %>
+  <div class="row">
+    <aside class="span4">
+      <section>
+        <%= render 'shared/user_info' %>
+      </section>
+      <section>
+        <%= render 'shared/stats' %>
+      </section>
+    </aside>
+  </div>
+<% else %>
 <div class="center hero-unit">
-  <h1>Welcome to the Checkers Game App</h1>
+  <h1>Checkers Game App</h1>
 
   <h2>
-  	This is the home page for my SWE 681 school project.
+  	Welcome to the home of my SWE 681 school project, Checkers on Rail app.
   </h2>
 
   <%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
@@ -10,3 +22,4 @@
 <div class="center">
 <%= link_to image_tag("checkers.jpg", alt: "Checkers"), 'http://simple.wikipedia.org/wiki/Checkers' %>
 </div>
+<% end %>

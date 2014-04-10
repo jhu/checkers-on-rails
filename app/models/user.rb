@@ -2,6 +2,8 @@ class User < ActiveRecord::Base
   has_many :black_games, :class_name => 'Game', :foreign_key => 'black_id'
   has_many :red_games, :class_name => 'Game', :foreign_key => 'red_id'
 
+  #has_many :games
+
   before_save { self.name = name.downcase }
   before_create :create_remember_token
   #VALID_USERNAME_REGEX = /\A([a-zA-Z])\w{2,24}\z/
