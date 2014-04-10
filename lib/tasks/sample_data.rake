@@ -23,5 +23,9 @@ namespace :db do
     #  game.black = blackplayers[n]
     #  game.red = redplayers[n]
     #end
+    users = User.all(limit: 6)
+    50.times do
+      users.each { |user| user.games.create!() }
+    end
   end
 end
