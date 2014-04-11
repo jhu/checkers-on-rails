@@ -9,7 +9,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @games = @user.games
+    @games = @user.games # need to figure out how to get completed games
     #@games = @user.games.paginate(page: params[:page])
   end
 

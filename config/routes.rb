@@ -1,4 +1,5 @@
 CheckersApp::Application.routes.draw do
+  get "moves/new"
   get "games/new"
   resources :users
   resources :sessions, only: [:new, :create, :destroy]

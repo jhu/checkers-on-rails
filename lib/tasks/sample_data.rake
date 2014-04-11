@@ -4,7 +4,7 @@ namespace :db do
     make_users
     make_games
     make_waiting_games
-    #make_moves
+    make_moves
   end
 end
 
@@ -38,6 +38,13 @@ def make_waiting_games
 end
 
 def make_moves
-  games = Game.all
-  games.each {|game| 25.times do game.moves.create!() end}
+  games = Game.where("red_id is not null")
+  games.each { |game|
+    25.times do
+      game.moves.create!(movetext:Faker::Lorem.characters(10),
+                          fen:Faker::Lorem.characters(20),
+                          startpos:Faker::Lorem.word,
+                          endpos:Faker::Lorem.word)
+    end
+  }
 end
