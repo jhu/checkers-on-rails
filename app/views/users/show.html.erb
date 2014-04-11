@@ -1,6 +1,6 @@
 <% provide(:title, @user.name) %>
 <div class="row">
-  <aside class="span4">
+  <aside class="span3">
     <section>
       <h1>
         <%= @user.name %>
@@ -16,7 +16,8 @@
       <ol class="games">
         <%= render @games %>
       </ol>
-
+    <% else %>
+      <h3>No games</h3>
     <% end %>
   </div>
 </div>

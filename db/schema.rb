@@ -11,24 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140410042606) do
-
-  create_table "gameplays", force: true do |t|
-    t.integer  "game_id"
-    t.string   "move"
-    t.string   "state"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "gameplays", ["game_id"], name: "index_gameplays_on_game_id"
+ActiveRecord::Schema.define(version: 20140411000242) do
 
   create_table "games", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "black_id"
     t.integer  "red_id"
+    t.integer  "winner_id"
   end
+
+  create_table "moves", force: true do |t|
+    t.integer  "game_id"
+    t.string   "movetext"
+    t.string   "fen"
+    t.string   "startpos"
+    t.string   "endpos"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "moves", ["game_id"], name: "index_moves_on_game_id"
 
   create_table "users", force: true do |t|
     t.string   "name"

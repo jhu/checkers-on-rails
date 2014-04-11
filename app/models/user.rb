@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   has_many :black_games, :class_name => 'Game', :foreign_key => 'black_id'
   has_many :red_games, :class_name => 'Game', :foreign_key => 'red_id'
 
+  has_many :winner_games, :class_name => 'Game', :foreign_key => 'winner_id'
   #has_many :games
 
   before_save { self.name = name.downcase }
@@ -19,18 +20,31 @@ class User < ActiveRecord::Base
   has_secure_password
   VALID_PW_REGEX = /\A(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,20}\z/
   #validates :password, length: { within: 6..40 }
+<<<<<<< HEAD
   validates :password, format: { with: VALID_PW_REGEX, message: "must be between 6 and 20 characters that contains at least one of each type of character: lowercase alpha, uppercase alpha, and a numeric value."}
   
   #def getWinCount
   #  Game.count_wins(self)
   #end
+=======
+  validates :password, format: { with: VALID_PW_REGEX, 
+  								 message: "must be between 6 and 20 characters that contains at least one of each type of character: lowercase alpha, uppercase alpha, and a numeric value."}
+>>>>>>> game-model
 
-  #def getLossCount
-  #  Game.count_losses(self)
-  #end
+  def win_count
+    Game.where("winner_id = ?", self.id).count
+  end
   
+  def loss_count
+    self.games.count - self.win_count
+  end
+
   def games
     black_games + red_games
+  end
+
+  def completed_games
+    
   end
 
   def User.new_remember_token
