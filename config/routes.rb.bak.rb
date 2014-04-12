@@ -1,16 +1,10 @@
 CheckersApp::Application.routes.draw do
+  get "moves/new"
+  get "games/new"
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
-  #get 'creategame', to: 'games#create', via: 'get'
-  resources :games do
-    member do
-      get 'myturn' # myturn_game_path
-      get 'join', to: 'games#update', as: :join # join_game_path
-      post 'mymove' # mymove_game_path, or patch?
-    end
-    resources :move, only: [:new, :create, :destroy]
-  end
-  
+  get 'creategame', to: 'games#create', via: 'get'
+  resources :games
   root  'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/signin',  to: 'sessions#new',         via: 'get'

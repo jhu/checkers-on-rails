@@ -1,9 +1,10 @@
 <li>
   <%= game.id %>
-    <span class="content">Black: <%= game.black.name unless game.black.nil? %>
- vs. Red: <%= game.red.name unless game.red.nil? %>
- Winner: <%= game.winner.name unless game.winner.nil? %>
-</span>
+  <span class="content">
+  	Black: <%= game.black.name unless game.black.nil? %>
+  	vs. Red: <%= game.red.name unless game.red.nil? %>
+  	Winner: <%= game.winner.name unless game.winner.nil? %>
+  </span>
   <%= link_to "Boxscore", game, class: "btn btn-medium btn-primary" %>
   <span class="timestamp">
     Started <%= time_ago_in_words(game.created_at) %> ago.

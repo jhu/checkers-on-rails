@@ -1,17 +1,21 @@
 <% provide(:title, 'Game Room') %>
 <h1>Game Room</h1>
 <%-# create a new game here -%>
-<%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
+<%= link_to "New game", games_path, class: "btn btn-medium btn-primary" %>
 <%-# break line -%>
 <%-# list of waiting games -%>
 
-<h2>Waiting for player</h2>
-<ul class="games">
-  <% @waitinggames.each do |game| %>
-    <li>
-    	Game id: <%= game.id %>
-    	Player: player1 
-    	<%= link_to "Join", game, class: "btn btn-medium btn-primary" %>
-    </li>
-  <% end %>
-</ul>
+<h3>Waiting for players</h3>
+<% if @waitinggames.any? %>
+	<ul class="games">
+	  <% @waitinggames.each do |game| %>
+	    <li>
+	    	Game id: <%= game.id %>
+	    	Player: player1 
+	    	<%= link_to "Join", join_game_path(game.id), class: "btn btn-medium btn-primary" %>
+	    </li>
+	  <% end %>
+	</ul>
+<% else %>
+	<h2>No games</h2>
+<% end %>
