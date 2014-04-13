@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140411000242) do
+ActiveRecord::Schema.define(version: 20140412214127) do
 
   create_table "games", force: true do |t|
     t.datetime "created_at"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 20140411000242) do
     t.integer  "black_id"
     t.integer  "red_id"
     t.integer  "winner_id"
+    t.string   "result",     default: "*"
+    t.boolean  "active",     default: false
   end
 
   create_table "moves", force: true do |t|

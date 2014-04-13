@@ -1,7 +1,7 @@
 <% provide(:title, 'Game Room') %>
 <h1>Game Room</h1>
 <%-# create a new game here -%>
-<%= link_to "New game", games_path, class: "btn btn-medium btn-primary" %>
+<%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
 <%-# break line -%>
 <%-# list of waiting games -%>
 
@@ -11,7 +11,7 @@
 	  <% @waitinggames.each do |game| %>
 	    <li>
 	    	Game id: <%= game.id %>
-	    	Player: player1 
+	    	Player: <%= game.black.name %> 
 	    	<%= link_to "Join", join_game_path(game.id), class: "btn btn-medium btn-primary" %>
 	    </li>
 	  <% end %>

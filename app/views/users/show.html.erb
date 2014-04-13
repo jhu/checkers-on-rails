@@ -11,13 +11,15 @@
     </section>
   </aside>
   <div class="span8">
-    <% if @user.games.any? %>
-      <h3>Game History (<%= @user.games.count %>)</h3>
+    <% if @ongoing_games.any? %>
+      <h3>Ongoing Games (<%= @ongoing_games.count %>)</h3>
       <ol class="games">
-        <%= render @games %>
+        <%= render @ongoing_games %>
       </ol>
-    <% else %>
-      <h3>No games</h3>
     <% end %>
+    <h3>Game History (<%= @games.count %>)</h3>
+    <ol class="games">
+      <%= render(@games) || "There are no games." %>
+    </ol>
   </div>
 </div>

@@ -12,7 +12,8 @@ class GamesController < ApplicationController
 
   def new
   	#@game = Game.new
-  	create
+  	@game = Game.new
+  	create # TODO: this is probably not correct way...
   end
 
   def show
@@ -39,7 +40,7 @@ class GamesController < ApplicationController
   	# need to join the waiting game
   	@game = Game.find(params[:id])
   	# need to check if its not full and not already joined
-  	if @game.update(red:current_user)
+  	if @game.update(red:current_user, active:true)
   		flash[:success] = "you have joined this game!"
   		redirect_to @game
   	else
@@ -50,7 +51,8 @@ class GamesController < ApplicationController
   private
 
   	def game_params
-  	  params.require(:micropost).permit(:content)
+  		#.permit(:name, :password, :password_confirmation)
+  	  params.require(:game).permit(:content)
   	end
 
     def correct_user

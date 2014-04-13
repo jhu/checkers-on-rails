@@ -1,8 +1,15 @@
-Black: <%= @game.black.name unless @game.black.nil? %>,
-Red: <%= @game.red.name unless @game.red.nil? %>,
-Winner: <%= @game.winner.name unless @game.winner.nil? %>
-
-<div>
-Game moves
-<% @moves %>
+<% provide(:title, "Game number: #{@game.id}" ) %>
+<div class="row">
+	<aside>
+	</aside>
+	<div class="span8">
+		<%= @game.id %>
+		Black: <%= @game.black.name unless @game.black.nil? %>,
+		Red: <%= @game.red.name unless @game.red.nil? %>,
+		Winner: <%= @game.winner.name unless @game.winner.nil? %>
+		<div>
+			Game moves
+			<% @moves %>
+		</div>
+	</div>
 </div>

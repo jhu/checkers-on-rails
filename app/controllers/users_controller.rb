@@ -9,7 +9,11 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @games = @user.games # need to figure out how to get completed games
+    @games = @user.completed_games
+    #if current_user?(@user)
+    @ongoing_games = @user.ongoing_games
+    #end
+    #@games = @user.games # TODO: need to figure out how to get completed games
     #@games = @user.games.paginate(page: params[:page])
   end
 

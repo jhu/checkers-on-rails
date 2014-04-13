@@ -6,4 +6,14 @@ class Game < ActiveRecord::Base
   default_scope -> { order('created_at DESC') }
 
   has_many :moves
+
+  #validates_inclusion_of :result, :in => %w( 1-0 0-1 *)
+
+  def ongoing?
+  	self.active
+  end
+
+  def correct_players?(user)
+  	user == self.black or user == self.red
+  end
 end
