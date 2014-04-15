@@ -1,25 +1,33 @@
 <% provide(:title, @user.name) %>
 <div class="row">
-  <aside class="span3">
-    <section>
-      <h1>
-        <%= @user.name %>
-      </h1>
-    </section>
-    <section>
-      <%= render 'shared/stats' %>
-    </section>
+  <h1>Profile for <%= @user.name %></h1>
+    <aside class="span2">
+      <section>
+        <%= render 'shared/user_info' %>
+      </section>
+      <section>
+        <%= render 'shared/stats' %>
+      </section>
   </aside>
   <div class="span8">
+    <div><%= "Wins: #{@user.win_count} | Losses: #{@user.loss_count}" %></div>
+    <h3>Ongoing Games <%="(#{@ongoing_games.count})" unless @ongoing_games.empty? %></h3>
+    <ol class="games">
+      <%= render(@ongoing_games) || "There are no active games at the moment." %>
+    </ol>
+
+    <% if false %>
     <% if @ongoing_games.any? %>
-      <h3>Ongoing Games (<%= @ongoing_games.count %>)</h3>
+      <h3>Ongoing Games <%="(#{@ongoing_games.count})" unless @ongoing_games.empty? %></h3>
       <ol class="games">
         <%= render @ongoing_games %>
       </ol>
     <% end %>
-    <h3>Game History (<%= @games.count %>)</h3>
+    <% end %>
+
+    <h3>Game History <%="(#{@games.count})" unless @games.empty? %></h3>
     <ol class="games">
-      <%= render(@games) || "There are no games." %>
+      <%= render(@games) || "There are no completed games on record." %>
     </ol>
   </div>
 </div>

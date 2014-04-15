@@ -1,15 +1,21 @@
 <% provide(:title, "Game number: #{@game.id}" ) %>
 <div class="row">
-	<aside>
-	</aside>
+	<aside class="span2">
+      <section>
+        <%= render 'shared/user_info' %>
+      </section>
+      <section>
+        <%= render 'shared/stats' %>
+      </section>
+    </aside>
 	<div class="span8">
 		<%= @game.id %>
 		Black: <%= @game.black.name unless @game.black.nil? %>,
 		Red: <%= @game.red.name unless @game.red.nil? %>,
 		Winner: <%= @game.winner.name unless @game.winner.nil? %>
 		<div>
-			Game moves
-			<% @moves %>
+			<%= "Game moves" if @moves.any? %>
+			<ol><%= render @moves %></ol>
 		</div>
 	</div>
 </div>

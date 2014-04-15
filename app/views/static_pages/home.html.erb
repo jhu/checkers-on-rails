@@ -1,6 +1,6 @@
 <% if signed_in? %>
   <div class="row">
-    <aside class="span4">
+    <aside class="span2">
       <section>
         <%= render 'shared/user_info' %>
       </section>
@@ -13,9 +13,9 @@
 <div class="center hero-unit">
   <h1>Checkers Game App</h1>
 
-  <h2>
+  <p>
   	Welcome to the home of my SWE 681 school project, Checkers on Rail app.
-  </h2>
+  </p>
 
   <%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
 </div>

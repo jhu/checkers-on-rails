@@ -1,21 +1,39 @@
 <% provide(:title, 'Game Room') %>
-<h1>Game Room</h1>
-<%-# create a new game here -%>
-<%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
-<%-# break line -%>
-<%-# list of waiting games -%>
+<div class="row">
+	<h1>Game Room</h1>
+	
+	<aside class="span2">
+    <section>
+      <%= render 'shared/user_info' %>
+    </section>
+    <section>
+      <%= render 'shared/stats' %>
+    </section>
+  </aside>
 
-<h3>Waiting for players</h3>
-<% if @waitinggames.any? %>
-	<ul class="games">
-	  <% @waitinggames.each do |game| %>
-	    <li>
-	    	Game id: <%= game.id %>
-	    	Player: <%= game.black.name %> 
-	    	<%= link_to "Join", join_game_path(game.id), class: "btn btn-medium btn-primary" %>
-	    </li>
-	  <% end %>
-	</ul>
-<% else %>
-	<h2>No games</h2>
-<% end %>
+  <div class="span8">
+		<h3>Create a new game</h3>
+		<%-# create a new game here -%>
+		<%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
+		<%-# break line -%>
+		<%-# list of waiting games -%>
+		<h3>Waiting for players</h3>
+		<% if @waitinggames.any? %>
+			<ul class="games">
+			  <% @waitinggames.each do |game| %>
+			    <li>
+			    	<span class="content">
+			    		Game id: <%= game.id %> | Player: <%= game.black.name %>  
+			    		<%= link_to "Join", join_game_path(game.id), class: "btn btn-medium btn-primary" %>
+			    	</span>
+			    	<span class="timestamp">
+					    Started <%= time_ago_in_words(game.created_at) %> ago.
+					  </span>
+			    </li>
+			  <% end %>
+			</ul>
+		<% else %>
+			<h2>No games</h2>
+		<% end %>
+  </div>
+</div>

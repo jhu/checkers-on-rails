@@ -1,16 +1,16 @@
 <% @user ||= current_user %>
 <div class="stats">
-  <a href="#">
+  <div href="#">
     <% # TODO: maybe link to list of won games? %>
-    <strong id="following" class="stat">
-      <%= @user.win_count %> 
+    <strong class="stat">
+      <%= current_user.win_count %> 
     </strong>
     wins
-  </a>
-  <a href="#">
-    <strong id="followers" class="stat">
-      <%= @user.loss_count %>
+  </div>
+  <div href="#">
+    <strong class="stat">
+      <%= current_user.loss_count %>
     </strong>
     losses
-  </a>
+  </div>
 </div>

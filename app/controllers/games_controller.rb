@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :signed_in_user
+  before_action :signed_in_user, only: [:index, :show, :update]
   before_action :correct_user
   # need to check if it is correct user playing this game
   # before_action :correct_user,   only: :destroy
@@ -11,9 +11,14 @@ class GamesController < ApplicationController
   end
 
   def new
-  	#@game = Game.new
-  	@game = Game.new
-  	create # TODO: this is probably not correct way...
+  	#create # TODO: this is probably not correct way...
+    @game = Game.new(black:current_user)
+    if @game.save
+      flash[:success] = "Game has been created. Waiting for a player."
+      redirect_to @game
+    else
+      redirect_to games_path
+    end
   end
 
   def show
@@ -21,38 +26,47 @@ class GamesController < ApplicationController
     @moves = @game.moves
     #@moves = @game.moves
   end
-  
-  def create
-  	# create a game and then wait?
-  	@game = Game.new(black:current_user)
-  	if @game.save
-      flash[:success] = "Game has been created. Waiting for a player."
-      redirect_to @game
-  	else
-  	  redirect_to games_path
-  	end
-  end
 
-  def destroy
-  end
+  #def create
+  #end
 
-  def update
+  #def destroy
+  #end
+
+  def update # intentionally join method
   	# need to join the waiting game
-  	@game = Game.find(params[:id])
-  	# need to check if its not full and not already joined
-  	if @game.update(red:current_user, active:true)
-  		flash[:success] = "you have joined this game!"
-  		redirect_to @game
-  	else
-  		render :index
-  	end
+    @game = Game.find(params[:id])
+    if @game.in_game?(current_user)
+      flash[:notice] = "You are already in this game!"
+      redirect_to @game
+    else
+      if @game.update(red:current_user, active:true)
+        flash[:success] = "You have joined this game!"
+        redirect_to @game
+      else
+        flash[:error] = "can't join!"
+        redirect_to :index 
+      end
+    end
+  end
+
+  def rejoin
+    # to rejoin?
+    @game = Game.find(params[:id])
+    if !@game.ongoing? and @game.has_winner?
+      flash[:notice] = "game completed, view history!"
+      redirect_to :show
+    else
+      flash[:success] = "rejoined!"
+      redirect_to @game
+    end
+
   end
 
   private
 
   	def game_params
-  		#.permit(:name, :password, :password_confirmation)
-  	  params.require(:game).permit(:content)
+  	  params.require(:game).permit(:id)
   	end
 
     def correct_user
@@ -61,6 +75,5 @@ class GamesController < ApplicationController
     end
 
     def not_yet_join
-
     end
 end

@@ -3,14 +3,13 @@
   	Game #: <%= game.id %> | 
   	<%= "Black: #{game.black.name}" unless game.black.nil? %> 
   	<%= "vs. Red: #{game.red.name}" unless game.red.nil? %>
-  	<%= "| Winner: #{game.winner.name}" unless game.winner.nil? %>
-
+  	<%= "| Winner: #{game.winner.name}" unless game.winner.nil? %>  
+  	<% if game.ongoing? and game.in_game?(current_user)%>
+	  	<%= link_to "Rejoin", rejoin_game_path, class: "btn btn-medium btn-primary" %>
+	  <% elsif !game.ongoing? %>
+	  	<%= link_to "Boxscore", game, class: "btn btn-medium btn-primary" %>
+	  <% end %>
   </span>
-  <% if game.ongoing? and game.correct_players?(current_user)%>
-  	<%= link_to "Rejoin", game, class: "btn btn-medium btn-primary" %>
-  <% elsif !game.ongoing? %>
-  	<%= link_to "Boxscore", game, class: "btn btn-medium btn-primary" %>
-  <% end %>
   <span class="timestamp">
     Started <%= time_ago_in_words(game.created_at) %> ago.
   </span>

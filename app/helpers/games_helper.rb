@@ -5,7 +5,7 @@ module GamesHelper
   #  game.active
   #end
 
-  def correct_players?(user)
-  	user == self.black or user == self.red
+  def correct_player
+
   end
 end

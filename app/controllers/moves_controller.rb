@@ -12,8 +12,8 @@ class MovesController < ApplicationController
 
   private
 
-    def micropost_params
-      params.require(:micropost).permit(:content)
+    def move_params
+      params.require(:move).permit(:movetext, :fen)
     end
 
     def correct_user

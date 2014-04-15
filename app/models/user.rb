@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   end
   
   def loss_count
-    self.completed_games.count- self.win_count
+    self.completed_games.count - self.win_count
     #self.games.count - self.win_count
   end
 
@@ -46,10 +46,6 @@ class User < ActiveRecord::Base
     #completed_games.where("winner_id is not null") + red_games.where("winner_id is not null")
     black_games.where("winner_id is null").where(active: true) + red_games.where("winner_id is null").where(active: true)
   end
-
-  #def ongoing?
-  #  self.active
-  #end
 
   def User.new_remember_token
     SecureRandom.urlsafe_base64

@@ -6,7 +6,7 @@ CheckersApp::Application.routes.draw do
     member do
       get 'myturn' # myturn_game_path
       get 'join', to: 'games#update' # join_game_path
-      #get 'rejoin', to: 'games'
+      get 'rejoin'
       post 'mymove' # mymove_game_path, or patch?
     end
     resources :move, only: [:new, :create, :destroy]
