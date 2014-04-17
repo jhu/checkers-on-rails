@@ -4,7 +4,8 @@ CheckersApp::Application.routes.draw do
   #get 'creategame', to: 'games#create', via: 'get'
   resources :games do
     member do
-      get 'myturn' # myturn_game_path
+      get 'myturn' # myturn_game_path heartbeat
+      post 'play' # to play a move
       get 'join', to: 'games#update' # join_game_path
       get 'rejoin'
       post 'mymove' # mymove_game_path, or patch?
