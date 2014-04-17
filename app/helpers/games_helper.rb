@@ -8,4 +8,10 @@ module GamesHelper
   def correct_player
 
   end
+
+  def legal_move?(move)
+  	@prevMove = self.moves.order("created_at").last
+  	get_turn(@prevMove.fen)
+  	  	#self.moves.last # previous move that has been saved into
+  end
 end

@@ -16,6 +16,10 @@ class Game < ActiveRecord::Base
   	self.black.nil? or self.red.nil?
   end
 
+  def is_full?
+  	!self.black.nil? and !self.red.nil?
+  end
+
   def has_winner?
   	!self.winner.nil?
   end

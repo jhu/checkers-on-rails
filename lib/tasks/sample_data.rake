@@ -48,7 +48,7 @@ def make_waiting_games
 end
 
 def make_moves
-  games = Game.where("red_id is not null")
+  games = Game.where("red_id is not null").where(active:false)
   games.each { |game|
     25.times do
       #(B|W):W[1-3]?[0-9](,)

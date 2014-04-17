@@ -1,6 +1,6 @@
 class GamesController < ApplicationController
-  before_action :signed_in_user, only: [:index, :show, :update]
-  before_action :correct_user
+  before_action :signed_in_user
+  before_action :correct_user, only: [:index, :show, :update]
   # need to check if it is correct user playing this game
   # before_action :correct_user,   only: :destroy
   # otherwise anyone can see played games
@@ -14,8 +14,8 @@ class GamesController < ApplicationController
   	#create # TODO: this is probably not correct way...
     @game = Game.new(black:current_user)
     if @game.save
-      flash[:success] = "Game has been created. Waiting for a player."
-      redirect_to @game
+      #flash[:success] = "Game has been created. Waiting for a player."
+      redirect_to @game, flash: {success: "Game has been created. Waiting for a player."}
     else
       redirect_to games_path
     end
@@ -36,22 +36,25 @@ class GamesController < ApplicationController
   def update # intentionally join method
   	# need to join the waiting game
     @game = Game.find(params[:id])
+
     if @game.in_game?(current_user)
-      flash[:notice] = "You are already in this game!"
-      redirect_to @game
-    else
+      # already in the game
+      redirect_to @game, flash: {notice: "You are already in this game!"}
+    elsif !@game.is_full?
+      # what if the game is not full??
       if @game.update(red:current_user, active:true)
-        flash[:success] = "You have joined this game!"
-        redirect_to @game
+        # join the game
+        redirect_to @game, flash: {success: "You have joined this game!"}
       else
-        flash[:error] = "can't join!"
-        redirect_to :index 
+        # unable to join
+        redirect_to :index, flash: {error: "can't join!"}
       end
+    else
+      redirect_to :index, flash: {error: "game is full!"}
     end
   end
 
   def rejoin
-    # to rejoin?
     @game = Game.find(params[:id])
     if !@game.ongoing? and @game.has_winner?
       flash[:notice] = "game completed, view history!"

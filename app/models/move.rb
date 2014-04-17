@@ -3,6 +3,10 @@ class Move < ActiveRecord::Base
   default_scope -> { order('created_at ASC') }
   validates :game_id, presence: true
 
+  def get_turn
+  	
+  end
+
   private
   	
 end
