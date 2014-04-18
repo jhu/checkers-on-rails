@@ -19,9 +19,9 @@ class User < ActiveRecord::Base
   #validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }
 
   has_secure_password
-  VALID_PW_REGEX = /\A(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,20}\z/
+  VALID_PW_REGEX = /\A(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,20}\z/
   #validates :password, length: { within: 6..40 }
-  validates :password, format: { with: VALID_PW_REGEX, message: "must be between 6 and 20 characters that contains at least one of each type of character: lowercase alphabetic, uppercase alphabetic, and a number."}
+  validates :password, format: { with: VALID_PW_REGEX, message: "must be between 8 and 20 characters that contains at least one of each type of character: lowercase alphabetic, uppercase alphabetic, and a number."}
 
   def win_count
     self.winner_games.count

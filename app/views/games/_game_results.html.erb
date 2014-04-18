@@ -1,0 +1,12 @@
+<h1>Game Results</h1>
+<div>
+	<h3>Game Id: <%= @game.id %></h3>
+	<p>
+	<%= "Black: #{@game.black.name}" unless @game.black.nil? %></br>
+	<%= "Red: #{@game.red.name}" unless @game.red.nil? %></br>
+	<%= "Winner: #{@game.winner.name}" unless @game.winner.nil? %></p>
+	<div>
+		<h3><%= "Game Moves" if @moves.any? %></h3>
+		<ol><%= render @moves %></ol>
+	</div>
+</div>
