@@ -4,12 +4,14 @@ class Game < ActiveRecord::Base
   belongs_to :winner,  class_name: 'User', :foreign_key => 'winner_id'
   has_many :moves
   default_scope -> { order('created_at DESC') }
-  # 1-0 black won, 0-1 white won, * in progress
-  validates_inclusion_of :result, :in => %w( 1-0 0-1 *)
 
   # checks if game is ongoing
   def ongoing?
-  	self.active and self.result.eql? '*'
+  	self.active and self.winner.nil?
+  end
+
+  def waiting?
+  	!self.active and self.winner.nil?
   end
 
   def need_player?

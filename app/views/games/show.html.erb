@@ -9,13 +9,8 @@
       </section>
     </aside>
 	<div class="span8">
-		Game Id: <%= @game.id %>
-		<%= "Black: #{@game.black.name}" unless @game.black.nil? %>
-		<%= ", Red: #{@game.red.name}" unless @game.red.nil? %>
-		<%= ", Winner: #{@game.winner.name}" unless @game.winner.nil? %>
-		<div>
-			<%= "Game moves" if @moves.any? %>
-			<ol><%= render @moves %></ol>
-		</div>
+		<%= render partial: "wait_mode" if @game.waiting? %>
+		<%= render partial: "play_mode" if @game.ongoing? %>
+		<%= render partial: "game_results" if @game.has_winner? %>
 	</div>
 </div>

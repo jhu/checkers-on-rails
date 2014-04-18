@@ -28,7 +28,7 @@ def make_games
   users.each do |user|
     5.times do |i|
       game = Game.create!(black:user, winner:user)
-      game.update(red:User.first(offset: i+5), result:'1-0')
+      game.update(red:User.first(offset: i+5))
     end
   end
 end
