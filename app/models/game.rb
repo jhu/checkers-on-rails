@@ -10,9 +10,9 @@ class Game < ActiveRecord::Base
   	self.active and self.winner.nil?
   end
 
-  def waiting?
-  	!self.active and self.winner.nil?
-  end
+  #def waiting?
+  #	!self.active and self.winner.nil?
+  #end
 
   def need_player?
   	self.black.nil? or self.red.nil?
@@ -30,11 +30,19 @@ class Game < ActiveRecord::Base
   	user == self.black or user == self.red
   end
 
-  def can_join?(user)
-  	self.need_player? and !in_game?(user)
+  #def can_join?(user)
+  #	self.need_player? and !in_game?(user)
+  #end
+
+  def next_turn
+    turn = self.turn == "black" ? "red" : "black"
+    self.update(turn: turn)
   end
 
   # need to call this before persisting into db
+  # this will convert view based board array into string representation 
+  # of board with fen coordinates before saving it into Game model
+  # i.e. 
   def self.board_to_fen_board(board)
     flat_board = board.flatten
     fen_board=[]
@@ -44,16 +52,67 @@ class Game < ActiveRecord::Base
     board_string = fen_board.join(",")
   end
 
+  # this will convert string representation of board (in fen) into
+  # array for view board 
   def fen_board_as_array
     board=[0]*64
     fen_board = self.board.split(",").map{|s| s.to_i}
-    fen_to_board_map.each { |k, v|
-      board[v] = fen_board[k-1]
+    board_to_fen_map.each { |k, v|
+      board[k] = fen_board[v-1]
     }
     board.each_slice(8).to_a
   end
 
+  # initial game board state
+  def initialize_board
+    init_board = "-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1"
+    if self.update(board: init_board)
+      return [[ 0,-1,0,-1,0,-1, 0,-1 ],[-1,0,-1,0,-1,0,-1,0],[0,-1,0,-1,0,-1,0,-1],
+            [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
+            [1,0,1,0,1,0,1,0],[0,1,0,1,0,1,0,1],[1,0,1,0,1,0,1,0]]
+      end
+  end
+
+  # player tries to make this play, returns nil if it is not a legal move
+  # otherwise returns fen/board of resulted from this move
+  def play(from, to)
+    pieces = self.board.split(",").map{|s| s.to_i}
+    # TODO: need to make sure from and to are in notaion numbers
+
+    # correct turn?
+    return nil unless self.turn == Game.get_color(pieces[from - 1])
+    # check if there is piece at from
+    return nil if pieces[from - 1] == 0
+    # check if destination is empty
+    return nil unless pieces[to - 1] == 0
+
+    #TODO: check if move is forward for this piece
+    player_pieces = game.moves.last.get_pieces(from)
+
+    # Move and jump return nil on failure and an instance of PlayResult
+    # on success.
+    result = move(from, to) || jump(from, to)
+  end
+
+  def must_jump?(from)
+    #TODO: check if the player has to jump
+    self.board
+  end
+
+  def self.is_king?(piece)
+    piece == 2 or piece == -2
+  end
+
+  def self.get_color(piece)
+    piece > 0 ? "black" : "white"
+  end
+
+  def self.is_black?(piece)
+    piece > 0
+  end
+
   private
+    # mapping from 
     board_to_fen_map = {
       1=>1,3=>2,5=>3,7=>4,
       8=>5,10=>6,12=>7,14=>8,
@@ -65,14 +124,83 @@ class Game < ActiveRecord::Base
       56=>29,58=>30,60=>31,62=>32
     }
 
-    fen_to_board_map = {
-      1=>1,2=>3,3=>5,4=>7,
-      5=>8,6=>10,7=>12,8=>14,
-      9=>17,10=>19,11=>21,12=>23,
-      13=>24,14=>26,15=>28,16=>30,
-      17=>33,18=>35,19=>37,20=>39,
-      21=>40,22=>42,23=>44,24=>46,
-      25=>49,26=>51,27=>53,28=>55,
-      29=>56,30=>58,31=>60,32=>62
+    possible_moves_map = {
+      1 => [5, 6], 2 => [6, 7], 3 => [7, 8], 4 => [8],
+      5 => [1, 9], 6 => [1, 2, 9, 10], 7 => [2, 3, 10, 11], 8 => [3, 4, 11, 12],
+      9 => [5, 6, 13, 14], 10 => [6, 7, 14, 15], 11 => [7, 8, 15, 16], 12 => [8, 16],
+      13 => [9, 17], 14 => [9, 10, 17, 18], 15 => [10, 11, 18, 19], 16 => [11, 12, 19, 20],
+      17 => [13, 14, 21, 22], 18 => [14, 15, 22, 23], 19 => [15, 16, 23, 24], 20 => [16, 24],
+      21 => [17, 25], 22 => [17, 18, 25, 26], 23 => [18, 19, 26, 27], 24 => [19, 20, 27, 28],
+      25 => [21, 22, 29, 30], 26 => [22, 23, 30, 31], 27 => [23, 24, 31, 32], 28 => [24, 32],
+      29 => [25], 30 => [25, 26], 31 => [26, 27], 32 => [27, 28]
     }
+
+
+    def init_pieces
+    end
+
+    def move(from, to)
+      valid_move? from, to
+    end
+
+    def jump(from, to)
+
+
+      jumping = @pieces[from - 1]
+
+      check_for_enemy = jumping.valid_jump_destination? from, to
+      return unless check_for_enemy
+
+      target = @pieces[check_for_enemy - 1]
+      valid = (!target.nil? && target.color != jumping.color)
+      return unless valid
+
+      # Capture enemy piece.
+      @pieces[check_for_enemy - 1] = nil
+
+      result = perform_move(from, to)
+      result.msg = "captured enemy on #{check_for_enemy}"
+      result
+    end
+
+    def valid_move?(from, to)
+      # check if move is forward for plain piece (not king)
+      if Game.is_black?(from)
+        row = Utils.index_to_row(from)
+        return if row + 1 != Utils.index_to_row(to)
+      else
+        row = Utils.index_to_row(from)
+        return if row - 1 != Utils.index_to_row(to)
+      end
+
+      possible_moves_map[from].include? to
+    end
+    
+    # A jump is valid iff the target square is empty and there's an enemy
+    # piece between the origin square and the destination.
+    #
+    # Returns nil if the destination is not valid for a jump, otherwise returns
+    # the square that the board has to check for an enemy piece.
+    def valid_jump_destination?(from, to)
+      row = Utils.index_to_row(from)
+      return if row + 2 != Utils.index_to_row(to)
+
+      case to
+      when from + 7
+        row.even? ? from + 3 : from + 4
+      when from + 9
+        row.even? ? from + 4 : from + 5
+      else
+        nil
+      end
+    end
+
+    def valid_king_move?(from, to)
+    end
+
+    def valid_king_jump_destination?(from, to)
+    end
+
+    def perform_move(from, to)
+    end
 end
