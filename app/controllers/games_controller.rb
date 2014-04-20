@@ -7,12 +7,17 @@ class GamesController < ApplicationController
 
   def index
   	#@games = Game.paginate(page: params[:page], per_page: 15)
-  	@waitinggames = Game.where("red_id is null")
+  	@waitinggames = Game.where("red_id is null or black_id is null")
   end
 
   def new
   	#create # TODO: this is probably not correct way...
-    @game = Game.new(black:current_user)
+    if rand(0..1) == 0
+      @game = Game.new(black:current_user)
+    else
+      @game = Game.new(red:current_user)
+    end
+
     if @game.save
       #flash[:success] = "Game has been created. Waiting for a player."
       redirect_to @game, flash: {success: "Game has been created. Waiting for a player."}
@@ -22,6 +27,7 @@ class GamesController < ApplicationController
   end
 
   def show
+
     @game = Game.find(params[:id])
     @moves = @game.moves
     #@moves = @game.moves
@@ -42,13 +48,33 @@ class GamesController < ApplicationController
       redirect_to @game, flash: {notice: "You are already in this game!"}
     elsif !@game.is_full?
       # what if the game is not full??
-      if @game.update(red:current_user, active:true)
-        # join the game
+      if @game.black.nil? ? @game.update(black:current_user, active:true) 
+        : @game.update(red:current_user, active:true) 
         redirect_to @game, flash: {success: "You have joined this game!"}
       else
         # unable to join
         redirect_to :index, flash: {error: "can't join!"}
       end
+
+=begin
+      if @game.black.nil?
+        if @game.update(black:current_user, active:true) 
+          # join the game
+          redirect_to @game, flash: {success: "You have joined this game!"}
+        else
+          # unable to join
+          redirect_to :index, flash: {error: "can't join!"}
+        end
+      else
+        if @game.update(red:current_user, active:true) 
+          # join the game
+          redirect_to @game, flash: {success: "You have joined this game!"}
+        else
+          # unable to join
+          redirect_to :index, flash: {error: "can't join!"}
+        end
+      end
+=end
     else
       redirect_to :index, flash: {error: "game is full!"}
     end

@@ -1,13 +1,27 @@
 <% if signed_in? %>
   <div class="row">
+    <h1>Profile for <%= @user.name %></h1>
     <aside class="span2">
+      <% if false %>
       <section>
         <%= render 'shared/user_info' %>
       </section>
       <section>
         <%= render 'shared/stats' %>
       </section>
+      <% end %>
     </aside>
+    <div class="span8">
+      <div><%= "Wins: #{current_user.win_count} | Losses: #{current_user.loss_count}" %></div>
+      <h3>Ongoing Games <%="(#{@ongoing_games.count})" unless @ongoing_games.empty? %></h3>
+      <ol class="games">
+        <%= render(@ongoing_games) || "There are no active games at the moment." %>
+      </ol>
+      <h3>Game History <%="(#{@games.count})" unless @games.empty? %></h3>
+      <ol class="games">
+        <%= render(@games) || "There are no completed games on record." %>
+      </ol>
+    </div>
   </div>
 <% else %>
 <div class="center hero-unit">
@@ -20,6 +34,6 @@
   <%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
 </div>
 <div class="center">
-<%= link_to image_tag("Norman_Bethune_checkers_1937.jpg", alt: "Checkers"), 'http://simple.wikipedia.org/wiki/Checkers' %></br>image from wikipedia.org
+<%= link_to image_tag("Norman_Bethune_checkers_1937.jpg", alt: "Checkers"), 'http://simple.wikipedia.org/wiki/Checkers' %></br>image from <a href="http://upload.wikimedia.org/wikipedia/commons/b/b3/Norman_Bethune_checkers_1937.jpg">wikipedia</a>
 </div>
 <% end %>
