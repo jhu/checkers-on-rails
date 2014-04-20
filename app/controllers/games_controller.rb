@@ -27,7 +27,6 @@ class GamesController < ApplicationController
   end
 
   def show
-
     @game = Game.find(params[:id])
     @moves = @game.moves
     #@moves = @game.moves

@@ -1,4 +1,5 @@
 module GamesHelper
+  require_relative 'utils'
 
   def count(color)
     color == :black ? blacks_count : whites_count
@@ -12,17 +13,25 @@ module GamesHelper
     return board
   end
 
+  def must_jump?()
+    #TODO: check if the player has to jump
+  end
+
   # player tries to make this play, returns nil if it is not a legal move
-  # otherwise returns fen/board of resulted from the move
+  # otherwise returns fen/board of resulted from this move
   def play(game, from, to)
-    # need to make sure from and to are in notaion numbers
+    # TODO: need to make sure from and to are in notaion numbers
+
     fen = game.moves.last.fen # should be last game state
 
     # check if there is piece at from
-    return nil if fen.include? from.to_s
+    return nil unless fen.include? from.to_s
 
     # check if destination is empty
-    return nil unless fen.include? to.to_s
+    return nil if fen.include? to.to_s
+
+    #TODO: check if move is forward for this piece
+    player_pieces = game.moves.last.get_pieces(from)
 
     # Move and jump return nil on failure and an instance of PlayResult
     # on success.
@@ -40,13 +49,13 @@ module GamesHelper
     fen_array.each_with_index { |val, index|
       case val
       when 2
-        black_pieces<<"K#{board_pos_to_fen_pos(index)}"
+        black_pieces<<"K#{board_pos_to_fen_num(index)}"
       when 1
-        black_pieces<<"#{board_pos_to_fen_pos(index)}"
+        black_pieces<<"#{board_pos_to_fen_num(index)}"
       when -1
-        white_pieces<<"#{board_pos_to_fen_pos(index)}"
+        white_pieces<<"#{board_pos_to_fen_num(index)}"
       when -2
-        white_pieces<<"K#{board_pos_to_fen_pos(index)}"
+        white_pieces<<"K#{board_pos_to_fen_num(index)}"
       end
     }
     fen = "#{turn}:W#{white_pieces.join(',')}:B#{black_pieces.join(',')}"
@@ -108,7 +117,22 @@ module GamesHelper
       29 => [25], 30 => [25, 26], 31 => [26, 27], 32 => [27, 28]
     }
 
-    board_map = {
+    possible_jump_map = {
+      #1=>[10],2=>[9,11],3=>[],4=>[],5=>[],6=>[],7=>[],8=>[],9=>,
+    }
+
+    fen_to_board_map = {
+      1=>1,2=>3,3=>5,4=>7,
+      5=>8,6=>10,7=>12,8=>14,
+      9=>17,10=>19,11=>21,12=>23,
+      13=>24,14=>26,15=>28,16=>30,
+      17=>33,18=>35,19=>37,20=>39,
+      21=>40,22=>42,23=>44,24=>46,
+      25=>49,26=>51,27=>53,28=>55,
+      29=>56,30=>58,31=>60,32=>62
+    }
+
+    board_to_fen_map = {
       1=>1,3=>2,5=>3,7=>4,
       8=>5,10=>6,12=>7,14=>8,
       17=>9,19=>10,21=>11,23=>12,
@@ -120,19 +144,15 @@ module GamesHelper
     }
 
     def init_pieces
-      pieces = []
-
-      12.times { pieces.insert(0, BlackPiece.new) }
-      12.times { pieces.insert(20, WhitePiece.new) }
-
-      pieces
     end
 
-  	def move(from, to)
+    def move(from, to)
       valid_move? from, to
-  	end
+    end
 
-  	def jump(from, to)
+    def jump(from, to)
+
+
       jumping = @pieces[from - 1]
 
       check_for_enemy = jumping.valid_jump_destination? from, to
@@ -148,7 +168,7 @@ module GamesHelper
       result = perform_move(from, to)
       result.msg = "captured enemy on #{check_for_enemy}"
       result
-  	end
+    end
 
     def valid_move?(from, to)
       possible_moves_map[from].include? to
@@ -160,6 +180,17 @@ module GamesHelper
     # Returns nil if the destination is not valid for a jump, otherwise returns
     # the square that the board has to check for an enemy piece.
     def valid_jump_destination?(from, to)
+      row = Utils.index_to_row(from)
+      return if row + 2 != Utils.index_to_row(to)
+
+      case to
+      when from + 7
+        row.even? ? from + 3 : from + 4
+      when from + 9
+        row.even? ? from + 4 : from + 5
+      else
+        nil
+      end
     end
 
     def valid_king_move?(from, to)
@@ -171,8 +202,12 @@ module GamesHelper
   	def perform_move(from, to)
   	end
 
-    def board_pos_to_fen_pos(board_pos)
-      board_map[board_pos]
+    def fen_num_to_board_pos(fen_num)
+      fen_to_board_map[fen_num]
+    end
+
+    def board_pos_to_fen_num(board_pos)
+      board_to_fen_map[board_pos]
     end
 
     def fen_piece_to_board_piece(color, fen_piece)
