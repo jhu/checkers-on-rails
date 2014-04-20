@@ -12,20 +12,21 @@ module GamesHelper
     return board
   end
 
-  # player tries to make this play, this should check the legality of the play move
-  def play(from, to)
-    # check if the destinatino is empty
+  # player tries to make this play, returns nil if it is not a legal move
+  # otherwise returns fen/board of resulted from the move
+  def play(game, from, to)
+    # need to make sure from and to are in notaion numbers
+    fen = game.moves.last.fen # should be last game state
 
-    # check if the from is empty
+    # check if there is piece at from
+    return nil if fen.include? from.to_s
+
+    # check if destination is empty
+    return nil unless fen.include? to.to_s
 
     # Move and jump return nil on failure and an instance of PlayResult
     # on success.
-    result = move(from, to) || jump(from, to)
-    unless result
-      msg = "can't neither capture nor move from #{from} to #{to}"
-      result = PlayResult.new(msg: msg, success: false)
-    end
-    result
+    result = move(from, to) || jump(fen, from, to)
   end
 
   #"B:W18,24,27,28,K10,K15:B12,16,20,K22,K25,K29"
@@ -96,15 +97,7 @@ module GamesHelper
   end
 
   private
-    def init_pieces
-      pieces = []
-
-      12.times { pieces.insert(0, BlackPiece.new) }
-      12.times { pieces.insert(20, WhitePiece.new) }
-
-      pieces
-    end
-    POSSIBLE_MOVES = {
+    possible_moves_map = {
       1 => [5, 6], 2 => [6, 7], 3 => [7, 8], 4 => [8],
       5 => [1, 9], 6 => [1, 2, 9, 10], 7 => [2, 3, 10, 11], 8 => [3, 4, 11, 12],
       9 => [5, 6, 13, 14], 10 => [6, 7, 14, 15], 11 => [7, 8, 15, 16], 12 => [8, 16],
@@ -115,13 +108,50 @@ module GamesHelper
       29 => [25], 30 => [25, 26], 31 => [26, 27], 32 => [27, 28]
     }
 
+    board_map = {
+      1=>1,3=>2,5=>3,7=>4,
+      8=>5,10=>6,12=>7,14=>8,
+      17=>9,19=>10,21=>11,23=>12,
+      24=>13,26=>14,28=>15,30=>16,
+      33=>17,35=>18,37=>19,39=>20,
+      40=>21,42=>22,44=>23,46=>24,
+      49=>25,51=>26,53=>27,55=>28,
+      56=>29,58=>30,60=>31,62=>32
+    }
+
+    def init_pieces
+      pieces = []
+
+      12.times { pieces.insert(0, BlackPiece.new) }
+      12.times { pieces.insert(20, WhitePiece.new) }
+
+      pieces
+    end
+
   	def move(from, to)
+      valid_move? from, to
   	end
 
   	def jump(from, to)
+      jumping = @pieces[from - 1]
+
+      check_for_enemy = jumping.valid_jump_destination? from, to
+      return unless check_for_enemy
+
+      target = @pieces[check_for_enemy - 1]
+      valid = (!target.nil? && target.color != jumping.color)
+      return unless valid
+
+      # Capture enemy piece.
+      @pieces[check_for_enemy - 1] = nil
+
+      result = perform_move(from, to)
+      result.msg = "captured enemy on #{check_for_enemy}"
+      result
   	end
 
     def valid_move?(from, to)
+      possible_moves_map[from].include? to
     end
     
     # A jump is valid iff the target square is empty and there's an enemy
@@ -142,17 +172,7 @@ module GamesHelper
   	end
 
     def board_pos_to_fen_pos(board_pos)
-      board_map = {
-                    1=>1,3=>2,5=>3,7=>4,
-                    8=>5,10=>6,12=>7,14=>8,
-                    17=>9,19=>10,21=>11,23=>12,
-                    24=>13,26=>14,28=>15,30=>16,
-                    33=>17,35=>18,37=>19,39=>20,
-                    40=>21,42=>22,44=>23,46=>24,
-                    49=>25,51=>26,53=>27,55=>28,
-                    56=>29,58=>30,60=>31,62=>32
-                  }
-      return board_map[board_pos]
+      board_map[board_pos]
     end
 
     def fen_piece_to_board_piece(color, fen_piece)
