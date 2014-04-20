@@ -5,7 +5,7 @@
   	<%= "vs. Red: #{game.red.name}" unless game.red.nil? %>
   	<%= "| Winner: #{game.winner.name}" unless game.winner.nil? %>  
   	<% if game.ongoing? and game.in_game?(current_user)%>
-	  	<%= link_to "Rejoin", rejoin_game_path, class: "btn btn-medium btn-primary" %>
+	  	<%= link_to "Rejoin", rejoin_game_path(game), class: "btn btn-medium btn-primary" %>
 	  <% elsif !game.ongoing? %>
 	  	<%= link_to "Boxscore", game, class: "btn btn-medium btn-primary" %>
 	  <% end %>

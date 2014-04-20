@@ -4,9 +4,8 @@ class Move < ActiveRecord::Base
   validates :game_id, presence: true
 
   def get_turn
-  	
+    self.fen[0,1]
   end
 
   private
-  	
 end
