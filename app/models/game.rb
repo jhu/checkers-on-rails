@@ -192,6 +192,7 @@ class Game < ActiveRecord::Base
 
     def perform_jump(from, to, target)
       # TODO: update the board
+
     end
 
     # return false if the move is not valid 
@@ -245,8 +246,5 @@ class Game < ActiveRecord::Base
     end
 
     def valid_king_jump_destination?(from, to)
-    end
-
-    def perform_move(from, to)
     end
 end
