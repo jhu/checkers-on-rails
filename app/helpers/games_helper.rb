@@ -5,39 +5,6 @@ module GamesHelper
     color == :black ? blacks_count : whites_count
   end
 
-  # initial game board state
-  def initialize_board
-    board = [[ 0,-1,0,-1,0,-1, 0,-1 ],[-1,0,-1,0,-1,0,-1,0],[0,-1,0,-1,0,-1,0,-1],
-            [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],
-            [1,0,1,0,1,0,1,0],[0,1,0,1,0,1,0,1],[1,0,1,0,1,0,1,0]]
-    return board
-  end
-
-  def must_jump?()
-    #TODO: check if the player has to jump
-  end
-
-  # player tries to make this play, returns nil if it is not a legal move
-  # otherwise returns fen/board of resulted from this move
-  def play(game, from, to)
-    # TODO: need to make sure from and to are in notaion numbers
-
-    fen = game.moves.last.fen # should be last game state
-
-    # check if there is piece at from
-    return nil unless fen.include? from.to_s
-
-    # check if destination is empty
-    return nil if fen.include? to.to_s
-
-    #TODO: check if move is forward for this piece
-    player_pieces = game.moves.last.get_pieces(from)
-
-    # Move and jump return nil on failure and an instance of PlayResult
-    # on success.
-    result = move(from, to) || jump(fen, from, to)
-  end
-
   #"B:W18,24,27,28,K10,K15:B12,16,20,K22,K25,K29"
   # this constructs fen string from the board array and current turn
   def to_fen(turn, board)
@@ -121,17 +88,6 @@ module GamesHelper
       #1=>[10],2=>[9,11],3=>[],4=>[],5=>[],6=>[],7=>[],8=>[],9=>,
     }
 
-    fen_to_board_map = {
-      1=>1,2=>3,3=>5,4=>7,
-      5=>8,6=>10,7=>12,8=>14,
-      9=>17,10=>19,11=>21,12=>23,
-      13=>24,14=>26,15=>28,16=>30,
-      17=>33,18=>35,19=>37,20=>39,
-      21=>40,22=>42,23=>44,24=>46,
-      25=>49,26=>51,27=>53,28=>55,
-      29=>56,30=>58,31=>60,32=>62
-    }
-
     board_to_fen_map = {
       1=>1,3=>2,5=>3,7=>4,
       8=>5,10=>6,12=>7,14=>8,
@@ -143,68 +99,7 @@ module GamesHelper
       56=>29,58=>30,60=>31,62=>32
     }
 
-    def init_pieces
-    end
-
-    def move(from, to)
-      valid_move? from, to
-    end
-
-    def jump(from, to)
-
-
-      jumping = @pieces[from - 1]
-
-      check_for_enemy = jumping.valid_jump_destination? from, to
-      return unless check_for_enemy
-
-      target = @pieces[check_for_enemy - 1]
-      valid = (!target.nil? && target.color != jumping.color)
-      return unless valid
-
-      # Capture enemy piece.
-      @pieces[check_for_enemy - 1] = nil
-
-      result = perform_move(from, to)
-      result.msg = "captured enemy on #{check_for_enemy}"
-      result
-    end
-
-    def valid_move?(from, to)
-      possible_moves_map[from].include? to
-    end
     
-    # A jump is valid iff the target square is empty and there's an enemy
-    # piece between the origin square and the destination.
-    #
-    # Returns nil if the destination is not valid for a jump, otherwise returns
-    # the square that the board has to check for an enemy piece.
-    def valid_jump_destination?(from, to)
-      row = Utils.index_to_row(from)
-      return if row + 2 != Utils.index_to_row(to)
-
-      case to
-      when from + 7
-        row.even? ? from + 3 : from + 4
-      when from + 9
-        row.even? ? from + 4 : from + 5
-      else
-        nil
-      end
-    end
-
-    def valid_king_move?(from, to)
-    end
-
-    def valid_king_jump_destination?(from, to)
-    end
-
-  	def perform_move(from, to)
-  	end
-
-    def fen_num_to_board_pos(fen_num)
-      fen_to_board_map[fen_num]
-    end
 
     def board_pos_to_fen_num(board_pos)
       board_to_fen_map[board_pos]
