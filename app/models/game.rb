@@ -63,7 +63,7 @@ class Game < ActiveRecord::Base
     board.each_slice(8).to_a
   end
 
-  # initial game board state
+  # initial game board state (needed?)
   def initialize_board
     init_board = "-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1"
     if self.update(board: init_board)
@@ -86,8 +86,8 @@ class Game < ActiveRecord::Base
     # check if destination is empty
     return nil unless pieces[to - 1] == 0
 
-    # Move and jump return nil on failure and an instance of PlayResult
-    # on success.
+    # Move and jump return nil on failure and array of board 
+    # resulted from the move
     result = move(from, to) || jump(from, to)
   end
 
@@ -149,8 +149,9 @@ class Game < ActiveRecord::Base
     end
 
     def move(from, to)
+      pieces = self.board.split(",").map{|s| s.to_i}
       return unless valid_move? from, to
-      perform_move(from, to)
+      perform_move(from, to, pieces)
     end
 
     def jump(from, to)
@@ -167,11 +168,10 @@ class Game < ActiveRecord::Base
       # Capture enemy piece.
       pieces[check_for_enemy - 1] = 0
 
-      perform_jump(from, to, check_for_enemy)
+      perform_jump(from, to, pieces)
     end
 
-    def perform_move(from, to)
-      pieces = self.board.split(",").map{|s| s.to_i}
+    def perform_move(from, to, pieces)
       # move and jump invoke this method only when it's certain that the move
       # is valid.
       # result = PlayResult.new(success: true)
@@ -185,13 +185,15 @@ class Game < ActiveRecord::Base
       end
       board = pieces.join(",")
       if self.update(board: board)
+        movetext = Game.get_movetext(from, to)
+        fen = Game.standard_notation(pieces, from)
+
+        # TODO create move and save
+        self.moves.create({movetext: movetext, fen: fen, startpos: from, endpos: to})
+        
         return fen_board_as_array board
       end
-      # TODO: need to create move of fen and save
-    end
-
-    def perform_jump(from, to, target)
-      # TODO: update the board
+      
     end
 
     # return false if the move is not valid 
@@ -247,6 +249,16 @@ class Game < ActiveRecord::Base
     def valid_king_jump_destination?(from, to)
     end
 
-    def perform_move(from, to)
+    # this will determine if player has pieces left to end the game
+    def count(color)
+      color == :black ? blacks_count : whites_count
+    end
+
+    def whites_count
+      @pieces.count { |p| !p.nil? && p.color == :white }
+    end
+
+    def blacks_count
+      @pieces.count { |p| !p.nil? && p.color == :black }
     end
 end
