@@ -10,9 +10,9 @@ class Game < ActiveRecord::Base
   	self.active and self.winner.nil?
   end
 
-  #def waiting?
-  #	!self.active and self.winner.nil?
-  #end
+  def waiting?
+  	!self.active and self.winner.nil?
+  end
 
   def need_player?
   	self.black.nil? or self.red.nil?
@@ -34,7 +34,7 @@ class Game < ActiveRecord::Base
   #	self.need_player? and !in_game?(user)
   #end
 
-  def next_turn
+  def update_next_turn
     turn = self.turn == "black" ? "red" : "black"
     self.update(turn: turn)
   end
@@ -75,9 +75,9 @@ class Game < ActiveRecord::Base
 
   # player tries to make this play, returns nil if it is not a legal move
   # otherwise returns fen/board of resulted from this move
+  # from/to has to be in notation number (fen)
   def play(from, to)
     pieces = self.board.split(",").map{|s| s.to_i}
-    # TODO: need to make sure from and to are in notaion numbers
 
     # correct turn?
     return nil unless self.turn == Game.get_color(pieces[from - 1])
@@ -85,9 +85,6 @@ class Game < ActiveRecord::Base
     return nil if pieces[from - 1] == 0
     # check if destination is empty
     return nil unless pieces[to - 1] == 0
-
-    #TODO: check if move is forward for this piece
-    player_pieces = game.moves.last.get_pieces(from)
 
     # Move and jump return nil on failure and an instance of PlayResult
     # on success.
@@ -109,6 +106,18 @@ class Game < ActiveRecord::Base
 
   def self.is_black?(piece)
     piece > 0
+  end
+
+  def self.to_be_king?(piece, pos)
+    if Game.is_black? piece
+      return Utils.index_to_row(pos) == 7
+    else
+      return Utils.index_to_row(pos) == 0
+    end
+  end
+
+  def self.kinged(piece)
+    return piece > 0 ? 2 : -2
   end
 
   private
@@ -140,39 +149,61 @@ class Game < ActiveRecord::Base
     end
 
     def move(from, to)
-      valid_move? from, to
+      return unless valid_move? from, to
+      perform_move(from, to)
     end
 
     def jump(from, to)
-
-
-      jumping = @pieces[from - 1]
+      pieces = self.board.split(",").map{|s| s.to_i}
+      jumping = pieces[from - 1]
 
       check_for_enemy = jumping.valid_jump_destination? from, to
-      return unless check_for_enemy
+      return if check_for_enemy.nil?
 
-      target = @pieces[check_for_enemy - 1]
-      valid = (!target.nil? && target.color != jumping.color)
+      target = pieces[check_for_enemy - 1]
+      valid = !target.nil? && Game.get_color(target) != Game.get_color(jumping)
       return unless valid
 
       # Capture enemy piece.
-      @pieces[check_for_enemy - 1] = nil
+      pieces[check_for_enemy - 1] = 0
 
-      result = perform_move(from, to)
-      result.msg = "captured enemy on #{check_for_enemy}"
-      result
+      perform_jump(from, to, check_for_enemy)
     end
 
+    def perform_move(from, to)
+      pieces = self.board.split(",").map{|s| s.to_i}
+      # move and jump invoke this method only when it's certain that the move
+      # is valid.
+      # result = PlayResult.new(success: true)
+      moving = pieces[from - 1]
+      pieces[from - 1] = 0
+
+      if Game.to_be_king? to
+        pieces[to - 1] = Game.kinged moving
+      else
+        pieces[to - 1] = moving
+      end
+      board = pieces.join(",")
+      if self.update(board: board)
+        return fen_board_as_array board
+      end
+      # TODO: need to create move of fen and save
+    end
+
+    def perform_jump(from, to, target)
+      # TODO: update the board
+    end
+
+    # return false if the move is not valid 
+    # i.e. not forward move or destination is incorrect
     def valid_move?(from, to)
       # check if move is forward for plain piece (not king)
+      row = Utils.index_to_row(from)
       if Game.is_black?(from)
-        row = Utils.index_to_row(from)
-        return if row + 1 != Utils.index_to_row(to)
+        return false if row + 1 != Utils.index_to_row(to)
       else
-        row = Utils.index_to_row(from)
-        return if row - 1 != Utils.index_to_row(to)
+        return false if row - 1 != Utils.index_to_row(to)
       end
-
       possible_moves_map[from].include? to
     end
     
@@ -183,16 +214,31 @@ class Game < ActiveRecord::Base
     # the square that the board has to check for an enemy piece.
     def valid_jump_destination?(from, to)
       row = Utils.index_to_row(from)
-      return if row + 2 != Utils.index_to_row(to)
+      target = nil
+      if Game.is_black?(from)
+        return if row + 2 != Utils.index_to_row(to)
 
-      case to
-      when from + 7
-        row.even? ? from + 3 : from + 4
-      when from + 9
-        row.even? ? from + 4 : from + 5
+        case to
+        when from + 7
+          target = row.even? ? from + 3 : from + 4
+        when from + 9
+          target = row.even? ? from + 4 : from + 5
+        else
+          target = nil
+        end
       else
-        nil
+        return if row - 2 != Utils.index_to_row(to)
+
+        case to
+        when from - 7
+          target = row.even? ? from - 4 : from - 3
+        when from - 9
+          target = row.even? ? from - 5 : from - 4
+        else
+          target = nil
+        end
       end
+      return target
     end
 
     def valid_king_move?(from, to)
