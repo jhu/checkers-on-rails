@@ -283,14 +283,18 @@ class Game < ActiveRecord::Base
 
     # this will determine if player has pieces left to end the game
     def count(color)
-      color == :black ? blacks_count : whites_count
+      color == "black" ? blacks_count : whites_count
     end
 
     def whites_count
-      @pieces.count { |p| !p.nil? && p.color == :white }
+      pieces = self.board.split(",").map{|s| s.to_i}
+      pieces.count { |p| p != 0 && Game.get_color(p) == "white"}
+      #@pieces.count { |p| !p.nil? && p.color == :white }
     end
 
     def blacks_count
-      @pieces.count { |p| !p.nil? && p.color == :black }
+      pieces = self.board.split(",").map{|s| s.to_i}
+      pieces.count { |p| p != 0 && Game.get_color(p) == "black"}
+      #@pieces.count { |p| !p.nil? && p.color == :black }
     end
 end
