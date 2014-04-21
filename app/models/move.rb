@@ -15,6 +15,9 @@ class Move < ActiveRecord::Base
   end
 
   private
+    def move_params
+    end
+    
     def get_black_pieces
       self.fen.split(':')[2][1..-1].split(',')
     end
