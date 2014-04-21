@@ -168,7 +168,7 @@ class Game < ActiveRecord::Base
       # Capture enemy piece.
       pieces[check_for_enemy - 1] = 0
 
-      perform_jump(from, to, pieces)
+      perform_move(from, to, pieces)
     end
 
     def perform_move(from, to, pieces)
@@ -187,13 +187,34 @@ class Game < ActiveRecord::Base
       if self.update(board: board)
         movetext = Game.get_movetext(from, to)
         fen = Game.standard_notation(pieces, from)
-
         # TODO create move and save
-        self.moves.create({movetext: movetext, fen: fen, startpos: from, endpos: to})
-        
+        self.moves.create({movetext: movetext, fen: fen, startpos: from, endpos: to}) 
         return fen_board_as_array board
       end
       
+    end
+
+    def self.get_movetext(from, to)
+      return "#{from}x#{to}"
+    end
+
+    def self.standard_notation(pieces, from)
+      white_pieces=[]
+      black_pieces=[]
+      turn = Game.get_color(pieces)[0].upcase
+      pieces.each_with_index { |val, index|
+        case val
+        when 2
+          black_pieces<<"K#{index + 1}"
+        when 1
+          black_pieces<<"#{index + 1}"
+        when -1
+          white_pieces<<"#{index + 1}"
+        when -2
+          white_pieces<<"K#{index + 1}"
+        end
+      }
+      fen = "#{turn}:W#{white_pieces.join(',')}:B#{black_pieces.join(',')}"
     end
 
     # return false if the move is not valid 
