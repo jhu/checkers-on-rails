@@ -4,7 +4,7 @@ class Game < ActiveRecord::Base
   belongs_to :winner,  class_name: 'User', :foreign_key => 'winner_id'
   has_many :moves
   default_scope -> { order('created_at DESC') }
-  require_relative 'utils'
+  require_relative 'Utils'
 
   # checks if game is ongoing
   def ongoing?
