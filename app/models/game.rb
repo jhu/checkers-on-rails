@@ -4,7 +4,7 @@ class Game < ActiveRecord::Base
   belongs_to :winner,  class_name: 'User', :foreign_key => 'winner_id'
   has_many :moves
   default_scope -> { order('created_at DESC') }
-  require_relative 'Utils'
+  #require_relative 'Utils'
 
   # checks if game is ongoing
   def ongoing?
@@ -113,9 +113,9 @@ class Game < ActiveRecord::Base
 
   def self.to_be_king?(piece, pos)
     if Game.is_black? piece
-      return Utils.index_to_row(pos) == 7
+      return Game.index_to_row(pos) == 7
     else
-      return Utils.index_to_row(pos) == 0
+      return Game.index_to_row(pos) == 0
     end
   end
 
@@ -244,11 +244,11 @@ class Game < ActiveRecord::Base
     # i.e. not forward move or destination is incorrect
     def valid_move?(from, to)
       # check if move is forward for plain piece (not king)
-      row = Utils.index_to_row(from)
+      row = Game.index_to_row(from)
       if Game.is_black?(from)
-        return false if row + 1 != Utils.index_to_row(to)
+        return false if row + 1 != Game.index_to_row(to)
       else
-        return false if row - 1 != Utils.index_to_row(to)
+        return false if row - 1 != Game.index_to_row(to)
       end
       possible_moves_map[from].include? to
     end
@@ -259,10 +259,10 @@ class Game < ActiveRecord::Base
     # Returns nil if the destination is not valid for a jump, otherwise returns
     # the square that the board has to check for an enemy piece.
     def valid_jump_destination?(from, to)
-      row = Utils.index_to_row(from)
+      row = Game.index_to_row(from)
       target = nil
       if Game.is_black?(from)
-        return if row + 2 != Utils.index_to_row(to)
+        return if row + 2 != Game.index_to_row(to)
 
         case to
         when from + 7
@@ -273,7 +273,7 @@ class Game < ActiveRecord::Base
           target = nil
         end
       else
-        return if row - 2 != Utils.index_to_row(to)
+        return if row - 2 != Game.index_to_row(to)
 
         case to
         when from - 7
@@ -310,4 +310,8 @@ class Game < ActiveRecord::Base
       pieces.count { |p| p != 0 && Game.get_color(p) == "black"}
       #@pieces.count { |p| !p.nil? && p.color == :black }
     end
+
+  def self.index_to_row(piece_index)
+    row_index = (piece_index - 1) / 4
+  end
 end
