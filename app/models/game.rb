@@ -160,6 +160,7 @@ class Game < ActiveRecord::Base
 
 
     def init_pieces
+      
     end
 
     def move(from, to)
