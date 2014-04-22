@@ -10,7 +10,7 @@ CheckersApp::Application.routes.draw do
       get 'rejoin'
       post 'mymove' # mymove_game_path, or patch?
     end
-    resources :move, only: [:new, :create, :destroy]
+    #resources :move, only: [:new, :create, :destroy]
   end
   
   root  'static_pages#home'

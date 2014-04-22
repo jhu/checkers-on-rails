@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
   before_action :signed_in_user
   before_action :correct_user, only: [:index, :show, :update]
+  before_action :correct_turn, only: [:play]
   # need to check if it is correct user playing this game
   # before_action :correct_user,   only: :destroy
   # otherwise anyone can see played games
@@ -91,6 +92,25 @@ class GamesController < ApplicationController
 
   end
 
+  def play
+    # play
+    # check if 
+    return if @finished
+
+    error_msg = validate_input(orig, dest)
+    return PlayResult.new(msg: error_msg, success: false) if error_msg
+
+    result = @board.play(orig, dest)
+    if result.success
+      next_turn
+      if @board.count(@turn) == 0
+        result.ends_game = true
+        @finished = true
+      end
+    end
+    result
+  end
+
   private
 
   	def game_params
@@ -98,6 +118,11 @@ class GamesController < ApplicationController
   	end
 
     def correct_user
+      @user = current_user
+      redirect_to(root_url) unless current_user?(@user)
+    end
+
+    def correct_turn
       #@game = current_user.games.find_by(id: params[:id])
       #redirect_to root_url if @game.nil?
     end

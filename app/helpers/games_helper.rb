@@ -114,4 +114,19 @@ module GamesHelper
     	get_turn(@prevMove.fen)
     	  	#self.moves.last # previous move that has been saved into
     end
+
+    def validate_input(orig, dest)
+      case
+      when !((1..32).include? orig) || !((1..32).include? dest)
+        msg = "numbers must be in the range from 1 to 32"
+      when @board[orig].nil?
+        msg = "no piece at square #{orig}"
+      when @board[orig].color != @turn
+        msg = "the piece in square #{orig} is not #{@turn}"
+      else
+        msg = nil
+      end
+
+      msg
+    end
 end

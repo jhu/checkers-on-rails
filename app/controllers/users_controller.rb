@@ -59,6 +59,7 @@ class UsersController < ApplicationController
 
     # Before filters
 
+    # using session helper's
     #def signed_in_user
     #  unless signed_in?
     #    store_location

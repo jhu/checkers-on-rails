@@ -91,7 +91,8 @@ class Game < ActiveRecord::Base
     result = move(from, to) || jump(from, to)
   end
 
-  def must_jump?(from)
+  def must_jump?(from, board)
+
     #TODO: check if the player has to jump
     self.board
   end
@@ -276,6 +277,7 @@ class Game < ActiveRecord::Base
     end
 
     def valid_king_move?(from, to)
+      # TODO: this piece can go forward and backward, at least 1 space?
     end
 
     def valid_king_jump_destination?(from, to)
