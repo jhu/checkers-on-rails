@@ -160,19 +160,19 @@ class Game < ActiveRecord::Base
 
 
     def init_pieces
-      
+
     end
 
     def move(from, to)
       pieces = self.board.split(",").map{|s| s.to_i}
-
+=begin
       if Game.is_king?(from)
         return unless valid_king_move? from, to
       else
         return unless valid_move? from, to
       end
-
-      # return unless valid_move? from, to
+=end
+      return unless valid_move? from, to
       perform_move(from, to, pieces)
     end
 
