@@ -97,6 +97,7 @@ class Game < ActiveRecord::Base
     self.board
   end
 
+  # checks if piece is king
   def self.is_king?(piece)
     piece == 2 or piece == -2
   end
@@ -117,6 +118,7 @@ class Game < ActiveRecord::Base
     end
   end
 
+  # changes piece to king
   def self.kinged(piece)
     return piece > 0 ? 2 : -2
   end
@@ -162,7 +164,14 @@ class Game < ActiveRecord::Base
 
     def move(from, to)
       pieces = self.board.split(",").map{|s| s.to_i}
-      return unless valid_move? from, to
+
+      if Game.is_king?(from)
+        return unless valid_king_move? from, to
+      else
+        return unless valid_move? from, to
+      end
+
+      # return unless valid_move? from, to
       perform_move(from, to, pieces)
     end
 
