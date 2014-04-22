@@ -1,5 +1,5 @@
 module GamesHelper
-  require_relative 'utils'
+  #require_relative 'utils'
 
   def count(color)
     color == :black ? blacks_count : whites_count
