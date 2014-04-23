@@ -23,7 +23,7 @@ class GamesController < ApplicationController
   def index
   	#@games = Game.paginate(page: params[:page], per_page: 15)
   	@waitinggames = Game.where("red_id is null or black_id is null")
-    @count = current_user.waiting_and_ongoing_games.count
+    # @count = current_user.waiting_and_ongoing_games.count
   end
 
   def new
