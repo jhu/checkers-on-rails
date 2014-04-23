@@ -1,14 +1,29 @@
 class GamesController < ApplicationController
-  before_action :signed_in_user
-  before_action :correct_user, only: [:index, :show, :update]
-  before_action :correct_turn, only: [:play]
+  #before_action :signed_in_user
+  #before_action :correct_user, only: [:index, :show, :update]
+  #before_action :correct_turn, only: [:play]
+  
   # need to check if it is correct user playing this game
   # before_action :correct_user,   only: :destroy
   # otherwise anyone can see played games
 
+  def test
+
+  end
+
+  def curl_get_example
+    render text: 'Thanks for sending a GET request with cURL!'
+  end
+
+  def curl_post_example
+    request.body
+    render text: "#{params[:movetext]}"
+  end
+
   def index
   	#@games = Game.paginate(page: params[:page], per_page: 15)
   	@waitinggames = Game.where("red_id is null or black_id is null")
+    @count = current_user.waiting_and_ongoing_games.count
   end
 
   def new
@@ -19,7 +34,16 @@ class GamesController < ApplicationController
       @game = Game.new(red:current_user)
     end
 
-    if @game.save
+    if current_user.waiting_and_ongoing_games.count > 3
+      redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"} 
+    elsif @game.save
+      @board = @game.fen_board_as_array
+      @pieceImages = { 
+      '1' => 'pr.png',
+        '2' =>'kr.png',
+        '-1'=> 'pw.png',
+        '-2'=> 'kw.png'
+    }
       #flash[:success] = "Game has been created. Waiting for a player."
       redirect_to @game, flash: {success: "Game has been created. Waiting for a player."}
     else
@@ -30,7 +54,14 @@ class GamesController < ApplicationController
   def show
     @game = Game.find(params[:id])
     @moves = @game.moves
+    @board = @game.fen_board_as_array
     #@moves = @game.moves
+    @pieceImages = { 
+      '1' => 'pr.png',
+        '2' =>'kr.png',
+        '-1'=> 'pw.png',
+        '-2'=> 'kw.png'
+    }
   end
 
   #def create
@@ -48,12 +79,14 @@ class GamesController < ApplicationController
       redirect_to @game, flash: {notice: "You are already in this game!"}
     elsif !@game.is_full?
       # what if the game is not full??
-      if @game.black.nil? ? @game.update(black:current_user, active:true) 
+      if current_user.waiting_and_ongoing_games.count > 3
+        redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"}
+      elsif @game.black.nil? ? @game.update(black:current_user, active:true) 
         : @game.update(red:current_user, active:true) 
         redirect_to @game, flash: {success: "You have joined this game!"}
       else
         # unable to join
-        redirect_to :index, flash: {error: "can't join!"}
+        redirect_to games_path, flash: {error: "can't join!"}
       end
 
 =begin
@@ -93,10 +126,6 @@ class GamesController < ApplicationController
   end
 
   def play
-    respond_to do |format|
-      
-    end
-
     @game = Game.find(params[:id])
     # check if the game is over
     if !@game.winner.nil?

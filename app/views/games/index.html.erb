@@ -17,6 +17,7 @@
 		<%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
 		<%-# break line -%>
 		<%-# list of waiting games -%>
+		<%= @count %>
 		<h3>Waiting for players</h3>
 		<% if @waitinggames.any? %>
 			<ul class="games">

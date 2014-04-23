@@ -15,8 +15,6 @@ class User < ActiveRecord::Base
                     #format: { with: VALID_USERNAME_REGEX, 
                     #message: "must be between 6 and 25 characters that contains alphanumeric and must begin with alphabetic"},
                     uniqueness: { case_sensitive: false }
-  #VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  #validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }
 
   has_secure_password
   VALID_PW_REGEX = /\A(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,20}\z/
@@ -42,8 +40,11 @@ class User < ActiveRecord::Base
   end
 
   def ongoing_games
-    #completed_games.where("winner_id is not null") + red_games.where("winner_id is not null")
     black_games.where("winner_id is null").where(active: true) + red_games.where("winner_id is null").where(active: true)
+  end
+
+  def waiting_and_ongoing_games
+    black_games.where("winner_id is null") + red_games.where("winner_id is null")
   end
 
   def User.new_remember_token

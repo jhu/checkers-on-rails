@@ -59,7 +59,7 @@ class Game < ActiveRecord::Base
   def fen_board_as_array
     board=[0]*64
     fen_board = self.board.split(",").map{|s| s.to_i}
-    board_to_fen_map.each { |k, v|
+    get_board_to_fen_map.each { |k, v|
       board[k] = fen_board[v-1]
     }
     board.each_slice(8).to_a
@@ -128,19 +128,21 @@ class Game < ActiveRecord::Base
   def self.kinged(piece)
     return piece > 0 ? 2 : -2
   end
-
+def get_board_to_fen_map
+      board_to_fen_map = {
+        1=>1,3=>2,5=>3,7=>4,
+        8=>5,10=>6,12=>7,14=>8,
+        17=>9,19=>10,21=>11,23=>12,
+        24=>13,26=>14,28=>15,30=>16,
+        33=>17,35=>18,37=>19,39=>20,
+        40=>21,42=>22,44=>23,46=>24,
+        49=>25,51=>26,53=>27,55=>28,
+        56=>29,58=>30,60=>31,62=>32
+      }
+    end
   private
     # mapping from 
-    board_to_fen_map = {
-      1=>1,3=>2,5=>3,7=>4,
-      8=>5,10=>6,12=>7,14=>8,
-      17=>9,19=>10,21=>11,23=>12,
-      24=>13,26=>14,28=>15,30=>16,
-      33=>17,35=>18,37=>19,39=>20,
-      40=>21,42=>22,44=>23,46=>24,
-      49=>25,51=>26,53=>27,55=>28,
-      56=>29,58=>30,60=>31,62=>32
-    }
+    
 
     possible_moves_map = {
       1=>[5,6],2=>[6,7],3=>[7,8],4=>[8],
