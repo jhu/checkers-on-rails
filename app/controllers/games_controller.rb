@@ -34,7 +34,7 @@ class GamesController < ApplicationController
       @game = Game.new(red:current_user)
     end
 
-    if current_user.waiting_and_ongoing_games.count > 3
+    if current_user.waiting_and_ongoing_games.count >= 3
       redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"} 
     elsif @game.save
       @board = @game.fen_board_as_array
