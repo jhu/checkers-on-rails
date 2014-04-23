@@ -40,6 +40,7 @@ class Game < ActiveRecord::Base
     self.update(turn: turn)
   end
 
+
   # need to call this before persisting into db
   # this will convert view based board array into string representation 
   # of board with fen coordinates before saving it into Game model
@@ -92,10 +93,14 @@ class Game < ActiveRecord::Base
     result = move(from, to) || jump(from, to)
   end
 
-  def must_jump?(from, board)
-
+  # return true if player is required to jump and its move is not a jump
+  def must_jump?(from, to)
     #TODO: check if the player has to jump
     self.board
+  end
+
+  def game_over?(turn)
+    count_pieces(turn) == 0
   end
 
   # checks if piece is king
@@ -173,6 +178,7 @@ class Game < ActiveRecord::Base
         return unless valid_move? from, to
       end
 =end
+      # maybe check if its required to jump?
       return unless valid_move? from, to
       perform_move(from, to, pieces)
     end
@@ -295,7 +301,7 @@ class Game < ActiveRecord::Base
     end
 
     # this will determine if player has pieces left to end the game
-    def count(color)
+    def count_pieces(color)
       color == "black" ? blacks_count : whites_count
     end
 

@@ -93,22 +93,33 @@ class GamesController < ApplicationController
   end
 
   def play
-    # play
-    # check if 
-    return if @finished
+    respond_to do |format|
+      
+    end
 
-    error_msg = validate_input(orig, dest)
-    return PlayResult.new(msg: error_msg, success: false) if error_msg
+    @game = Game.find(params[:id])
+    # check if the game is over
+    if !@game.winner.nil?
+      redirect_to @game, flash: {success: "The game is over!"}
+    end
 
-    result = @board.play(orig, dest)
-    if result.success
-      next_turn
-      if @board.count(@turn) == 0
-        result.ends_game = true
-        @finished = true
+    if @game.must_jump? from, to
+      redirect_to @game, flash: {notice: "You need to make a jump!"}
+    end
+
+    # call game model play
+    @board = @game.play from, to
+    # if nil, set flash to say its invalid move and rerender the game board
+    if @board.nil?
+      @board = @game.fen_board_as_array
+      flash[:error] = "invalid move or jump!"
+    else
+      @game.update_next_turn
+      if @game.game_over?(@game.turn)
+        return
       end
     end
-    result
+    redirect_to @game, @board
   end
 
   private
