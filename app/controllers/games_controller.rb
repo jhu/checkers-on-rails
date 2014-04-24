@@ -23,7 +23,7 @@ class GamesController < ApplicationController
   def index
   	#@games = Game.paginate(page: params[:page], per_page: 15)
   	@waitinggames = Game.where("red_id is null or white_id is null")
-    @count = current_user.waiting_and_ongoing_games.count
+    # @count = current_user.waiting_and_ongoing_games.count
   end
 
   def new
@@ -77,28 +77,8 @@ class GamesController < ApplicationController
         # unable to join
         redirect_to games_path, flash: {error: "can't join!"}
       end
-
-=begin
-      if @game.black.nil?
-        if @game.update(black:current_user, active:true) 
-          # join the game
-          redirect_to @game, flash: {success: "You have joined this game!"}
-        else
-          # unable to join
-          redirect_to :index, flash: {error: "can't join!"}
-        end
-      else
-        if @game.update(red:current_user, active:true) 
-          # join the game
-          redirect_to @game, flash: {success: "You have joined this game!"}
-        else
-          # unable to join
-          redirect_to :index, flash: {error: "can't join!"}
-        end
-      end
-=end
     else
-      redirect_to :index, flash: {error: "game is full!"}
+      redirect_to games_path, flash: {error: "game is full!"}
     end
   end
 

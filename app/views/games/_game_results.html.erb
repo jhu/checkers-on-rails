@@ -2,8 +2,8 @@
 <div>
 	<h3>Game Id: <%= @game.id %></h3>
 	<p>
-	<%= "Black: #{@game.black.name}" unless @game.black.nil? %></br>
 	<%= "Red: #{@game.red.name}" unless @game.red.nil? %></br>
+	<%= "White: #{@game.white.name}" unless @game.white.nil? %></br>
 	<%= "Winner: #{@game.winner.name}" unless @game.winner.nil? %></p>
 	<div>
 		<h3><%= "Game Moves" if @moves.any? %></h3>
