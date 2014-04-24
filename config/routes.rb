@@ -6,11 +6,9 @@ CheckersApp::Application.routes.draw do
     member do
       get 'myturn' # myturn_game_path heartbeat
       post :play
-      #post 'play', to: 'games#play' # to play a move
       get 'join', to: 'games#update' # join_game_path
       get 'rejoin'
       post :test
-      #post 'mymove' # mymove_game_path, or patch?
     end
     #resources :move, only: [:new, :create, :destroy]
   end
@@ -25,6 +23,7 @@ CheckersApp::Application.routes.draw do
 
   #match '/curl_example' => 'games#curl_get_example', via: :get
   match '/curl_example' => 'games#curl_post_example', via: :post
+  match '/stream' => 'games#stream', via: :get
 
   #get 'profile', to: 'users#show'
   #resources :users, :games

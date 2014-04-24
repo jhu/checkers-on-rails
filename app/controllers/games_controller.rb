@@ -1,4 +1,14 @@
-class GamesController < ApplicationController
+class GamesController < ApplicationController #include ActionController::Live
+
+  def stream
+    response.headers['Content-Type'] = 'text/event-stream'
+    100.times {
+      response.stream.write "hello world\n"
+      sleep 1
+    }
+  ensure
+    response.stream.close
+  end
   #before_action :signed_in_user
   #before_action :correct_user, only: [:index, :show, :update]
   #before_action :correct_turn, only: [:play]
@@ -49,7 +59,6 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
     @moves = @game.moves
     @board = @game.fen_board_as_array
-    #@moves = @game.moves
     @pieceImages = {'1'=>'pr.png','2'=>'kr.png','-1'=>'pw.png','-2'=>'kw.png'}
   end
 
@@ -95,11 +104,19 @@ class GamesController < ApplicationController
   end
 
   def play
-    # @game = Game.find(params[:id])
-    # # check if the game is over
-    # if !@game.winner.nil?
-    #   redirect_to @game, flash: {success: "The game is over!"}
-    # end
+    # readout = ""
+    # params.each{|x|
+    #   readout = readout + "#{params[x]} "
+    # }
+
+    # for board chedk: \A\[\[\-?[0-2](,-?[0-2]){7}\](,\[\-?[0-2](,-?[0-2]){7}\]){7}\]\z
+    # for move check: \A(([1-2][0-9]|[1-9])|3[0-2])(x([1-2]?[0-9]|3[0-2]))+\z
+  render text: "#{params[:movetext]} #{params[:turn]} #{params[:id]}"
+    @game = Game.find(params[:id])
+    # check if the game is over
+    if !@game.winner.nil?
+      render @game, flash: {success: "The game is over!"}
+    end
 
     # if @game.must_jump? from, to
     #   redirect_to @game, flash: {notice: "You need to make a jump!"}
@@ -118,8 +135,6 @@ class GamesController < ApplicationController
     #   end
     # end
     # redirect_to @game, @board
-
-    render text: "#{params[:movetext]} #{params[:turn]}"
   end
 
   private

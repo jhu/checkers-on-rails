@@ -52,7 +52,7 @@ def make_moves
   games.each { |game|
     25.times do
       #(B|W):W[1-3]?[0-9](,)
-      game.moves.create!(movetext:Faker::Base.regexify(/^[1-3]?[0-9](x[1-3]?[0-9]){1,3}$/),
+      game.moves.create!(movetext:Faker::Base.regexify(/^[1-3][0-2](x[1-3][0-2]){1,3}$/),
                           fen:Faker::Base.regexify(/^(B|W):WK?[1-3]?[1-2](,K?[1-3]?[1-2]){3,9}:BK?[1-3]?[1-2](,K?[1-3]?[1-2]){3,9}$/),
                           startpos:Faker::Number.number(2),
                           endpos:Faker::Number.number(2))
