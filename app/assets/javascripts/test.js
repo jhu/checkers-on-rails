@@ -14,26 +14,34 @@
   move.turn = "black";
   move.movetext = "22x32";
   request.send(JSON.stringify(move));*/
-
+  function test(){
   function CSRFProtection(xhr) {
- var token = $('meta[name="csrf-token"]').attr('content');
- if (token) xhr.setRequestHeader('X-CSRF-Token', token);
-}
-if ('ajaxPrefilter' in $) $.ajaxPrefilter(function(options, originalOptions, xhr) { CSRFProtection(xhr); });
-else $(document).ajaxSend(function(e, xhr) { CSRFProtection(xhr); });
-
+    var token = $('meta[name="csrf-token"]')
+      .attr('content');
+    if (token) xhr.setRequestHeader('X-CSRF-Token', token);
+  }
+  if ('ajaxPrefilter' in $) {
+    $.ajaxPrefilter(function (options, originalOptions, xhr) {
+      CSRFProtection(xhr);
+    });
+  } else {
+    $(document)
+      .ajaxSend(function (e, xhr) {
+        CSRFProtection(xhr);
+      });
+  }
   var request = new XMLHttpRequest();
   request.open("post", location.pathname + "/play");
   request.setRequestHeader("Content-Type", "application/json");
   var move = {};
   move.turn = "black";
   move.movetext = "22x32";
-  move.board = [[0,-1,0,-1,0,-1, 0,-1],[-1,0,-1,0,-1,0,-1,0],[0,-1,0,-1,0,-1,0,-1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[1,0,1,0,1,0,1,0],[0,1,0,1,0,1,0,1],[1,0,1,0,1,0,1,0]]
+  move.board = [[0, -1, 0, -1, 0, -1, 0, -1], [-1, 0, -1, 0, -1, 0, -
+    1, 0], [0, -1, 0, -1, 0, -1, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0], [
+    0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 0, 1, 0, 1, 0], [0, 1, 0,
+    1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1, 0]]
   request.send(JSON.stringify(move));
-
   //JSON.stringify(move);
-
-
   $.ajax({
     url: location.pathname + '/play',
     type: 'POST',
@@ -52,4 +60,6 @@ else $(document).ajaxSend(function(e, xhr) { CSRFProtection(xhr); });
       alert("error in ajax call!");
     }
   });
+}
+  window.onload = test;
 })(jQuery);

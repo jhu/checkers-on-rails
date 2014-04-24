@@ -1,4 +1,7 @@
 class GamesController < ApplicationController #include ActionController::Live
+  before_action :signed_in_user
+  before_action :correct_user,    only: [:index, :show, :update]
+  before_action :correct_turn,    only: :play
 
   def stream
     response.headers['Content-Type'] = 'text/event-stream'
@@ -9,9 +12,7 @@ class GamesController < ApplicationController #include ActionController::Live
   ensure
     response.stream.close
   end
-  #before_action :signed_in_user
-  #before_action :correct_user, only: [:index, :show, :update]
-  #before_action :correct_turn, only: [:play]
+  
   
   # need to check if it is correct user playing this game
   # before_action :correct_user,   only: :destroy
@@ -137,6 +138,17 @@ class GamesController < ApplicationController #include ActionController::Live
     # redirect_to @game, @board
   end
 
+  def handle_unverified_request
+  content_mime_type = request.respond_to?(:content_mime_type) ? request.content_mime_type : request.content_type
+  if content_mime_type && content_mime_type.verify_request?
+    raise ActionController::InvalidAuthenticityToken
+  else
+    super
+    cookies.delete 'user_credentials'
+    @current_user_session = @current_user = nil
+  end
+end
+
   private
 
   	def game_params
@@ -149,8 +161,11 @@ class GamesController < ApplicationController #include ActionController::Live
     end
 
     def correct_turn
-      #@game = current_user.games.find_by(id: params[:id])
-      #redirect_to root_url if @game.nil?
+      @game = Game.find(params[:id])
+      unless @game.my_turn?(current_user)
+        flash.now[:notice] = 'Not your turn yet!'
+        render 'show'
+      end
     end
 
     def not_yet_join

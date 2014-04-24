@@ -31,6 +31,11 @@ class Game < ActiveRecord::Base
   	user == self.white or user == self.red
   end
 
+  def my_turn?(user)
+    self.turn == "red" ? self.red == user : self.white == user
+  end
+
+
   #def can_join?(user)
   #	self.need_player? and !in_game?(user)
   #end
