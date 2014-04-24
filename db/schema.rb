@@ -16,12 +16,12 @@ ActiveRecord::Schema.define(version: 20140420185903) do
   create_table "games", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "black_id"
+    t.integer  "white_id"
     t.integer  "red_id"
     t.integer  "winner_id"
     t.boolean  "active",     default: false
-    t.string   "turn",       default: "black"
-    t.string   "board",      default: "-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1"
+    t.string   "turn",       default: "red"
+    t.string   "board",      default: "1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1"
   end
 
   create_table "moves", force: true do |t|

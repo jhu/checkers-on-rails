@@ -2,7 +2,7 @@ module GamesHelper
   #require_relative 'utils'
 
   def count(color)
-    color == :black ? blacks_count : whites_count
+    color == :red ? reds_count : whites_count
   end
 
   #"B:W18,24,27,28,K10,K15:B12,16,20,K22,K25,K29"
@@ -11,28 +11,28 @@ module GamesHelper
     # this converts board array into fen
     fen_array = board.flatten
     white_pieces=[]
-    black_pieces=[]
+    red_pieces=[]
 
     fen_array.each_with_index { |val, index|
       case val
       when 2
-        black_pieces<<"K#{board_pos_to_fen_num(index)}"
+        red_pieces<<"K#{board_pos_to_fen_num(index)}"
       when 1
-        black_pieces<<"#{board_pos_to_fen_num(index)}"
+        red_pieces<<"#{board_pos_to_fen_num(index)}"
       when -1
         white_pieces<<"#{board_pos_to_fen_num(index)}"
       when -2
         white_pieces<<"K#{board_pos_to_fen_num(index)}"
       end
     }
-    fen = "#{turn}:W#{white_pieces.join(',')}:B#{black_pieces.join(',')}"
+    fen = "#{turn}:W#{white_pieces.join(',')}:B#{red_pieces.join(',')}"
   end
 
   # this constructs board array from fen string
   def to_board(fen)
     fen_array = fen.split(':')
     white_pieces = fen_array[1][1..-1].split(',')
-    black_pieces = fen_array[2][1..-1].split(',')
+    red_pieces = fen_array[2][1..-1].split(',')
     piece_squares = [0]*32
     white_pieces.each { |piece|
       #fen_piece_to_board_piece(piece_squares, piece)
@@ -42,7 +42,7 @@ module GamesHelper
         piece_squares[piece.to_i-1] = -1
       end
     }
-    black_pieces.each { |piece| 
+    red_pieces.each { |piece| 
       if piece.include? 'K'
         piece_squares[piece[1,2].to_i-1] = 2
       else

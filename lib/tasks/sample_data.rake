@@ -27,8 +27,8 @@ def make_games
   users = User.all(limit: 5)
   users.each do |user|
     5.times do |i|
-      game = Game.create!(black:user, winner:user)
-      game.update(red:User.first(offset: i+5))
+      game = Game.create!(red:user, winner:user)
+      game.update(white:User.first(offset: i+5))
     end
   end
 end
@@ -37,18 +37,18 @@ def make_ongoing_games
   users = User.all(limit: 20)
   users.each do |user|
     2.times do |i|
-      game = Game.create!(black:user)
-      game.update!(red:User.first(offset: i+5), active:true)
+      game = Game.create!(red:user)
+      game.update!(white:User.first(offset: i+5), active:true)
     end
   end
 end
 
 def make_waiting_games
-  5.times { |i| Game.create!(black:User.first(offset:i)) }
+  5.times { |i| Game.create!(red:User.first(offset:i)) }
 end
 
 def make_moves
-  games = Game.where("red_id is not null").where(active:false)
+  games = Game.where("white_id is not null").where(active:false)
   games.each { |game|
     25.times do
       #(B|W):W[1-3]?[0-9](,)

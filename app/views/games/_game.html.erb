@@ -1,8 +1,8 @@
 <li>
   <span class="content">
   	Game #: <%= game.id %> | 
-  	<%= "Black: #{game.black.name}" unless game.black.nil? %> 
-  	<%= "vs. Red: #{game.red.name}" unless game.red.nil? %>
+  	<%= "Red: #{game.red.name}" unless game.red.nil? %> 
+  	<%= "vs. White: #{game.white.name}" unless game.white.nil? %>
   	<%= "| Winner: #{game.winner.name}" unless game.winner.nil? %>  
   	<% if game.ongoing? and game.in_game?(current_user)%>
 	  	<%= link_to "Rejoin", rejoin_game_path(game), class: "btn btn-medium btn-primary" %>

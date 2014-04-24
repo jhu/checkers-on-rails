@@ -8,9 +8,9 @@ class Move < ActiveRecord::Base
   end
 
   def get_pieces(from)
-    black_pieces = get_black_pieces
+    red_pieces = get_red_pieces
     white_pieces = get_white_pieces
-    return black_pieces if black_pieces.include? from
+    return red_pieces if red_pieces.include? from
     return white_pieces if white_pieces.include? from
   end
 
@@ -18,11 +18,11 @@ class Move < ActiveRecord::Base
     def move_params
     end
     
-    def get_black_pieces
-      self.fen.split(':')[2][1..-1].split(',')
+    def get_red_pieces
+      self.fen.split(':')[1][1..-1].split(',')
     end
 
     def get_white_pieces
-      self.fen.split(':')[1][1..-1].split(',')
+      self.fen.split(':')[2][1..-1].split(',')
     end
 end

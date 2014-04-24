@@ -1,5 +1,5 @@
 class Game < ActiveRecord::Base
-  belongs_to :black, class_name: 'User', :foreign_key => 'black_id'
+  belongs_to :white, class_name: 'User', :foreign_key => 'white_id'
   belongs_to :red,  class_name: 'User', :foreign_key => 'red_id'
   belongs_to :winner,  class_name: 'User', :foreign_key => 'winner_id'
   has_many :moves
@@ -16,11 +16,11 @@ class Game < ActiveRecord::Base
   end
 
   def need_player?
-  	self.black.nil? or self.red.nil?
+  	self.white.nil? or self.red.nil?
   end
 
   def is_full?
-  	!self.black.nil? and !self.red.nil?
+  	!self.white.nil? and !self.red.nil?
   end
 
   def has_winner?
@@ -28,7 +28,7 @@ class Game < ActiveRecord::Base
   end
 
   def in_game?(user)
-  	user == self.black or user == self.red
+  	user == self.white or user == self.red
   end
 
   #def can_join?(user)
@@ -36,7 +36,7 @@ class Game < ActiveRecord::Base
   #end
 
   def update_next_turn
-    turn = self.turn == "black" ? "red" : "black"
+    turn = self.turn == "white" ? "red" : "white"
     self.update(turn: turn)
   end
 
@@ -109,15 +109,15 @@ class Game < ActiveRecord::Base
   end
 
   def self.get_color(piece)
-    piece > 0 ? "black" : "white"
+    piece > 0 ? "red" : "white"
   end
 
-  def self.is_black?(piece)
+  def self.is_red?(piece)
     piece > 0
   end
 
   def self.to_be_king?(piece, pos)
-    if Game.is_black? piece
+    if Game.is_red? piece
       return Game.index_to_row(pos) == 7
     else
       return Game.index_to_row(pos) == 0
@@ -142,8 +142,6 @@ def get_board_to_fen_map
     end
   private
     # mapping from 
-    
-
     possible_moves_map = {
       1=>[5,6],2=>[6,7],3=>[7,8],4=>[8],
       5=>[1,9],6=>[1,2,9,10],7=>[2,3,10,11],8=>[3,4,11,12],
@@ -231,21 +229,21 @@ def get_board_to_fen_map
 
     def self.standard_notation(pieces, from)
       white_pieces=[]
-      black_pieces=[]
+      red_pieces=[]
       turn = Game.get_color(pieces)[0].upcase
       pieces.each_with_index { |val, index|
         case val
         when 2
-          black_pieces<<"K#{index + 1}"
+          red_pieces<<"K#{index + 1}"
         when 1
-          black_pieces<<"#{index + 1}"
+          red_pieces<<"#{index + 1}"
         when -1
           white_pieces<<"#{index + 1}"
         when -2
           white_pieces<<"K#{index + 1}"
         end
       }
-      fen = "#{turn}:W#{white_pieces.join(',')}:B#{black_pieces.join(',')}"
+      fen = "#{turn}:W#{white_pieces.join(',')}:R#{red_pieces.join(',')}"
     end
 
     # return false if the move is not valid 
@@ -253,7 +251,7 @@ def get_board_to_fen_map
     def valid_move?(from, to)
       # check if move is forward for plain piece (not king)
       row = Game.index_to_row(from)
-      if Game.is_black?(from)
+      if Game.is_red?(from)
         return false if row + 1 != Game.index_to_row(to)
       else
         return false if row - 1 != Game.index_to_row(to)
@@ -269,7 +267,7 @@ def get_board_to_fen_map
     def valid_jump_destination?(from, to)
       row = Game.index_to_row(from)
       target = nil
-      if Game.is_black?(from)
+      if Game.is_red?(from)
         return if row + 2 != Game.index_to_row(to)
 
         case to
@@ -304,7 +302,7 @@ def get_board_to_fen_map
 
     # this will determine if player has pieces left to end the game
     def count_pieces(color)
-      color == "black" ? blacks_count : whites_count
+      color == "red" ? reds_count : whites_count
     end
 
     def whites_count
@@ -313,10 +311,10 @@ def get_board_to_fen_map
       #@pieces.count { |p| !p.nil? && p.color == :white }
     end
 
-    def blacks_count
+    def reds_count
       pieces = self.board.split(",").map{|s| s.to_i}
-      pieces.count { |p| p != 0 && Game.get_color(p) == "black"}
-      #@pieces.count { |p| !p.nil? && p.color == :black }
+      pieces.count { |p| p != 0 && Game.get_color(p) == "red"}
+      #@pieces.count { |p| !p.nil? && p.color == :red }
     end
 
   def self.index_to_row(piece_index)

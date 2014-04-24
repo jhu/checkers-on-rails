@@ -17,14 +17,14 @@
 		<%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
 		<%-# break line -%>
 		<%-# list of waiting games -%>
-
+		<%=@count%>
 		<h3>Waiting for players</h3>
 		<% if @waitinggames.any? %>
 			<ul class="games">
 			  <% @waitinggames.each do |game| %>
 			    <li>
 			    	<span class="content">
-			    		Game id: <%= game.id %> | Player: <%= !game.black.nil? ? game.black.name : game.red.name %>  
+			    		Game id: <%= game.id %> | Player: <%= !game.red.nil? ? game.red.name : game.white.name %>  
 			    		<%= link_to "Join", join_game_path(game.id), class: "btn btn-medium btn-primary" %>
 			    	</span>
 			    	<span class="timestamp">

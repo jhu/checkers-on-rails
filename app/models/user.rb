@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :black_games, :class_name => 'Game', :foreign_key => 'black_id'
+  has_many :white_games, :class_name => 'Game', :foreign_key => 'white_id'
   has_many :red_games, :class_name => 'Game', :foreign_key => 'red_id'
   has_many :winner_games, :class_name => 'Game', :foreign_key => 'winner_id'
   #has_many :games
@@ -32,19 +32,19 @@ class User < ActiveRecord::Base
   end
 
   def games
-    black_games + red_games
+    white_games + red_games
   end
 
   def completed_games
-    black_games.where("winner_id is not null") + red_games.where("winner_id is not null")
+    white_games.where("winner_id is not null") + red_games.where("winner_id is not null")
   end
 
   def ongoing_games
-    black_games.where("winner_id is null").where(active: true) + red_games.where("winner_id is null").where(active: true)
+    white_games.where("winner_id is null").where(active: true) + red_games.where("winner_id is null").where(active: true)
   end
 
   def waiting_and_ongoing_games
-    black_games.where("winner_id is null") + red_games.where("winner_id is null")
+    white_games.where("winner_id is null") + red_games.where("winner_id is null")
   end
 
   def User.new_remember_token

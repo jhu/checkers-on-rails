@@ -22,14 +22,14 @@ class GamesController < ApplicationController
 
   def index
   	#@games = Game.paginate(page: params[:page], per_page: 15)
-  	@waitinggames = Game.where("red_id is null or black_id is null")
-    # @count = current_user.waiting_and_ongoing_games.count
+  	@waitinggames = Game.where("red_id is null or white_id is null")
+    @count = current_user.waiting_and_ongoing_games.count
   end
 
   def new
   	#create # TODO: this is probably not correct way...
     if rand(0..1) == 0
-      @game = Game.new(black:current_user)
+      @game = Game.new(white:current_user)
     else
       @game = Game.new(red:current_user)
     end
@@ -68,9 +68,9 @@ class GamesController < ApplicationController
       redirect_to @game, flash: {notice: "You are already in this game!"}
     elsif !@game.is_full?
       # what if the game is not full??
-      if current_user.waiting_and_ongoing_games.count > 3
+      if current_user.waiting_and_ongoing_games.count >= 3
         redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"}
-      elsif @game.black.nil? ? @game.update(black:current_user, active:true) 
+      elsif @game.white.nil? ? @game.update(white:current_user, active:true) 
         : @game.update(red:current_user, active:true) 
         redirect_to @game, flash: {success: "You have joined this game!"}
       else
@@ -138,7 +138,7 @@ class GamesController < ApplicationController
     #   end
     # end
     # redirect_to @game, @board
-    
+
     render text: "#{params[:movetext]} #{params[:turn]}"
   end
 
