@@ -16,7 +16,7 @@ class GamesController < ApplicationController
   end
 
   def curl_post_example
-    request.body
+    # request.body
     render text: "#{params[:movetext]}"
   end
 
@@ -38,13 +38,7 @@ class GamesController < ApplicationController
       redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"} 
     elsif @game.save
       @board = @game.fen_board_as_array
-      @pieceImages = { 
-      '1' => 'pr.png',
-        '2' =>'kr.png',
-        '-1'=> 'pw.png',
-        '-2'=> 'kw.png'
-    }
-      #flash[:success] = "Game has been created. Waiting for a player."
+      @pieceImages = {'1'=>'pr.png','2'=>'kr.png','-1'=>'pw.png','-2'=>'kw.png'}
       redirect_to @game, flash: {success: "Game has been created. Waiting for a player."}
     else
       redirect_to games_path
@@ -56,12 +50,7 @@ class GamesController < ApplicationController
     @moves = @game.moves
     @board = @game.fen_board_as_array
     #@moves = @game.moves
-    @pieceImages = { 
-      '1' => 'pr.png',
-        '2' =>'kr.png',
-        '-1'=> 'pw.png',
-        '-2'=> 'kw.png'
-    }
+    @pieceImages = {'1'=>'pr.png','2'=>'kr.png','-1'=>'pw.png','-2'=>'kw.png'}
   end
 
   #def create
@@ -126,29 +115,31 @@ class GamesController < ApplicationController
   end
 
   def play
-    @game = Game.find(params[:id])
-    # check if the game is over
-    if !@game.winner.nil?
-      redirect_to @game, flash: {success: "The game is over!"}
-    end
+    # @game = Game.find(params[:id])
+    # # check if the game is over
+    # if !@game.winner.nil?
+    #   redirect_to @game, flash: {success: "The game is over!"}
+    # end
 
-    if @game.must_jump? from, to
-      redirect_to @game, flash: {notice: "You need to make a jump!"}
-    end
+    # if @game.must_jump? from, to
+    #   redirect_to @game, flash: {notice: "You need to make a jump!"}
+    # end
 
-    # call game model play
-    @board = @game.play from, to
-    # if nil, set flash to say its invalid move and rerender the game board
-    if @board.nil?
-      @board = @game.fen_board_as_array
-      flash[:error] = "invalid move or jump!"
-    else
-      @game.update_next_turn
-      if @game.game_over?(@game.turn)
-        return
-      end
-    end
-    redirect_to @game, @board
+    # # call game model play
+    # @board = @game.play from, to
+    # # if nil, set flash to say its invalid move and rerender the game board
+    # if @board.nil?
+    #   @board = @game.fen_board_as_array
+    #   flash[:error] = "invalid move or jump!"
+    # else
+    #   @game.update_next_turn
+    #   if @game.game_over?(@game.turn)
+    #     return
+    #   end
+    # end
+    # redirect_to @game, @board
+    
+    render text: "#{params[:movetext]} #{params[:turn]}"
   end
 
   private

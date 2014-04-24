@@ -14,4 +14,13 @@ var move = {};
 move.turn = "black";
 move.movetext = "22x32";
 request.send(JSON.stringify(move));
+
+
+var request = new XMLHttpRequest();
+request.open("post", "http://localhost:3000/games/7/play");
+request.setRequestHeader("Content-Type", "application/json");
+var move = {};
+move.turn = "black";
+move.movetext = "22x32";
+request.send(JSON.stringify(move));
 })(jQuery);
