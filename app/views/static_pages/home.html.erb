@@ -12,10 +12,10 @@
       <% end %>
     </aside>
     <div class="span8">
-      <div><%= "Wins: #{current_user.win_count} | Losses: #{current_user.loss_count}" %></div>
-      <h3>Ongoing Games <%="(#{@ongoing_games.count})" unless @ongoing_games.empty? %></h3>
+      <div><%= "Wins: #{@user.win_count} | Losses: #{@user.loss_count}" %></div>
+      <h3>Ongoing and Waiting Games <%="(#{@waiting_ongoing_games.count})" unless @waiting_ongoing_games.empty? %></h3>
       <ol class="games">
-        <%= render(@ongoing_games) || "There are no active games at the moment." %>
+        <%= render(@waiting_ongoing_games) || "There are no active games at the moment." %>
       </ol>
       <h3>Game History <%="(#{@games.count})" unless @games.empty? %></h3>
       <ol class="games">

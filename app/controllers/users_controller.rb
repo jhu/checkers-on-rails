@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @games = @user.completed_games
     #if current_user?(@user)
-    @ongoing_games = @user.ongoing_games
+    @waiting_ongoing_games = @user.waiting_and_ongoing_games
     #end
     #@games = @user.games # TODO: need to figure out how to get completed games
     #@games = @user.games.paginate(page: params[:page])
