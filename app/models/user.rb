@@ -8,7 +8,6 @@ class User < ActiveRecord::Base
   before_create :create_remember_token
   #VALID_USERNAME_REGEX = /\A([a-zA-Z])\w{2,24}\z/
   VALID_USERNAME_REGEX = /\A[a-zA-Z][a-zA-Z\d]{5,24}\z/
-  #VALID_USERNAME_REGEX = /\A\w\z/
   #validates_format_of :name, with: ->(user) { user.admin? ? /\A[a-z0-9][a-z0-9_\-]*\z/i : /\A[a-z][a-z0-9_\-]*\z/i }
 
   validates :name, presence: true,
@@ -56,7 +55,6 @@ class User < ActiveRecord::Base
   end
 
   private
-
     def create_remember_token
       self.remember_token = User.hash(User.new_remember_token)
     end

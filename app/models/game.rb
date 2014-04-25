@@ -32,6 +32,10 @@ class Game < ActiveRecord::Base
   end
 
   def my_turn?(user)
+    logger.debug "current's turn: #{self.turn}"
+    logger.debug "my id: #{user.id}"
+    logger.debug "game red id: #{self.red.id}"
+    logger.debug "game white id: #{self.white.id}"
     self.turn == "red" ? self.red == user : self.white == user
   end
 
@@ -51,9 +55,11 @@ class Game < ActiveRecord::Base
   # of board with fen coordinates before saving it into Game model
   # i.e. 
   def self.board_to_fen_board(board)
+    logger.debug "hi! fen board"
+    map = get_board_to_fen_map
     flat_board = board.flatten
     fen_board=[]
-    board_to_fen_map.each { |k, v|
+    map.each { |k, v|
       fen_board[v-1] = flat_board[k]
     }
     board_string = fen_board.join(",")
@@ -62,9 +68,11 @@ class Game < ActiveRecord::Base
   # this will convert string representation of board (in fen) into
   # array for view board 
   def fen_board_as_array
+    logger.debug "hi! array"
+    map = get_board_to_fen_map
     board=[0]*64
     fen_board = self.board.split(",").map{|s| s.to_i}
-    get_board_to_fen_map.each { |k, v|
+    map.each { |k, v|
       board[k] = fen_board[v-1]
     }
     board.each_slice(8).to_a
@@ -86,8 +94,10 @@ class Game < ActiveRecord::Base
   def play(from, to)
     pieces = self.board.split(",").map{|s| s.to_i}
 
+    logger.debug "correct turn?"
     # correct turn?
     return nil unless self.turn == Game.get_color(pieces[from - 1])
+     
     # check if there is piece at from
     return nil if pieces[from - 1] == 0
     # check if destination is empty
@@ -101,7 +111,8 @@ class Game < ActiveRecord::Base
   # return true if player is required to jump and its move is not a jump
   def must_jump?(from, to)
     #TODO: check if the player has to jump
-    self.board
+    # self.board
+    return false
   end
 
   def game_over?(turn)
@@ -133,31 +144,9 @@ class Game < ActiveRecord::Base
   def self.kinged(piece)
     return piece > 0 ? 2 : -2
   end
-def get_board_to_fen_map
-      board_to_fen_map = {
-        1=>1,3=>2,5=>3,7=>4,
-        8=>5,10=>6,12=>7,14=>8,
-        17=>9,19=>10,21=>11,23=>12,
-        24=>13,26=>14,28=>15,30=>16,
-        33=>17,35=>18,37=>19,39=>20,
-        40=>21,42=>22,44=>23,46=>24,
-        49=>25,51=>26,53=>27,55=>28,
-        56=>29,58=>30,60=>31,62=>32
-      }
-    end
+
   private
     # mapping from 
-    possible_moves_map = {
-      1=>[5,6],2=>[6,7],3=>[7,8],4=>[8],
-      5=>[1,9],6=>[1,2,9,10],7=>[2,3,10,11],8=>[3,4,11,12],
-      9=>[5,6,13,14],10=>[6,7,14,15],11=>[7,8,15,16],12=>[8,16],
-      13=>[9,17],14=>[9,10,17,18],15=>[10,11,18,19],16=>[11,12,19,20],
-      17=>[13,14,21,22],18=>[14,15,22,23],19=>[15,16,23,24],20=>[16,24],
-      21=>[17,25],22=>[17,18,25,26],23=>[18,19,26,27],24=>[19,20,27,28],
-      25=>[21,22,29,30],26=>[22,23,30,31],27=>[23,24,31,32],28=>[24,32],
-      29=>[25],30=>[25,26],31=>[26,27],32=>[27,28]
-    }
-    
     possible_jumps_map = {
       1=>[10],2=>[9,11],3=>[10,12],4=>[11],
       5=>[14],6=>[13,15],7=>[14,16],8=>[15],
@@ -169,6 +158,31 @@ def get_board_to_fen_map
       29=>[22],30=>[21,23],31=>[22,24],32=>[23]
     }
 
+    def get_board_to_fen_map
+      return board_to_fen_map = {
+        1=>1,3=>2,5=>3,7=>4,
+        8=>5,10=>6,12=>7,14=>8,
+        17=>9,19=>10,21=>11,23=>12,
+        24=>13,26=>14,28=>15,30=>16,
+        33=>17,35=>18,37=>19,39=>20,
+        40=>21,42=>22,44=>23,46=>24,
+        49=>25,51=>26,53=>27,55=>28,
+        56=>29,58=>30,60=>31,62=>32
+      }
+    end
+
+    def get_possible_moves_map
+      return possible_moves_map = {
+        1=>[5,6],2=>[6,7],3=>[7,8],4=>[8],
+        5=>[1,9],6=>[1,2,9,10],7=>[2,3,10,11],8=>[3,4,11,12],
+        9=>[5,6,13,14],10=>[6,7,14,15],11=>[7,8,15,16],12=>[8,16],
+        13=>[9,17],14=>[9,10,17,18],15=>[10,11,18,19],16=>[11,12,19,20],
+        17=>[13,14,21,22],18=>[14,15,22,23],19=>[15,16,23,24],20=>[16,24],
+        21=>[17,25],22=>[17,18,25,26],23=>[18,19,26,27],24=>[19,20,27,28],
+        25=>[21,22,29,30],26=>[22,23,30,31],27=>[23,24,31,32],28=>[24,32],
+        29=>[25],30=>[25,26],31=>[26,27],32=>[27,28]
+      }
+    end
 
     def init_pieces
 
@@ -184,19 +198,26 @@ def get_board_to_fen_map
       end
 =end
       # maybe check if its required to jump?
-      return unless valid_move? from, to
+      return unless valid_move? from, to, pieces
       perform_move(from, to, pieces)
     end
 
     def jump(from, to)
+      logger.debug "#{from} #{to}"
       pieces = self.board.split(",").map{|s| s.to_i}
       jumping = pieces[from - 1]
 
-      check_for_enemy = jumping.valid_jump_destination? from, to
+      check_for_enemy = valid_jump_destination? from, to, pieces
+      logger.debug "enemy: #{check_for_enemy}"
       return if check_for_enemy.nil?
 
       target = pieces[check_for_enemy - 1]
       valid = !target.nil? && Game.get_color(target) != Game.get_color(jumping)
+      logger.debug "target is nil? #{target.nil?}"
+      logger.debug "target color: #{Game.get_color(target)}"
+      logger.debug "jumping color: #{Game.get_color(jumping)}"
+
+      logger.debug "enemy: #{valid}"
       return unless valid
 
       # Capture enemy piece.
@@ -212,7 +233,7 @@ def get_board_to_fen_map
       moving = pieces[from - 1]
       pieces[from - 1] = 0
 
-      if Game.to_be_king? to
+      if Game.to_be_king? pieces[to - 1], to
         pieces[to - 1] = Game.kinged moving
       else
         pieces[to - 1] = moving
@@ -223,7 +244,7 @@ def get_board_to_fen_map
         fen = Game.standard_notation(pieces, from)
         # TODO create move and save
         self.moves.create({movetext: movetext, fen: fen, startpos: from, endpos: to}) 
-        return fen_board_as_array board
+        return fen_board_as_array
       end
       
     end
@@ -235,7 +256,7 @@ def get_board_to_fen_map
     def self.standard_notation(pieces, from)
       white_pieces=[]
       red_pieces=[]
-      turn = Game.get_color(pieces)[0].upcase
+      turn = Game.get_color(pieces[from - 1])[0].upcase
       pieces.each_with_index { |val, index|
         case val
         when 2
@@ -253,15 +274,24 @@ def get_board_to_fen_map
 
     # return false if the move is not valid 
     # i.e. not forward move or destination is incorrect
-    def valid_move?(from, to)
+    def valid_move?(from, to, pieces)
+      logger.debug "checking to see if its a valid move"
       # check if move is forward for plain piece (not king)
       row = Game.index_to_row(from)
-      if Game.is_red?(from)
+      logger.debug "from #{pieces[from]}"
+      logger.debug "to #{pieces[to]}"
+      if Game.is_red?(pieces[from])
+        logger.debug "its red!"
+        logger.debug "from row#{Game.index_to_row(from)}"
+        logger.debug "to row#{Game.index_to_row(to)}"
         return false if row + 1 != Game.index_to_row(to)
       else
+        logger.debug "its white!"
         return false if row - 1 != Game.index_to_row(to)
       end
-      possible_moves_map[from].include? to
+      map = get_possible_moves_map
+      logger.debug "in map? #{map[from].include? to}"
+      map[from].include? to
     end
     
     # A jump is valid iff the target square is empty and there's an enemy
@@ -269,17 +299,21 @@ def get_board_to_fen_map
     #
     # Returns nil if the destination is not valid for a jump, otherwise returns
     # the square that the board has to check for an enemy piece.
-    def valid_jump_destination?(from, to)
+    def valid_jump_destination?(from, to, pieces)
+      logger.debug "checking to see if its valid jump"
       row = Game.index_to_row(from)
       target = nil
-      if Game.is_red?(from)
+      if Game.is_red?(pieces(from))
+        logger.debug "its red player"
         return if row + 2 != Game.index_to_row(to)
 
         case to
         when from + 7
-          target = row.even? ? from + 3 : from + 4
+          logger.debug "from + 7"
+          target = row.even? ? from + 4 : from + 3
         when from + 9
-          target = row.even? ? from + 4 : from + 5
+          logger.debug "from + 9"
+          target = row.even? ? from + 5 : from + 4
         else
           target = nil
         end

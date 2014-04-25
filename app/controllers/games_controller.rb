@@ -1,35 +1,12 @@
-class GamesController < ApplicationController #include ActionController::Live
+class GamesController < ApplicationController
   before_action :signed_in_user
   before_action :correct_user,    only: [:index, :show, :update]
+  before_action :correct_player,  only: [:show, :play]
   before_action :correct_turn,    only: :play
 
-  def stream
-    response.headers['Content-Type'] = 'text/event-stream'
-    100.times {
-      response.stream.write "hello world\n"
-      sleep 1
-    }
-  ensure
-    response.stream.close
-  end
-  
-  
   # need to check if it is correct user playing this game
   # before_action :correct_user,   only: :destroy
   # otherwise anyone can see played games
-
-  def test
-
-  end
-
-  def curl_get_example
-    render text: 'Thanks for sending a GET request with cURL!'
-  end
-
-  def curl_post_example
-    # request.body
-    render text: "#{params[:movetext]}"
-  end
 
   def index
   	#@games = Game.paginate(page: params[:page], per_page: 15)
@@ -39,11 +16,7 @@ class GamesController < ApplicationController #include ActionController::Live
 
   def new
   	#create # TODO: this is probably not correct way...
-    if rand(0..1) == 0
-      @game = Game.new(white:current_user)
-    else
-      @game = Game.new(red:current_user)
-    end
+    @game = rand(0..1) == 0 ? Game.new(white:current_user) : Game.new(red:current_user)
 
     if current_user.waiting_and_ongoing_games.count >= 3
       redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"} 
@@ -101,7 +74,6 @@ class GamesController < ApplicationController #include ActionController::Live
       flash[:success] = "rejoined!"
       redirect_to @game
     end
-
   end
 
   def play
@@ -112,42 +84,72 @@ class GamesController < ApplicationController #include ActionController::Live
 
     # for board chedk: \A\[\[\-?[0-2](,-?[0-2]){7}\](,\[\-?[0-2](,-?[0-2]){7}\]){7}\]\z
     # for move check: \A(([1-2][0-9]|[1-9])|3[0-2])(x([1-2]?[0-9]|3[0-2]))+\z
-  render text: "#{params[:movetext]} #{params[:turn]} #{params[:id]}"
+  # render text: "#{params[:movetext]} #{params[:turn]} #{params[:id]}"
     @game = Game.find(params[:id])
-    # check if the game is over
-    if !@game.winner.nil?
-      render @game, flash: {success: "The game is over!"}
+    # @game.update(board:Game.board_to_fen_board(params[:boardState]))
+
+    # respond_to do |format|
+    #   # format.html { redirect_to @game }
+    #   format.json { render :json => @game }
+
+    # validate the move
+    logger.debug "checking the movetext #{params[:movetext]}"
+
+    move_regex = /\A(([1-2][0-9]|[1-9])|3[0-2])(x(([1-2][0-9]|[1-9])|3[0-2]))+\z/
+    if !move_regex.match(params[:movetext]).nil? and !defined?(params[:movetext]).nil?
+      themove = params[:movetext].split('x').map{|s| s.to_i}
+    else
+      return
     end
 
-    # if @game.must_jump? from, to
-    #   redirect_to @game, flash: {notice: "You need to make a jump!"}
-    # end
+    from = themove[0]
+    to = themove[1]
+    # turn = params[:turn]
 
-    # # call game model play
-    # @board = @game.play from, to
-    # # if nil, set flash to say its invalid move and rerender the game board
-    # if @board.nil?
-    #   @board = @game.fen_board_as_array
-    #   flash[:error] = "invalid move or jump!"
-    # else
-    #   @game.update_next_turn
-    #   if @game.game_over?(@game.turn)
-    #     return
-    #   end
-    # end
-    # redirect_to @game, @board
+    # check if the game is over
+    if @game.has_winner?
+      # need to automatically direct to game results?
+      render :json => {:message => "the game is over!"}
+    elsif @game.must_jump? from, to
+      render :json => {:message => "you must make a jump!"}
+    else
+      # # call game model play
+      @board = @game.play from, to
+      # if nil, set flash to say its invalid move and rerender the game board
+      if !@board.nil?
+        # @board = @game.fen_board_as_array    
+        # flash[:error] = "invalid move or jump!"
+        if @game.game_over?(@game.turn)
+          render :json => {:message => "we have the winner!"}
+        else
+          @game.update_next_turn
+          render :json => {:board => @board, :turn => @game.turn}
+        end
+      else
+        render :json => {:message => "no move!", :movestring => params[:movetext]}
+      end
+    end
   end
 
+    #redirect_to @game
+        # respond_to do |format|
+        #   format.html { redirect_to @game }
+        # end
+        
+          # render :json => {:message => "the game is over!"}
+          # render :json => {:message => "the game is over!"}
+        # @game.update(winner:current_user)
+        # redirect_to root_url, flash: {success: "you are the winner!"}
   def handle_unverified_request
-  content_mime_type = request.respond_to?(:content_mime_type) ? request.content_mime_type : request.content_type
-  if content_mime_type && content_mime_type.verify_request?
-    raise ActionController::InvalidAuthenticityToken
-  else
-    super
-    cookies.delete 'user_credentials'
-    @current_user_session = @current_user = nil
+    content_mime_type = request.respond_to?(:content_mime_type) ? request.content_mime_type : request.content_type
+    if content_mime_type && content_mime_type.verify_request?
+      raise ActionController::InvalidAuthenticityToken
+    else
+      super
+      sign_out
+      redirect_to root_url
+    end
   end
-end
 
   private
 
@@ -163,8 +165,18 @@ end
     def correct_turn
       @game = Game.find(params[:id])
       unless @game.my_turn?(current_user)
-        flash.now[:notice] = 'Not your turn yet!'
-        render 'show'
+        # flash.now[:notice] = 'Not your turn yet!'
+        # render 'show'
+        render :json => {:message => "Not your turn!"}
+      end
+    end
+
+    # TODO: better logic? to check if current player sould be in this game
+    def correct_player
+      logger.debug "#{params[:id]}"
+      @game = Game.find(params[:id])
+      if @game.ongoing? and @game.white != current_user and @game.red != current_user
+        render :json => {:message => "you are not allowed to be in this game!"}
       end
     end
 

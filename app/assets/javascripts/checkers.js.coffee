@@ -29,9 +29,9 @@ $(() ->
   snapToMiddle = (dragger, target) ->
     topMove = target.position().top - dragger.data('position').top + (target.outerHeight(true) - dragger.outerHeight(true)) / 2
     leftMove= target.position().left - dragger.data('position').left + (target.outerWidth(true) - dragger.outerWidth(true)) / 2
-    dragger.animate({top:topMove,left:leftMove},{duration:600,easing:'easeOutBack'})
+    dragger.animate({top:topMove,left:leftMove},{duration:100,easing:'easeOutBack'})
 
   snapToStart = (dragger, target) ->
-    dragger.animate({top:0,left:0},{duration:600,easing:'easeOutBack'})
+    dragger.animate({top:0,left:0},{duration:100,easing:'easeOutBack'})
 
 );

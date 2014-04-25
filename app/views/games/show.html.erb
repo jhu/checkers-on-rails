@@ -1,4 +1,7 @@
 <% provide(:title, "Game number: #{@game.id}" ) %>
+<% content_for :player do %>
+  <%= javascript_include_tag "test", "data-turbolinks-track" => true %>
+<% end %>
 <div class="row">
 	<aside class="span2">
       <section>
