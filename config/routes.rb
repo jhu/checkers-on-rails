@@ -15,7 +15,8 @@ CheckersApp::Application.routes.draw do
   end 
   resources :move, only: [:new, :create]
 
-  match '/play',    to: 'games#update', via:'post'
+  match 'makeplay' => 'games#play', :via => :post
+  # match 'makeplay',    to: 'games#play', via:'post'
   match '/stream',   to: 'games#stream', via:'get'
 
   root  'static_pages#home'

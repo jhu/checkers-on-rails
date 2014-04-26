@@ -181,7 +181,9 @@ class GamesController < ApplicationController
   private
 
     def find_game
+      logger.debug "game id: #{params[:id]}"
       @game = Game.find(params[:id])
+      logger.debug "game content: #{@game}"
     end
 
     def validate_movetext
@@ -222,7 +224,7 @@ class GamesController < ApplicationController
 
     def not_yet_join
     end
-
+=begin
     # TODO: need to integrate
     def valid_params
       params.require(:side,:board).permit(:side,:board)
@@ -305,4 +307,5 @@ class GamesController < ApplicationController
       puts "Data for moves" + makeMoves(board,side).to_s
       #puts makeMoves(board,side)
     end
+=end
 end

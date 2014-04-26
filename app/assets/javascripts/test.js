@@ -16,7 +16,7 @@
         });
     }
     var request = new XMLHttpRequest();
-    request.open("post", "/play");
+    request.open("post", location.pathname + "/play");
     request.setRequestHeader("Content-Type", "application/json");
     var i = 0;
     //setInterval(function(){sendmove(i++)},3000);
@@ -58,15 +58,17 @@
         data: JSON.stringify(move),
         contentType: 'application/json',
         mimeType: 'application/json',
-        beforeSend: function (data) {},
+        beforeSend: function (data) {
+        	
+        },
         success: function (data) {
           // $(".testboard").append('<span>'+data+'</span>');
           // $( ".inner" ).append( "test" );
-          $("#board-container #board tr td").empty();
-          var results = JSON.parse(data);
+          // $("#board-container #board tr td").empty();
+          // var results = JSON.parse(data);
           $.each(data, function (y, row) {
             $.each(row, function (x, piece) {
-              $("tr.y" + y + " td.x" + x).append(move.boardState[y][x]);
+              // $("tr.y" + y + " td.x" + x).append(move.boardState[y][x]);
             });
           });
           //not currently able to use the 'new RedirectView("/games/" + gameId, true);' returned by controller
@@ -83,3 +85,25 @@
   }
   window.onload = test;
 })(jQuery);
+
+
+function getBoardState () {
+
+
+}
+
+function getMovetext (x0,y0,x1,y1) {
+  var from = x0.toString()[1] + y0.toString()[1];
+  var to = x1.toString()[1] + y1.toString()[1];
+  var board_map = {
+    '10':1,'30':2,'50':3,'70':4,
+    '01':5,'21':6,'41':7,'61':8,
+    '12':9,'32':10,'52':11,'72':12,
+    '03':13,'23':14,'43':15,'63':16,
+    '14':17,'34':18,'54':19,'74':20,
+    '05':21,'25':22,'45':23,'65':24,
+    '16':25,'36':26,'56':27,'76':28,
+    '07':29,'27':30,'47':31,'67':32
+  };
+  return board_map[from]+'x'+board_map[to];
+}
