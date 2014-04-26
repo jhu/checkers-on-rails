@@ -1,8 +1,8 @@
 class GamesController < ApplicationController
   before_action :signed_in_user
   before_action :correct_user,    only: [:index, :show, :update]
-  before_action :correct_player,  only: [:show, :play]
-  before_action :correct_turn,    only: :play
+  before_action :correct_player,  only: [:show, :play, :myturn]
+  before_action :correct_turn,    only: [:play, :myturn]
 
   # need to check if it is correct user playing this game
   # before_action :correct_user,   only: :destroy
@@ -128,6 +128,15 @@ class GamesController < ApplicationController
       else
         render :json => {:message => "no move!", :movestring => params[:movetext]}
       end
+    end
+  end
+
+  def myturn #heartbeat
+    @game = Game.find(params[:id])
+    if @game.my_turn?(current_user)
+      render :json => {:board => @game.fen_board_as_array, :myturn => true}
+    else
+      render :json => {:myturn => false}
     end
   end
 

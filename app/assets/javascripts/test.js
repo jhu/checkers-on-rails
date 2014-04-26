@@ -22,7 +22,7 @@
     //setInterval(function(){sendmove(i++)},3000);
 
     // var moves = ["11x18","12x32","8x12","11x15"];
-    var moves = ['21x17','22x18','18x14','24x20','28x24'];
+    var moves = ['21x17',/*'22x18','18x14','24x20','28x24'*/];
     $.each(moves, function(index, val){
       sendmove(index);
     });
@@ -48,6 +48,7 @@
         success: function (data) {
           // $(".testboard").append('<span>'+data+'</span>');
           // $( ".inner" ).append( "test" );
+          /*
           $("#board-container #board tr td").empty();
           $.each(move.boardState, function(y, row){
             $.each(row, function(x,piece){
@@ -55,6 +56,7 @@
               $("tr.y"+y+" td.x"+x).append(move.boardState[y][x]);
             });
           });
+      */
           //not currently able to use the 'new RedirectView("/games/" + gameId, true);' returned by controller
           /*Draw(game.board);
       $.data(document.body, 'myTurn', false);*/

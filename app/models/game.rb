@@ -110,8 +110,60 @@ class Game < ActiveRecord::Base
 
   # return true if player is required to jump and its move is not a jump
   def must_jump?(from, to)
-    #TODO: check if the player has to jump
-    # self.board
+    pieces = self.board.split(",").map{|s| s.to_i}
+    # making sure that the proposed move is actual jump
+    return false unless valid_jump_destination?(from, to, pieces).nil?
+
+    # must loop through for first potential move and return true
+    type = pieces[from - 1]
+    pieces.each_with_index { |piece, index|
+      if piece != 0 and type == piece and can_jump(index + 1, pieces)
+        logger.debug "now you can jump... #{from}"
+        logger.debug "#{piece}"
+        return true
+      end
+    }
+    return false
+  end
+
+  def can_jump(from, pieces)
+    if Game.is_red?(pieces[from - 1])
+      to_right = from + 7
+      check_for_enemy = valid_jump_destination?(from, to_right, pieces)
+      target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] < 0
+      if pieces[to_right - 1] == 0 and target
+        logger.debug "target: #{valid_jump_destination?(from, to_right, pieces)}"
+        logger.debug "target type: #{pieces[valid_jump_destination?(from, to_right, pieces)-1]}"
+        return true
+      end
+      to_left = from + 9
+      check_for_enemy = valid_jump_destination?(from, to_left, pieces)
+      target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] < 0
+      if pieces[to_left - 1] == 0 and target
+        logger.debug "target: #{valid_jump_destination?(from, to_left, pieces)}"
+        logger.debug "target type: #{pieces[valid_jump_destination?(from, to_left, pieces)-1]}"
+        return true
+      end
+    else
+      to_right = from - 7
+      check_for_enemy = valid_jump_destination?(from, to_right, pieces)
+      target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] > 0
+      if pieces[to_right - 1] == 0 and target
+        logger.debug "target: #{valid_jump_destination?(from, to_right, pieces)}"
+        logger.debug "target type: #{pieces[valid_jump_destination?(from, to_right, pieces)-1]}"
+        return true 
+      end
+      
+      to_left = from - 9
+      check_for_enemy = valid_jump_destination?(from, to_left, pieces)
+      target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] > 0
+      if pieces[to_left - 1] == 0 and target
+        logger.debug "target: #{valid_jump_destination?(from, to_left, pieces)}"
+        logger.debug "target type: #{pieces[valid_jump_destination?(from, to_left, pieces)-1]}"
+        return true
+      end
+    end
+    logger.debug "nah you can't jump yet"
     return false
   end
 
@@ -300,11 +352,12 @@ class Game < ActiveRecord::Base
     # Returns nil if the destination is not valid for a jump, otherwise returns
     # the square that the board has to check for an enemy piece.
     def valid_jump_destination?(from, to, pieces)
+      logger.debug "from: #{from} to: #{to}"
       logger.debug "checking to see if its valid jump"
       row = Game.index_to_row(from)
       target = nil
-      if Game.is_red?(pieces(from))
-        logger.debug "its red player"
+      if Game.is_red?(pieces[from-1])
+        logger.debug "its a red player"
         return if row + 2 != Game.index_to_row(to)
 
         case to
@@ -319,12 +372,12 @@ class Game < ActiveRecord::Base
         end
       else
         return if row - 2 != Game.index_to_row(to)
-
+        logger.debug "its a white player"
         case to
         when from - 7
-          target = row.even? ? from - 4 : from - 3
+          target = row.even? ? from - 3 : from - 4
         when from - 9
-          target = row.even? ? from - 5 : from - 4
+          target = row.even? ? from - 4 : from - 5
         else
           target = nil
         end
@@ -337,6 +390,7 @@ class Game < ActiveRecord::Base
     end
 
     def valid_king_jump_destination?(from, to)
+
     end
 
     # this will determine if player has pieces left to end the game

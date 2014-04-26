@@ -8,7 +8,7 @@ CheckersApp::Application.routes.draw do
       post :play
       get 'join', to: 'games#update' # join_game_path
       get 'rejoin'
-      post :test
+      # post :test
     end
     #resources :move, only: [:new, :create, :destroy]
   end
@@ -22,8 +22,8 @@ CheckersApp::Application.routes.draw do
   match '/contact', to: 'static_pages#contact', via: 'get'
 
   #match '/curl_example' => 'games#curl_get_example', via: :get
-  match '/curl_example' => 'games#curl_post_example', via: :post
-  match '/stream' => 'games#stream', via: :get
+  # match '/curl_example' => 'games#curl_post_example', via: :post
+  # match '/stream' => 'games#stream', via: :get
 
   #get 'profile', to: 'users#show'
   #resources :users, :games
