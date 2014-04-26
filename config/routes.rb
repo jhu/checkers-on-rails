@@ -9,10 +9,15 @@ CheckersApp::Application.routes.draw do
       get 'join', to: 'games#update' # join_game_path
       get 'rejoin'
       # post :test
+      # get 'stream', to: 'games#stream'
+      # post 'play', to: 'games#play'
     end
   end 
   resources :move, only: [:new, :create]
-  
+
+  match '/play',    to: 'games#update', via:'post'
+  match '/stream',   to: 'games#stream', via:'get'
+
   root  'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'
   match '/signin',  to: 'sessions#new',         via: 'get'

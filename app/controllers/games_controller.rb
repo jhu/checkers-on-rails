@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  include ActionController::Live
   before_action :signed_in_user
   before_action :correct_user,      only: [:index, :show, :update]
   before_action :find_game,         only: [:show, :update, :rejoin, :play, :myturn, :correct_turn, :correct_player]
@@ -111,7 +112,7 @@ class GamesController < ApplicationController
         if @game.game_over?(@game.turn)
           render :json => {:message => "we have the winner!"}
         else
-          @game.update_next_turn
+          # @game.update_next_turn
           render :json => {:board => @board, :turn => @game.turn}
         end
       else
@@ -146,6 +147,35 @@ class GamesController < ApplicationController
       sign_out
       redirect_to root_url
     end
+  end
+
+  # to see what sse is all about...
+  def stream
+    response.headers['Content-Type'] = 'text/event-stream'
+
+    begin
+    loop do
+    if (Time.current.sec % 5).zero?
+      response.stream.write("event: counter\n")
+      response.stream.write("data: 5 seconds passed\n\n")
+    end
+      sleep 1
+    end
+    rescue IOError
+      # Catch when the client disconnects
+    ensure
+      response.stream.close
+    end
+    # render nothing: true
+  end
+
+  def valid
+    side = params[:side].to_i
+    currentBoard = JSON.parse(params[:board])
+    #puts currentBoard[1][0]
+    myPlays(currentBoard,side)
+
+    render :json => @plays
   end
 
   private
@@ -191,5 +221,88 @@ class GamesController < ApplicationController
     end
 
     def not_yet_join
+    end
+
+    # TODO: need to integrate
+    def valid_params
+      params.require(:side,:board).permit(:side,:board)
+    end
+
+    def makeMoves(board,side)
+      @plays = Array.new
+      if side == 1
+        for y in 0..7
+          for x in 0..7
+            p = board[y][x]
+            if p > 0
+              move = doMoves(x, y, p,board)
+              if move.any?
+                @plays.push move;
+              end
+            end
+          end
+        end
+      elsif side == -1
+        7.downto(0) do |y|
+          7.downto(0) do |x|
+            p = board[y][x];
+            if p < 0
+              move = doMoves(x, y, p,board)
+              if move.any?
+                @plays.push move;
+              end
+            end
+          end
+        end
+      end
+      @plays
+    end
+
+    def doMoves(x, y, p,board)
+      @dirsMap =  {
+           1 => [[ 1,  1], [-1,  1]],
+           2 => [[ 1,  1], [-1,  1], [ 1, -1], [-1, -1]],
+           -1 => [[-1, -1], [ 1, -1]],
+           -2 => [[-1, -1], [ 1, -1], [-1,  1], [ 1,  1]]
+      }
+      plays = Array.new
+
+      dirs = @dirsMap[p]
+
+      dirs.each do |item|
+        dir = item
+        dx = dir[0]
+        dy = dir[1]
+        nx = x + dx
+        ny = y + dy
+
+        if nx >= 0 && nx < 8 && ny >= 0 && ny < 8
+          position = board[y][x]
+          n = board[ny][nx]
+
+          if n == 0
+
+            #check promoted
+            promoted = (position == 1 && ny == 7) || (position == -1 && ny == 0)
+            q = (promoted ? position * 2: position)
+
+            board[y][x]   = 0
+            board[ny][nx] = q
+
+            plays.push [x, y, nx, ny]
+
+            board[y][x]   = position
+            board[ny][nx] = 0
+          end
+        end
+      end
+      plays
+    end
+
+
+    def myPlays(board,side)
+      #makeMoves(board) || makeJumps(board)
+      puts "Data for moves" + makeMoves(board,side).to_s
+      #puts makeMoves(board,side)
     end
 end

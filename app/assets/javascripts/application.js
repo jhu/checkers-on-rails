@@ -16,3 +16,10 @@
 //= require turbolinks
 //= require_tree .
 //= require jquery.ui.all
+
+// $(function() {
+// 	var source = new EventSource('/stream');
+// 		source.addEventListener('counter', function(e) {
+// 		$('body').after(e.data + '<br />');
+// 	});
+// });
