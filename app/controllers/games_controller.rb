@@ -1,11 +1,11 @@
 class GamesController < ApplicationController
   include ActionController::Live
   before_action :signed_in_user
-  before_action :correct_user,      only: [:index, :show, :update]
-  before_action :find_game,         only: [:show, :update, :rejoin, :play, :myturn, :correct_turn, :correct_player]
-  before_action :correct_player,    only: [:show, :play, :myturn]
-  before_action :correct_turn,      only: [:play, :myturn]
-  before_action :validate_movetext,  only: :play
+  before_action :correct_user,        only: [:index, :show, :update]
+  before_action :find_game,           only: [:show, :update, :rejoin, :play, :myturn, :correct_turn, :correct_player]
+  before_action :correct_player,      only: [:show, :play, :myturn]
+  before_action :correct_turn,        only: :play
+  before_action :validate_movetext,   only: :play
 
   # need to check if it is correct user playing this game
   # otherwise anyone can see played games
@@ -99,9 +99,9 @@ class GamesController < ApplicationController
     # check if the game is over
     if @game.has_winner?
       # need to automatically direct to game results?
-      render :json => {:message => "the game is over!"}
+      render :json => {valid: false, :message => "The game is over! Go see box score for details."}
     elsif @game.must_jump? from, to
-      render :json => {:message => "you must make a jump!"}
+      render :json => {valid: false, :message => "You must make a jump!"}
     else
       # # call game model play
       @board = @game.play from, to
@@ -110,13 +110,15 @@ class GamesController < ApplicationController
         # @board = @game.fen_board_as_array    
         # flash[:error] = "invalid move or jump!"
         if @game.game_over?(@game.turn)
-          render :json => {:message => "we have the winner!"}
+          render :json => {valid: true, :board => @board, :turn => @game.turn,
+            :message => "#{@game.winner.name} is declared a winner!"}
         else
           # @game.update_next_turn
-          render :json => {:board => @board, :turn => @game.turn}
+          render :json => {valid: true, :board => @board, :turn => @game.turn,
+            :message => "Valid move/jump!"}
         end
       else
-        render :json => {:message => "no move!", :movestring => @movetext}
+        render :json => {valid: false, :message => "Invalid move/jump!", :movestring => @movetext}
       end
     end
   end
@@ -193,8 +195,14 @@ class GamesController < ApplicationController
       if !move_regex.match(params[:movetext]).nil? and !defined?(params[:movetext]).nil?
         @movetext = params[:movetext].split('x').map{|s| s.to_i}
       else
-        render :json => {:message => "Invalid movetext!"} 
+        render :json => {valid: false, :message => "Invalid movetext!"} 
       end
+    end
+
+    def send_response valid, message, turn, board
+      render :json => {
+        valid: valid,:message => message,:turn => turn,:board => board
+      } 
     end
 
   	def game_params
@@ -210,7 +218,7 @@ class GamesController < ApplicationController
       unless @game.my_turn?(current_user)
         # flash.now[:notice] = 'Not your turn yet!'
         # render 'show'
-        render :json => {:message => "Not your turn!"}
+        render :json => {valid: false, :message => "Not your turn!"}
       end
     end
 
@@ -218,11 +226,12 @@ class GamesController < ApplicationController
     def correct_player
       logger.debug "#{params[:id]}"
       if @game.ongoing? and @game.white != current_user and @game.red != current_user
-        render :json => {:message => "you are not allowed to be in this game!"}
+        render :json => {valid: false, :message => "You are not allowed to be in this game!"}
       end
     end
 
     def not_yet_join
+
     end
 =begin
     # TODO: need to integrate
