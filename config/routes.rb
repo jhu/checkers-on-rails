@@ -2,7 +2,7 @@ CheckersApp::Application.routes.draw do
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   #get 'creategame', to: 'games#create', via: 'get'
-  resources :games do
+  resources :games, except: [:edit, :destroy] do
     member do
       get 'myturn' # myturn_game_path heartbeat
       post :play
@@ -10,8 +10,8 @@ CheckersApp::Application.routes.draw do
       get 'rejoin'
       # post :test
     end
-    #resources :move, only: [:new, :create, :destroy]
-  end
+  end 
+  resources :move, only: [:new, :create]
   
   root  'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'

@@ -1,15 +1,15 @@
 class GamesController < ApplicationController
   before_action :signed_in_user
-  before_action :correct_user,    only: [:index, :show, :update]
-  before_action :correct_player,  only: [:show, :play, :myturn]
-  before_action :correct_turn,    only: [:play, :myturn]
+  before_action :correct_user,      only: [:index, :show, :update]
+  before_action :find_game,         only: [:show, :update, :rejoin, :play, :myturn, :correct_turn, :correct_player]
+  before_action :correct_player,    only: [:show, :play, :myturn]
+  before_action :correct_turn,      only: [:play, :myturn]
+  before_action :validate_movetext,  only: :play
 
   # need to check if it is correct user playing this game
-  # before_action :correct_user,   only: :destroy
   # otherwise anyone can see played games
 
   def index
-  	#@games = Game.paginate(page: params[:page], per_page: 15)
   	@waitinggames = Game.where("red_id is null or white_id is null")
     # @count = current_user.waiting_and_ongoing_games.count
   end
@@ -30,7 +30,6 @@ class GamesController < ApplicationController
   end
 
   def show
-    @game = Game.find(params[:id])
     @moves = @game.moves
     @board = @game.fen_board_as_array
     @pieceImages = {'1'=>'pr.png','2'=>'kr.png','-1'=>'pw.png','-2'=>'kw.png'}
@@ -44,7 +43,6 @@ class GamesController < ApplicationController
 
   def update # intentionally join method
   	# need to join the waiting game
-    @game = Game.find(params[:id])
 
     if @game.in_game?(current_user)
       # already in the game
@@ -66,7 +64,6 @@ class GamesController < ApplicationController
   end
 
   def rejoin
-    @game = Game.find(params[:id])
     if !@game.ongoing? and @game.has_winner?
       flash[:notice] = "game completed, view history!"
       redirect_to :show
@@ -82,10 +79,9 @@ class GamesController < ApplicationController
     #   readout = readout + "#{params[x]} "
     # }
 
-    # for board chedk: \A\[\[\-?[0-2](,-?[0-2]){7}\](,\[\-?[0-2](,-?[0-2]){7}\]){7}\]\z
+    # for board check: \A\[\[\-?[0-2](,-?[0-2]){7}\](,\[\-?[0-2](,-?[0-2]){7}\]){7}\]\z
     # for move check: \A(([1-2][0-9]|[1-9])|3[0-2])(x([1-2]?[0-9]|3[0-2]))+\z
   # render text: "#{params[:movetext]} #{params[:turn]} #{params[:id]}"
-    @game = Game.find(params[:id])
     # @game.update(board:Game.board_to_fen_board(params[:boardState]))
 
     # respond_to do |format|
@@ -93,17 +89,10 @@ class GamesController < ApplicationController
     #   format.json { render :json => @game }
 
     # validate the move
-    logger.debug "checking the movetext #{params[:movetext]}"
 
-    move_regex = /\A(([1-2][0-9]|[1-9])|3[0-2])(x(([1-2][0-9]|[1-9])|3[0-2]))+\z/
-    if !move_regex.match(params[:movetext]).nil? and !defined?(params[:movetext]).nil?
-      themove = params[:movetext].split('x').map{|s| s.to_i}
-    else
-      return
-    end
 
-    from = themove[0]
-    to = themove[1]
+    from = @movetext[0]
+    to = @movetext[1]
     # turn = params[:turn]
 
     # check if the game is over
@@ -126,13 +115,12 @@ class GamesController < ApplicationController
           render :json => {:board => @board, :turn => @game.turn}
         end
       else
-        render :json => {:message => "no move!", :movestring => params[:movetext]}
+        render :json => {:message => "no move!", :movestring => @movetext}
       end
     end
   end
 
   def myturn #heartbeat
-    @game = Game.find(params[:id])
     if @game.my_turn?(current_user)
       render :json => {:board => @game.fen_board_as_array, :myturn => true}
     else
@@ -162,6 +150,21 @@ class GamesController < ApplicationController
 
   private
 
+    def find_game
+      @game = Game.find(params[:id])
+    end
+
+    def validate_movetext
+      logger.debug "checking the movetext #{params[:movetext]}"
+
+      move_regex = /\A(([1-2][0-9]|[1-9])|3[0-2])(x(([1-2][0-9]|[1-9])|3[0-2]))+\z/
+      if !move_regex.match(params[:movetext]).nil? and !defined?(params[:movetext]).nil?
+        @movetext = params[:movetext].split('x').map{|s| s.to_i}
+      else
+        render :json => {:message => "Invalid movetext!"} 
+      end
+    end
+
   	def game_params
   	  params.require(:game).permit(:id)
   	end
@@ -172,7 +175,6 @@ class GamesController < ApplicationController
     end
 
     def correct_turn
-      @game = Game.find(params[:id])
       unless @game.my_turn?(current_user)
         # flash.now[:notice] = 'Not your turn yet!'
         # render 'show'
@@ -183,7 +185,6 @@ class GamesController < ApplicationController
     # TODO: better logic? to check if current player sould be in this game
     def correct_player
       logger.debug "#{params[:id]}"
-      @game = Game.find(params[:id])
       if @game.ongoing? and @game.white != current_user and @game.red != current_user
         render :json => {:message => "you are not allowed to be in this game!"}
       end
