@@ -113,12 +113,8 @@ if ('ajaxPrefilter' in $) {
 }
 var myTurn = false;
 var MY_TURN_COLOR;
-var pieceImages = {
-  '1': '/assets/pr.png',
-  '2': '/assets/kr.png',
-  '-1': '/assets/pw.png',
-  '-2': '/assets/kw.png'
-};
+var pieceImages = {};
+var pieceDraggableImages = {};
 var redPieces = [1, 2];
 
 function setTurnColor(t) {
@@ -160,17 +156,19 @@ function populateBoard(board) {
   clearBoard();
   $.each(board, function (y, row) {
     $.each(row, function (x, piece) {
-      var image = "<img src='" + pieceImages[board[y][x].toString()] + "'/>";
+// dojoDndItem ui-draggable
+
+
+      var image = pieceImages[board[y][x].toString()];
       if (MY_TURN_COLOR === 'red' && board[y][x] > 0) {
-        image = "<img src='" + pieceImages[board[y][x].toString()] +
-          "' class='dojoDndItem ui-draggable'/>";
+        image = pieceDraggableImages[board[y][x].toString()];
       } else if (MY_TURN_COLOR === 'white' && board[y][x] < 0) {
-        image = "<img src='" + pieceImages[board[y][x].toString()] +
-          "' class='dojoDndItem ui-draggable'/>";
+        image = pieceDraggableImages[board[y][x].toString()];
       }
       if (board[y][x] !== 0) {
         $("tr.y" + y + " td.x" + x).append(image);
       }
+
     });
   });
   setDroppable();
@@ -199,4 +197,18 @@ function getMovetext(x0, y0, x1, y1) {
     '07':29,'27':30,'47':31,'67':32
   };
   return board_map[from] + 'x' + board_map[to];
+}
+
+function setImageHash(red1,red2,white1,white2){
+  pieceImages['1'] = red1;
+  pieceImages['2'] = red2;
+  pieceImages['-1'] = white1;
+  pieceImages['-2'] = white2;
+}
+
+function setDraggableImageHash(red1,red2,white1,white2){
+  pieceDraggableImages['1'] = red1;
+  pieceDraggableImages['2'] = red2;
+  pieceDraggableImages['-1'] = white1;
+  pieceDraggableImages['-2'] = white2;
 }

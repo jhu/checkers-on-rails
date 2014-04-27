@@ -1,5 +1,10 @@
 <%= javascript_tag do %>
 	(function(){
+
+		setImageHash('<%= image_tag @pieceImages['1'] %>','<%= image_tag @pieceImages['2'] %>','<%= image_tag @pieceImages['-1'] %>','<%= image_tag @pieceImages['-2'] %>');
+
+		setDraggableImageHash('<%= image_tag @pieceImages['1'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['2'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['-1'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['-2'], :class => "dojoDndItem" %>');
+
 		setTurnColor('<%= @turn %>');
 		window.onload=function(){
 			sendHeartbeat();
@@ -10,7 +15,6 @@
 <h1>Play!</h1>
 <div id="board-container">
     <table id="board" style="text-align:center;">
-    	<% if false %><%= image_tag('MiLLkE7gT.png') %><% end %>
 		<% for y in 0..7 %>
 			<tr class="<%= 'y' + y.to_s %>" >
 			<% for x in 0..7 %>
