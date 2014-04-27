@@ -33,6 +33,7 @@ class GamesController < ApplicationController
   def show
     @moves = @game.moves
     @board = @game.fen_board_as_array
+    @turn = @game.get_turn_color current_user
     @pieceImages = {'1'=>'pr.png','2'=>'kr.png','-1'=>'pw.png','-2'=>'kw.png'}
   end
 

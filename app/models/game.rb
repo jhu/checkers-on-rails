@@ -6,6 +6,15 @@ class Game < ActiveRecord::Base
   default_scope -> { order('created_at DESC') }
   #require_relative 'Utils'
 
+  def get_turn_color user
+    if self.red.eql? user
+      return 'red'
+    elsif self.white.eql? user
+      return 'white'
+    else
+      return 'nocolor'
+    end
+  end
   # checks if game is ongoing
   def ongoing?
   	self.active and self.winner.nil?

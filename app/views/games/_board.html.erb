@@ -1,23 +1,10 @@
 <%= javascript_tag do %>
 	(function(){
-	  setInterval(function(){sendHeartbeat();},3000);
-      function sendHeartbeat(){
-	      var request = $.ajax({
-	        url: location.pathname + '/myturn',
-	        type: 'GET',
-	        dataType: 'html',
-	        contentType: 'application/json',
-	        mimeType: 'application/json',
-	        beforeSend: function (data) {
-	          
-	        },
-	        success: function (data) {
-	          // console.log(data);
-	          console.log(data)
-	        },
-	        error: function (data, status, er) { }
-	      });
-	    }
+		setTurnColor('<%= @turn %>');
+		window.onload=function(){
+			sendHeartbeat();
+			window.refreshIntervalId = setInterval(function(){sendHeartbeat();},3000);
+		};
 	})();
 <% end %>
 <h1>Play!</h1>
@@ -32,7 +19,13 @@
 					<%  @piece = @board[y][x] %>
 					<% if (@piece != 0) %>
 						<% @location = @pieceImages[@piece.to_s]  %>
-						<%= image_tag @location, :class => "dojoDndItem" %>
+						<% if @turn.eql? 'red' and @piece > 0 %>
+							<%= image_tag @location, :class => "dojoDndItem" %>	
+						<% elsif @turn.eql? 'white' and @piece < 0 %>
+							<%= image_tag @location, :class => "dojoDndItem" %>
+						<% else %>
+							<%= image_tag @location %>
+						<% end %>
 					<% end %>
 					</td>
 				<% else %>
