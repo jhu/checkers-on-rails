@@ -27,9 +27,8 @@ ActiveRecord::Schema.define(version: 20140420185903) do
   create_table "moves", force: true do |t|
     t.integer  "game_id"
     t.string   "movetext"
-    t.string   "fen"
-    t.string   "startpos"
-    t.string   "endpos"
+    t.string   "board"
+    t.string   "turn"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

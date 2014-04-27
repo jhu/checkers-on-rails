@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   include ActionController::Live
   before_action :signed_in_user
   before_action :correct_user,        only: [:index, :show, :update]
-  before_action :find_game,           only: [:show, :update, :rejoin, :play, :myturn, :correct_turn, :correct_player]
+  before_action :find_game,           only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player]
   before_action :correct_player,      only: [:show, :play, :myturn]
   before_action :correct_turn,        only: :play
   before_action :validate_movetext,   only: :play
@@ -46,15 +46,23 @@ class GamesController < ApplicationController
   def update # intentionally join method
   	# need to join the waiting game
 
+
+  end
+
+  def join
     if @game.in_game?(current_user)
+      logger.debug "already in game?"
+      puts "rejoin"
       # already in the game
       redirect_to @game, flash: {notice: "You are already in this game!"}
     elsif !@game.is_full?
       # what if the game is not full??
       if current_user.waiting_and_ongoing_games.count >= 3
         redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"}
-      elsif @game.white.nil? ? @game.update(white:current_user, active:true) 
+      elsif @game.white.nil? ? @game.update(white:current_user, active:true) # todo: fix this
         : @game.update(red:current_user, active:true) 
+        logger.debug "joining in game"
+        puts "join"
         redirect_to @game, flash: {success: "You have joined this game!"}
       else
         # unable to join

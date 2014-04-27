@@ -13,11 +13,11 @@ class MovesController < ApplicationController
   private
 
     def move_params
-      params.require(:move).permit(:movetext, :fen)
+      params.require(:move).permit(:movetext, :board)
     end
 
-    def correct_user
-      @micropost = current_user.microposts.find_by(id: params[:id])
-      redirect_to root_url if @micropost.nil?
-    end
+    # def correct_user
+    #   @micropost = current_user.microposts.find_by(id: params[:id])
+    #   redirect_to root_url if @micropost.nil?
+    # end
 end

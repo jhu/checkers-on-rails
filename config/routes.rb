@@ -6,18 +6,19 @@ CheckersApp::Application.routes.draw do
     member do
       get 'myturn' # myturn_game_path heartbeat
       post :play
-      get 'join', to: 'games#update' # join_game_path
+      get :join
+      # get 'join', to: 'games#update' # join_game_path
       get 'rejoin'
       # post :test
       # get 'stream', to: 'games#stream'
       # post 'play', to: 'games#play'
     end
   end 
-  resources :move, only: [:new, :create]
+  #resources :move, only: [:new, :create]
 
-  match 'makeplay' => 'games#play', :via => :post
+  # match 'makeplay' => 'games#play', :via => :post
   # match 'makeplay',    to: 'games#play', via:'post'
-  match '/stream',   to: 'games#stream', via:'get'
+  # match '/stream',   to: 'games#stream', via:'get'
 
   root  'static_pages#home'
   match '/signup',  to: 'users#new',            via: 'get'

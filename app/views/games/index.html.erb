@@ -23,7 +23,7 @@
 			  <% @waitinggames.each do |game| %>
 			    <li>
 			    	<span class="content">
-			    		Game id: <%= game.id %> | Player: <%= !game.red.nil? ? game.red.name : game.white.name %>  
+			    		Game id: <%= game.id %> | Player: <%= game.red.nil? ? game.white.name : game.red.name %>  
 			    		<%= link_to "Join", join_game_path(game.id), class: "btn btn-medium btn-primary" %>
 			    	</span>
 			    	<span class="timestamp">

@@ -4,7 +4,7 @@ class Move < ActiveRecord::Base
   validates :game_id, presence: true
 
   def get_turn
-    self.fen[0,1]
+    self.turn
   end
 
   def get_pieces(from)
@@ -19,10 +19,10 @@ class Move < ActiveRecord::Base
     end
     
     def get_red_pieces
-      self.fen.split(':')[1][1..-1].split(',')
+      # self.fen.split(':')[1][1..-1].split(',')
     end
 
     def get_white_pieces
-      self.fen.split(':')[2][1..-1].split(',')
+      # self.fen.split(':')[2][1..-1].split(',')
     end
 end

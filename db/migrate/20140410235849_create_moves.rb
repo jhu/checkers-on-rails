@@ -3,9 +3,8 @@ class CreateMoves < ActiveRecord::Migration
     create_table :moves do |t|
       t.references :game, index: true
       t.string :movetext
-      t.string :fen
-      t.string :startpos
-      t.string :endpos
+      t.string :board
+      t.string :turn
 
       t.timestamps
     end

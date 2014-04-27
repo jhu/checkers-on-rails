@@ -48,14 +48,14 @@ def make_waiting_games
 end
 
 def make_moves
+  turn_set=['red','white']
   games = Game.where("white_id is not null").where(active:false)
   games.each { |game|
-    25.times do
+    25.times do |i|
       #(B|W):W[1-3]?[0-9](,)
       game.moves.create!(movetext:Faker::Base.regexify(/^[1-3][0-2](x[1-3][0-2]){1,3}$/),
-                          fen:Faker::Base.regexify(/^(B|W):WK?[1-3]?[1-2](,K?[1-3]?[1-2]){3,9}:BK?[1-3]?[1-2](,K?[1-3]?[1-2]){3,9}$/),
-                          startpos:Faker::Number.number(2),
-                          endpos:Faker::Number.number(2))
+                          board:Faker::Base.regexify(/^(0|-?[12])(,0|,-?[12]){31}$/),
+                          turn:turn_set[i%2])
     end
   }
 end

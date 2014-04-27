@@ -37,7 +37,7 @@ class Game < ActiveRecord::Base
   end
 
   def in_game?(user)
-  	user == self.white or user == self.red
+  	self.white.eql? user or self.red.eql? user
   end
 
   def my_turn?(user)
@@ -377,9 +377,11 @@ class Game < ActiveRecord::Base
       board = pieces.join(",")
       if self.update(board: board)
         movetext = Game.get_movetext(from, to)
-        fen = Game.standard_notation(pieces, from)
+        # fen = Game.standard_notation(pieces, from)
         # TODO create move and save
-        self.moves.create({movetext: movetext, fen: fen, startpos: from, endpos: to}) 
+        # self.moves.create({movetext: movetext, fen: fen, startpos: from, endpos: to}) 
+        turn = Game.get_color pieces[from-1]
+        self.moves.create({movetext: movetext, board: board, turn: turn}) 
         return fen_board_as_array
       end
       return
