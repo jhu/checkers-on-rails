@@ -9,12 +9,9 @@ $(() ->
   $(".dojoDndItem").draggable ({
     create: () -> $(this).data('position',$(this).position())
     start: () ->
-
-
       y0 = $(this).closest("tr").attr('class')
       x0 = $(this).closest("td").attr('class').split(' ')[0]
       console.log("start Location" + "[" + x0 + ","+ y0 + "]")
-
   })
 
   #add the droppable type to just the highlighted squares

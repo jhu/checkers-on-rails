@@ -75,7 +75,16 @@ class GamesController < ApplicationController
   end
 
   def play
+    side = params[:turn].to_i
+    currentBoard = JSON.parse(params[:board])
 
+    row = params[:row].gsub(/\D/, '')
+    column = params[:column].gsub(/\D/, '')
+
+    puts "row,column[ " + row + "," + column + " ]"
+    myPlays(currentBoard,side)
+
+    render :json => @plays
 
 
 =begin
@@ -160,17 +169,7 @@ class GamesController < ApplicationController
     # render nothing: true
   end
 
-  def valid
-    side = params[:side].to_i
-    currentBoard = JSON.parse(params[:board])
-    #puts currentBoard[1][0]
-    myPlays(currentBoard,side)
-
-    render :json => @plays
-  end
-
   private
-
     def find_game
       logger.debug "game id: #{params[:id]}"
       @game = Game.find(params[:id])
@@ -219,7 +218,161 @@ class GamesController < ApplicationController
       end
     end
 
-    
+    #### move/jump valdation
+    def makeMoves(board,side)
+    @plays = Array.new
+    if side == 1
+      for y in 0..7
+        for x in 0..7
+          p = board[y][x]
+          if p > 0
+            move = doMoves(x, y, p,board)
+            if move.any?
+              @plays.push move;
+            end
+          end
+        end
+      end
+    elsif side == -1
+      7.downto(0) do |y|
+        7.downto(0) do |x|
+          p = board[y][x];
+          if p < 0
+            move = doMoves(x, y, p,board)
+            if move.any?
+              @plays.push move;
+            end
+          end
+        end
+      end
+    end
+    @plays
+  end
 
+  def doMoves(x, y, p,board)
+    @dirsMap =  {
+         1 => [[ 1,  1], [-1,  1]],
+         2 => [[ 1,  1], [-1,  1], [ 1, -1], [-1, -1]],
+         -1 => [[-1, -1], [ 1, -1]],
+         -2 => [[-1, -1], [ 1, -1], [-1,  1], [ 1,  1]]
+    }
+    plays = Array.new
+
+    dirs = @dirsMap[p]
+
+    dirs.each do |item|
+      dir = item
+      dx = dir[0]
+      dy = dir[1]
+      nx = x + dx
+      ny = y + dy
+
+      if nx >= 0 && nx < 8 && ny >= 0 && ny < 8
+        position = board[y][x]
+        n = board[ny][nx]
+
+        if n == 0
+
+          #check promoted
+          promoted = (position == 1 && ny == 7) || (position == -1 && ny == 0)
+          q = (promoted ? position * 2: position)
+
+          board[y][x]   = 0
+          board[ny][nx] = q
+
+          plays.push [x, y, nx, ny]
+
+          board[y][x]   = position
+          board[ny][nx] = 0
+        end
+      end
+    end
+    plays
+  end
+
+  def makeJumps(board,side)
+    @jumps = Array.new
+    ncurrent = Array.new
+    if @side == 1
+      for y in 0..8
+        for x in 0..8
+          p = board[y][x]
+          if p > 0
+            @jumps = doJumps(x, y, p,[x,y],board,ncurrent,side)
+          end
+        end
+      end
+    elsif @side == -1
+      7.downto(0) do |y|
+        7.downto(0) do |x|
+          p = board[y][x];
+
+          if p < 0
+            @jumps = doJumps(x, y, p,[x,y],board,ncurrent,side);
+          end
+        end
+      end
+    end
+    @jumps
+  end
+
+  def doJumps (x, y, p,board,ncurrent,side)
+    @dirsMap =  {
+       1 => [[ 1,  1], [-1,  1]],
+       2 => [[ 1,  1], [-1,  1], [ 1, -1], [-1, -1]],
+       -1 => [[-1, -1], [ 1, -1]],
+       -2 => [[-1, -1], [ 1, -1], [-1,  1], [ 1,  1]]
+    }
+
+    @jumps = Array.new
+
+    dirs = @dirsMap[p]
+    @oppCount = side == 1 ? 'lcount' : 'dcount'
+
+    dirs.each do |item|
+      dir = item
+      mx =  x + dir[0]
+      nx = mx + dir[0]
+      my =  y + dir[1]
+      ny = my + dir[1]
+
+      if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8)
+        position = board[y][x]
+        m = board[my][mx]
+        n = board[ny][nx]
+
+        if (n == 0 && ((side ==  1 && m < 0) || (side == -1 && m > 0)))
+          promoted = (p == 1 && ny == 7) || (p == -1 && ny == 0);
+          ncurrent.push(nx, ny)
+
+          q = (promoted ? p * 2: p)
+
+          if(side == 1)
+            board[y][x]   = 0
+            board[my][mx] = 0
+            board[ny][nx] = q
+
+            if (promoted || !doJumps(nx, ny, p, ncurrent, side))
+              @jumps.push ncurrent
+              puts "Current jumps being computed" + ncurrent
+            end
+            board[y][x] = p
+            board[my][mx] = m
+            board[ny][nx] = 0
+          end
+        end
+      end
+    end
+    @jumps
+  end
+
+
+  def myPlays(board,side)
+    @moves = makeMoves(board,side)
+    @jumps = makeJumps(board,side)
+    puts "Data for jumps" + @jumps.to_s
+    puts "Data for moves" + @moves.to_s
+    #makeMoves(board) || makeJumps(board)
+  end
 
 end

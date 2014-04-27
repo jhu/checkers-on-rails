@@ -1,31 +1,23 @@
 <%= javascript_tag do %>
-	()
-    setInterval(function(){
-      sendHeartbeat();
-    },3000);
-
-
-    function sendHeartbeat(){
-      var request = $.ajax({
-        url: location.pathname + '/myturn',
-        type: 'GET',
-        dataType: 'html',
-        /*data: JSON.stringify({'turn':'white'}),*/
-        contentType: 'application/json',
-        mimeType: 'application/json',
-        beforeSend: function (data) {
-          
-        },
-        success: function (data) {
-          // console.log(data);
-          console.log(data)
-        },
-        error: function (data, status, er) { }
-      });
-    }
-
-    (function(){
-	  
+	(function(){
+	  setInterval(function(){sendHeartbeat();},3000);
+      function sendHeartbeat(){
+	      var request = $.ajax({
+	        url: location.pathname + '/myturn',
+	        type: 'GET',
+	        dataType: 'html',
+	        contentType: 'application/json',
+	        mimeType: 'application/json',
+	        beforeSend: function (data) {
+	          
+	        },
+	        success: function (data) {
+	          // console.log(data);
+	          console.log(data)
+	        },
+	        error: function (data, status, er) { }
+	      });
+	    }
 	})();
 <% end %>
 <h1>Play!</h1>

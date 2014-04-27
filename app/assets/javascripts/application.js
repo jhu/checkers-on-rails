@@ -113,15 +113,17 @@
         },
         success: function (data) {
           console.log(data);
+          if (data.valid) {
+            
+          } else {
+            clearBoardState();
+
+          }
           // $(".testboard").append('<span>'+data+'</span>');
           // $( ".inner" ).append( "test" );
           // $("#board-container #board tr td").empty();
           // var results = JSON.parse(data);
-          $.each(data, function (y, row) {
-            $.each(row, function (x, piece) {
-              // $("tr.y" + y + " td.x" + x).append(move.boardState[y][x]);
-            });
-          });
+
           //not currently able to use the 'new RedirectView("/games/" + gameId, true);' returned by controller
           /*Draw(game.board);
       $.data(document.body, 'myTurn', false);*/
@@ -137,9 +139,22 @@
   window.onload = test;
 })(jQuery);
 
+var turn = undefined;
 
+
+function clearBoardState (){
+  $("#board-container #board tr td").empty();
+}
 function getBoardState () {
+  // TODO: get current state of this board
+}
 
+function populateBoard (board) {
+  $.each(board, function (y, row) {
+    $.each(row, function (x, piece) {
+      // $("tr.y" + y + " td.x" + x).append(move.boardState[y][x]);
+    });
+  });
 }
 
 function getMovetext (x0,y0,x1,y1) {
