@@ -115,10 +115,10 @@ if ('ajaxPrefilter' in $) {
 var myTurn = false;
 var MY_TURN_COLOR;
 var pieceImages = {
-  '1': 'http://localhost:3000/assets/images/pr.png',
-  '2': 'http://localhost:3000/assets/images/kr.png',
-  '-1': 'http://localhost:3000/assets/images/pw.png',
-  '-2': 'http://localhost:3000/assets/images/kw.png'
+  '1': '/assets/images/pr.png',
+  '2': '/assets/images/kr.png',
+  '-1': '/assets/images/pw.png',
+  '-2': '/assets/images/kw.png'
 };
 var redPieces = [1, 2];
 function setTurnColor(t) {
