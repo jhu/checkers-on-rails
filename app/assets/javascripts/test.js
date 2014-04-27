@@ -1,7 +1,7 @@
-var sendMove = function(turn, move){
+var sendMove = function (turn, move) {
   data = {
     'turn': turn,
-    'movetext':move
+    'movetext': move
   };
   var request = $.ajax({
     url: location.pathname + '/play',
@@ -16,29 +16,30 @@ var sendMove = function(turn, move){
     },
     success: function (data) {
       console.log(data);
-      if(typeof data.board !== 'undefined'){
+      if (data.board !== undefined) {
         populateBoard(data.board);
       }
       if (data.valid) {
         // give up turn and start timer
         lockTheBoard();
         clearInterval(window.refreshIntervalId);
-        window.refreshIntervalId = setInterval(function(){sendHeartbeat();},3000);
+        window.refreshIntervalId = setInterval(function () {
+          sendHeartbeat();
+        }, 3000);
       } else {
         // revert until valid move
         populateBoard(data.board);
         unlockTheBoard();
       }
       // display message?
-      if(typeof data.message !== 'undefined'){
+      if (data.message !== undefined) {
         alert(message);
       }
     },
-    error: function (data, status, er) { }
+    error: function (data, status, er) {}
   });
 }
-
-var setDroppable = function(){
+var setDroppable = function () {
   var snapToMiddle, snapToStart, x0, x1, y0, y1;
   window.sourceElement;
   window.destinationElement;
@@ -95,7 +96,6 @@ var setDroppable = function(){
   };
 }
 
-
 function CSRFProtection(xhr) {
   var token = $('meta[name="csrf-token"]')
     .attr('content');
@@ -111,7 +111,6 @@ if ('ajaxPrefilter' in $) {
       CSRFProtection(xhr);
     });
 }
-
 var myTurn = false;
 var MY_TURN_COLOR;
 var pieceImages = {
@@ -121,30 +120,31 @@ var pieceImages = {
   '-2': '/assets/images/kw.png'
 };
 var redPieces = [1, 2];
+
 function setTurnColor(t) {
   MY_TURN_COLOR = t;
 }
 
-function sendHeartbeat(){
+function sendHeartbeat() {
   var request = $.ajax({
     url: location.pathname + '/myturn',
     type: 'GET',
     dataType: 'html',
     contentType: 'application/json',
     mimeType: 'application/json',
-    beforeSend: function (data) { },
-    success: function (data) { 
+    beforeSend: function (data) {},
+    success: function (data) {
       console.log(data);
       var o = JSON.parse(data);
-      if(o.myturn) {
+      if (o.myturn) {
         // stop the heartbeat
         myTurn = false;
         clearInterval(window.refreshIntervalId);
         populateBoard(o.board);
         unlockTheBoard();
-      } 
-  },
-    error: function (data, status, er) { }
+      }
+    },
+    error: function (data, status, er) {}
   });
 }
 
@@ -185,7 +185,7 @@ function unlockTheBoard() {
   $(".dojoDndItem").draggable('enable');
 }
 
-function getMovetext (x0,y0,x1,y1) {
+function getMovetext(x0, y0, x1, y1) {
   var from = x0.toString()[1] + y0.toString()[1];
   var to = x1.toString()[1] + y1.toString()[1];
   var board_map = {
@@ -198,5 +198,5 @@ function getMovetext (x0,y0,x1,y1) {
     '16':25,'36':26,'56':27,'76':28,
     '07':29,'27':30,'47':31,'67':32
   };
-  return board_map[from]+'x'+board_map[to];
+  return board_map[from] + 'x' + board_map[to];
 }
