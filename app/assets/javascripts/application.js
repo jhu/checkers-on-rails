@@ -61,29 +61,30 @@
       sendmove(index);
     });*/
     // var timer = setInterval(function(){sendmove(i++)},3000)
-    setInterval(function(){
-      sendHeartbeat();
-    },3000);
+
+    // setInterval(function(){
+    //   sendHeartbeat();
+    // },3000);
 
 
-    function sendHeartbeat(){
-      var request = $.ajax({
-        url: location.pathname + '/myturn',
-        type: 'GET',
-        dataType: 'html',
-        /*data: JSON.stringify({'turn':'white'}),*/
-        contentType: 'application/json',
-        mimeType: 'application/json',
-        beforeSend: function (data) {
+    // function sendHeartbeat(){
+    //   var request = $.ajax({
+    //     url: location.pathname + '/myturn',
+    //     type: 'GET',
+    //     dataType: 'html',
+    //     /*data: JSON.stringify({'turn':'white'}),*/
+    //     contentType: 'application/json',
+    //     mimeType: 'application/json',
+    //     beforeSend: function (data) {
           
-        },
-        success: function (data) {
-          // console.log(data);
-          console.log(data)
-        },
-        error: function (data, status, er) { }
-      });
-    }
+    //     },
+    //     success: function (data) {
+    //       // console.log(data);
+    //       console.log(data)
+    //     },
+    //     error: function (data, status, er) { }
+    //   });
+    // }
 
     function sendmove(num) {
       // if(i > sample_moves.length){

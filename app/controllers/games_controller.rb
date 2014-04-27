@@ -75,23 +75,10 @@ class GamesController < ApplicationController
   end
 
   def play
-    # readout = ""
-    # params.each{|x|
-    #   readout = readout + "#{params[x]} "
-    # }
-
-    # for board check: \A\[\[\-?[0-2](,-?[0-2]){7}\](,\[\-?[0-2](,-?[0-2]){7}\]){7}\]\z
-    # for move check: \A(([1-2][0-9]|[1-9])|3[0-2])(x([1-2]?[0-9]|3[0-2]))+\z
-  # render text: "#{params[:movetext]} #{params[:turn]} #{params[:id]}"
-    # @game.update(board:Game.board_to_fen_board(params[:boardState]))
-
-    # respond_to do |format|
-    #   # format.html { redirect_to @game }
-    #   format.json { render :json => @game }
-
-    # validate the move
 
 
+
+=begin
     from = @movetext[0]
     to = @movetext[1]
     # turn = params[:turn]
@@ -122,6 +109,7 @@ class GamesController < ApplicationController
         render :json => {valid: false, :message => "Invalid move/jump!", :movestring => @movetext}
       end
     end
+=end
   end
 
   def myturn #heartbeat
@@ -231,91 +219,7 @@ class GamesController < ApplicationController
       end
     end
 
-    def not_yet_join
-
-    end
-=begin
-    # TODO: need to integrate
-    def valid_params
-      params.require(:side,:board).permit(:side,:board)
-    end
-
-    def makeMoves(board,side)
-      @plays = Array.new
-      if side == 1
-        for y in 0..7
-          for x in 0..7
-            p = board[y][x]
-            if p > 0
-              move = doMoves(x, y, p,board)
-              if move.any?
-                @plays.push move;
-              end
-            end
-          end
-        end
-      elsif side == -1
-        7.downto(0) do |y|
-          7.downto(0) do |x|
-            p = board[y][x];
-            if p < 0
-              move = doMoves(x, y, p,board)
-              if move.any?
-                @plays.push move;
-              end
-            end
-          end
-        end
-      end
-      @plays
-    end
-
-    def doMoves(x, y, p,board)
-      @dirsMap =  {
-           1 => [[ 1,  1], [-1,  1]],
-           2 => [[ 1,  1], [-1,  1], [ 1, -1], [-1, -1]],
-           -1 => [[-1, -1], [ 1, -1]],
-           -2 => [[-1, -1], [ 1, -1], [-1,  1], [ 1,  1]]
-      }
-      plays = Array.new
-
-      dirs = @dirsMap[p]
-
-      dirs.each do |item|
-        dir = item
-        dx = dir[0]
-        dy = dir[1]
-        nx = x + dx
-        ny = y + dy
-
-        if nx >= 0 && nx < 8 && ny >= 0 && ny < 8
-          position = board[y][x]
-          n = board[ny][nx]
-
-          if n == 0
-
-            #check promoted
-            promoted = (position == 1 && ny == 7) || (position == -1 && ny == 0)
-            q = (promoted ? position * 2: position)
-
-            board[y][x]   = 0
-            board[ny][nx] = q
-
-            plays.push [x, y, nx, ny]
-
-            board[y][x]   = position
-            board[ny][nx] = 0
-          end
-        end
-      end
-      plays
-    end
+    
 
 
-    def myPlays(board,side)
-      #makeMoves(board) || makeJumps(board)
-      puts "Data for moves" + makeMoves(board,side).to_s
-      #puts makeMoves(board,side)
-    end
-=end
 end
