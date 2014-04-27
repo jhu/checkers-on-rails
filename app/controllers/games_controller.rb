@@ -110,6 +110,7 @@ class GamesController < ApplicationController
         # @board = @game.fen_board_as_array    
         # flash[:error] = "invalid move or jump!"
         if @game.game_over?(@game.turn)
+          @game.update(winner:current_user)
           render :json => {valid: true, :board => @board, :turn => @game.turn,
             :message => "#{@game.winner.name} is declared a winner!"}
         else

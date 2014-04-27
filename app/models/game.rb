@@ -110,15 +110,23 @@ class Game < ActiveRecord::Base
 
   # return true if player is required to jump and its move is not a jump
   def must_jump?(from, to)
+    logger.debug "breaking here? 1"
     pieces = self.board.split(",").map{|s| s.to_i}
+    logger.debug "breaking here? 2"
     # making sure that the proposed move is actual jump
-    return false unless valid_jump_destination?(from, to, pieces).nil?
+    return false unless (valid_jump_destination?(from, to, pieces)).nil?
+    logger.debug "breaking here? 3"
 
     # must loop through for first potential move and return true
-    type = pieces[from - 1]
+    typeColor = Game.get_color pieces[from - 1]
+    logger.debug "breaking here? 4"
+
     pieces.each_with_index { |piece, index|
-      if piece != 0 and type == piece and can_jump(index + 1, pieces)
-        logger.debug "now you can jump... #{from}"
+      # logger.debug "#{self.can_jump(index + 1, pieces)}"
+      logger.debug "loop: #{index} #{piece}"
+      pieceColor = Game.get_color piece
+      if (piece != 0) and (typeColor == pieceColor) and can_jump(index + 1, pieces)
+        logger.debug "now you can jump... #{index+1}"
         logger.debug "#{piece}"
         return true
       end
@@ -127,44 +135,100 @@ class Game < ActiveRecord::Base
   end
 
   def can_jump(from, pieces)
-    if Game.is_red?(pieces[from - 1])
-      to_right = from + 7
-      check_for_enemy = valid_jump_destination?(from, to_right, pieces)
-      target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] < 0
-      if pieces[to_right - 1] == 0 and target
-        logger.debug "target: #{valid_jump_destination?(from, to_right, pieces)}"
-        logger.debug "target type: #{pieces[valid_jump_destination?(from, to_right, pieces)-1]}"
-        return true
-      end
-      to_left = from + 9
-      check_for_enemy = valid_jump_destination?(from, to_left, pieces)
-      target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] < 0
-      if pieces[to_left - 1] == 0 and target
-        logger.debug "target: #{valid_jump_destination?(from, to_left, pieces)}"
-        logger.debug "target type: #{pieces[valid_jump_destination?(from, to_left, pieces)-1]}"
-        return true
-      end
-    else
-      to_right = from - 7
-      check_for_enemy = valid_jump_destination?(from, to_right, pieces)
-      target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] > 0
-      if pieces[to_right - 1] == 0 and target
-        logger.debug "target: #{valid_jump_destination?(from, to_right, pieces)}"
-        logger.debug "target type: #{pieces[valid_jump_destination?(from, to_right, pieces)-1]}"
-        return true 
-      end
-      
-      to_left = from - 9
-      check_for_enemy = valid_jump_destination?(from, to_left, pieces)
-      target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] > 0
-      if pieces[to_left - 1] == 0 and target
-        logger.debug "target: #{valid_jump_destination?(from, to_left, pieces)}"
-        logger.debug "target type: #{pieces[valid_jump_destination?(from, to_left, pieces)-1]}"
-        return true
-      end
+    logger.debug "can jump from: #{from}"
+    if Game.is_king?(pieces[from-1]) # kings can go in both direction
+      return red_possible_jumps(from, pieces) || white_possible_jumps(from, pieces)
+    elsif Game.is_red?(pieces[from - 1])
+      return red_possible_jumps(from, pieces)
+    elsif Game.is_white?(pieces[from - 1])
+      return white_possible_jumps(from, pieces)
     end
     logger.debug "nah you can't jump yet"
     return false
+  end
+
+  def red_possible_jumps(from, pieces)
+    logger.debug "calling red possible jumps"
+    to_right = from + 7
+    row = Game.index_to_row(from)
+    return false if row + 2 != Game.index_to_row(to_right)
+
+    return false if Game.index_to_row(to_right) > 7 # boundry check
+    logger.debug "to right: #{to_right}"
+    check_for_enemy = valid_jump_destination?(from, to_right, pieces)
+    if check_for_enemy.nil?
+      return false
+    elsif pieces[check_for_enemy - 1] != 0
+      target = Game.get_color(pieces[check_for_enemy - 1]) != Game.get_color(pieces[from-1])
+    end
+
+    # target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] < 0 #color differentiate?
+    if pieces[to_right - 1] == 0 and target
+      logger.debug "target: #{valid_jump_destination?(from, to_right, pieces)}"
+      logger.debug "target type: #{pieces[valid_jump_destination?(from, to_right, pieces)-1]}"
+      return true
+    end
+    to_left = from + 9
+
+    return false if row + 2 != Game.index_to_row(to_left)
+
+    return false if Game.index_to_row(to_left) > 7
+    logger.debug "to left: #{to_left}"
+    check_for_enemy = valid_jump_destination?(from, to_left, pieces)
+    logger.debug "check_for_enemy nil? #{check_for_enemy}"
+    logger.debug "pieces: #{pieces}"
+    # target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] < 0
+    if check_for_enemy.nil?
+      return false
+    elsif pieces[check_for_enemy - 1] != 0
+      target = Game.get_color(pieces[check_for_enemy - 1]) != Game.get_color(pieces[from-1])
+    end
+    if pieces[to_left - 1] == 0 and target
+      logger.debug "target: #{valid_jump_destination?(from, to_left, pieces)}"
+      logger.debug "target type: #{pieces[valid_jump_destination?(from, to_left, pieces)-1]}"
+      return true
+    end
+  end
+
+  def white_possible_jumps(from, pieces)
+    logger.debug "calling white possible jumps"
+    to_right = from - 7
+    row = Game.index_to_row(from)
+    return false if row - 2 != Game.index_to_row(to_right)
+
+    return false if Game.index_to_row(to_right) < 0
+    logger.debug "to right: #{to_right}"
+    check_for_enemy = valid_jump_destination?(from, to_right, pieces)
+    if check_for_enemy.nil?
+      return false
+    elsif pieces[check_for_enemy - 1] != 0
+      target = Game.get_color(pieces[check_for_enemy - 1]) != Game.get_color(pieces[from-1])
+    end
+    # target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] > 0
+    if pieces[to_right - 1] == 0 and target
+      logger.debug "target: #{valid_jump_destination?(from, to_right, pieces)}"
+      logger.debug "target type: #{pieces[valid_jump_destination?(from, to_right, pieces)-1]}"
+      return true 
+    end
+    
+    to_left = from - 9
+    
+    return false if row - 2 != Game.index_to_row(to_left)
+
+    return false if Game.index_to_row(to_left) < 0
+    logger.debug "to left: #{to_left}"
+    check_for_enemy = valid_jump_destination?(from, to_left, pieces)
+    if check_for_enemy.nil?
+      return false
+    elsif pieces[check_for_enemy - 1] != 0
+      target = Game.get_color(pieces[check_for_enemy - 1]) != Game.get_color(pieces[from-1])
+    end
+    # target = check_for_enemy.nil? ? false : pieces[check_for_enemy - 1] > 0
+    if pieces[to_left - 1] == 0 and target
+      logger.debug "target: #{valid_jump_destination?(from, to_left, pieces)}"
+      logger.debug "target type: #{pieces[valid_jump_destination?(from, to_left, pieces)-1]}"
+      return true
+    end
   end
 
   def game_over?(turn)
@@ -177,17 +241,27 @@ class Game < ActiveRecord::Base
   end
 
   def self.get_color(piece)
-    piece > 0 ? "red" : "white"
+    return if piece == 0
+    return "red" if piece > 0
+    return "white" if piece < 0
   end
 
   def self.is_red?(piece)
     piece > 0
   end
 
-  def self.to_be_king?(piece, pos)
+  def self.is_white?(piece)
+    piece < 0
+  end
+
+  def self.at_kingrow?(piece, pos)
+    logger.debug "is it at kingrow piece #{piece} pos: #{pos}"
     if Game.is_red? piece
+      logger.debug "it is red piece at kingrow?"
       return Game.index_to_row(pos) == 7
-    else
+    elsif Game.is_white? piece
+      logger.debug "it is white piece at kingrow? #{Game.index_to_row(pos)}"
+
       return Game.index_to_row(pos) == 0
     end
   end
@@ -285,7 +359,8 @@ class Game < ActiveRecord::Base
       moving = pieces[from - 1]
       pieces[from - 1] = 0
 
-      if Game.to_be_king? pieces[to - 1], to
+      if Game.at_kingrow? moving, to
+        logger.debug "yes"
         pieces[to - 1] = Game.kinged moving
       else
         pieces[to - 1] = moving
@@ -298,7 +373,7 @@ class Game < ActiveRecord::Base
         self.moves.create({movetext: movetext, fen: fen, startpos: from, endpos: to}) 
         return fen_board_as_array
       end
-      
+      return
     end
 
     def self.get_movetext(from, to)
@@ -306,22 +381,23 @@ class Game < ActiveRecord::Base
     end
 
     def self.standard_notation(pieces, from)
-      white_pieces=[]
-      red_pieces=[]
-      turn = Game.get_color(pieces[from - 1])[0].upcase
-      pieces.each_with_index { |val, index|
-        case val
-        when 2
-          red_pieces<<"K#{index + 1}"
-        when 1
-          red_pieces<<"#{index + 1}"
-        when -1
-          white_pieces<<"#{index + 1}"
-        when -2
-          white_pieces<<"K#{index + 1}"
-        end
-      }
-      fen = "#{turn}:W#{white_pieces.join(',')}:R#{red_pieces.join(',')}"
+      # white_pieces=[]
+      # red_pieces=[]
+      # turn = Game.get_color(pieces[from - 1])[0].upcase
+      # pieces.each_with_index { |val, index|
+      #   case val
+      #   when 2
+      #     red_pieces<<"K#{index + 1}"
+      #   when 1
+      #     red_pieces<<"#{index + 1}"
+      #   when -1
+      #     white_pieces<<"#{index + 1}"
+      #   when -2
+      #     white_pieces<<"K#{index + 1}"
+      #   end
+      # }
+      # fen = "#{turn}:W#{white_pieces.join(',')}:R#{red_pieces.join(',')}"
+      "hello"
     end
 
     # return false if the move is not valid 
@@ -332,12 +408,14 @@ class Game < ActiveRecord::Base
       row = Game.index_to_row(from)
       logger.debug "from #{pieces[from]}"
       logger.debug "to #{pieces[to]}"
-      if Game.is_red?(pieces[from])
+      if Game.is_king?(pieces[from-1]) # kings can go in both direction
+        return false if (row + 1 != Game.index_to_row(to)) and (row - 1 != Game.index_to_row(to)) 
+      elsif Game.is_red?(pieces[from-1])
         logger.debug "its red!"
         logger.debug "from row#{Game.index_to_row(from)}"
         logger.debug "to row#{Game.index_to_row(to)}"
         return false if row + 1 != Game.index_to_row(to)
-      else
+      elsif Game.is_white?(pieces[from-1]) and !Game.is_king?(pieces[from-1]) # kings can go in both direction
         logger.debug "its white!"
         return false if row - 1 != Game.index_to_row(to)
       end
@@ -352,50 +430,50 @@ class Game < ActiveRecord::Base
     # Returns nil if the destination is not valid for a jump, otherwise returns
     # the square that the board has to check for an enemy piece.
     def valid_jump_destination?(from, to, pieces)
-      logger.debug "from: #{from} to: #{to}"
-      logger.debug "checking to see if its valid jump"
+      logger.debug "checking to see if its valid jump - from: #{from} to: #{to}"
       row = Game.index_to_row(from)
       target = nil
-      if Game.is_red?(pieces[from-1])
-        logger.debug "its a red player"
+      if Game.is_king?(pieces[from-1])
+        return if (row + 2 != Game.index_to_row(to)) and (row - 2 != Game.index_to_row(to))
+        target = get_target_for_red(row, from, to) || get_target_for_white(row, from, to)
+      elsif Game.is_red?(pieces[from-1])
         return if row + 2 != Game.index_to_row(to)
-
-        case to
-        when from + 7
-          logger.debug "from + 7"
-          target = row.even? ? from + 4 : from + 3
-        when from + 9
-          logger.debug "from + 9"
-          target = row.even? ? from + 5 : from + 4
-        else
-          target = nil
-        end
-      else
+        target = get_target_for_red(row, from, to)
+      elsif Game.is_white?(pieces[from-1])
         return if row - 2 != Game.index_to_row(to)
-        logger.debug "its a white player"
-        case to
-        when from - 7
-          target = row.even? ? from - 3 : from - 4
-        when from - 9
-          target = row.even? ? from - 4 : from - 5
-        else
-          target = nil
-        end
+        target = get_target_for_white(row, from, to)
       end
       return target
     end
 
-    def valid_king_move?(from, to)
-      # TODO: this piece can go forward and backward, at least 1 space?
+    def get_target_for_red(row, from, to)
+      case to
+      when from + 7
+        logger.debug "from + 7"
+        target = row.even? ? from + 4 : from + 3
+      when from + 9
+        logger.debug "from + 9"
+        target = row.even? ? from + 5 : from + 4
+      else
+        target = nil
+      end
+      return target
     end
-
-    def valid_king_jump_destination?(from, to)
-
+    def get_target_for_white(row, from, to)
+      case to
+      when from - 7
+        target = row.even? ? from - 3 : from - 4
+      when from - 9
+        target = row.even? ? from - 4 : from - 5
+      else
+        target = nil
+      end
+      return target
     end
 
     # this will determine if player has pieces left to end the game
     def count_pieces(color)
-      color == "red" ? reds_count : whites_count
+      color == "red" ? whites_count : reds_count
     end
 
     def whites_count
