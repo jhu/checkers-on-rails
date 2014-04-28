@@ -172,7 +172,7 @@ function sendHeartbeat() {
         // $(".turn-alert").alert('close');
       } else {
         $("#game-message").html('Wait for your turn').attr('class', 'alert alert-warning');
-        lockTheBoard();
+        // lockTheBoard();
         // $(".turn-alert").alert('close');
         // $(".wait-alert").alert();
         // var otherColor = (MY_TURN_COLOR !== 'red' ? 'red' : 'white');
