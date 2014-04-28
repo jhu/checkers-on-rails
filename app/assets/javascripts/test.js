@@ -11,30 +11,43 @@ var sendMove = function (turn, move) {
     contentType: 'application/json',
     mimeType: 'application/json',
     beforeSend: function (xhr) {
+      $("#game-message").html("Sending...").attr('class', 'alert alert-info');
       lockTheBoard();
-      return xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+      // return xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
     },
     success: function (data) {
       console.log(data);
       if (data.board !== undefined) {
         populateBoard(data.board);
       }
+      
+      if (data['gameover'] === true) {
+        return $("#game-message").html(data.message).attr('class', 'alert alert-success');
+      }
+
       if (data.valid) {
         // give up turn and start timer
+        $("#game-message").html(data.message + ' Waiting for other player...').attr('class', 'alert alert-success');
         lockTheBoard();
+        var otherColor = (MY_TURN_COLOR !== 'red' ? 'red' : 'white');
+        $("#turn-color").empty().html(otherColor + " turn");
         clearInterval(window.refreshIntervalId);
         window.refreshIntervalId = setInterval(function () {
           sendHeartbeat();
         }, 3000);
       } else {
+        $("#game-message").html(data.message).attr('class', 'alert alert-danger');
         // revert until valid move
-        populateBoard(data.board);
-        unlockTheBoard();
+        // alert(data.message);
+        // $(".alert").alert();
+
+        // populateBoard(data.board);
+        // unlockTheBoard();
       }
       // display message?
-      if (data.message !== undefined) {
-        alert(message);
-      }
+      // if (data.message !== undefined) {
+        // alert(data.message);
+      // }
     },
     error: function (data, status, er) {}
   });
@@ -63,7 +76,7 @@ var setDroppable = function () {
       y1 = $(this).closest("tr").attr('class');
       x1 = $(this).closest("td").attr('class').split(' ')[0];
       console.log("end Location" + "[" + x1 + "," + y1 + "]");
-      return sendMove(MY_TURN_COLOR, getMovetext(x0, y0, x1, y1))
+      return sendMove(MY_TURN_COLOR, getMovetext(x0, y0, x1, y1));
     },
     out: function (event, ui) {
       return $(ui.helper).mouseup(function () {
@@ -101,6 +114,7 @@ function CSRFProtection(xhr) {
     .attr('content');
   if (token) xhr.setRequestHeader('X-CSRF-Token', token);
 }
+
 if ('ajaxPrefilter' in $) {
   $.ajaxPrefilter(function (options, originalOptions, xhr) {
     CSRFProtection(xhr);
@@ -111,11 +125,14 @@ if ('ajaxPrefilter' in $) {
       CSRFProtection(xhr);
     });
 }
-var myTurn = false;
+
+// var myTurn = false;
 var MY_TURN_COLOR;
 var pieceImages = {};
 var pieceDraggableImages = {};
 var redPieces = [1, 2];
+
+var started = false;
 
 function setTurnColor(t) {
   MY_TURN_COLOR = t;
@@ -133,11 +150,33 @@ function sendHeartbeat() {
       console.log(data);
       var o = JSON.parse(data);
       if (o.myturn) {
+        if(!started){
+          $.ajax({
+            url: location.pathname + '/update_match_title',
+            type: 'GET',
+            dataType: 'script',
+            contentType: 'text/javascript',
+            success: function(){started = true;}
+          });
+        }
         // stop the heartbeat
-        myTurn = false;
+        // myTurn = false;
+        $("#game-message").html('Your turn!').attr('class', 'alert alert-info');
         clearInterval(window.refreshIntervalId);
         populateBoard(o.board);
-        unlockTheBoard();
+        // unlockTheBoard();
+
+        // $("#turn-color").empty().html(MY_TURN_COLOR + " turn");
+        // $(".wait-alert").alert('close');
+        // $(".turn-alert").alert();
+        // $(".turn-alert").alert('close');
+      } else {
+        $("#game-message").html('Wait for your turn').attr('class', 'alert alert-warning');
+        lockTheBoard();
+        // $(".turn-alert").alert('close');
+        // $(".wait-alert").alert();
+        // var otherColor = (MY_TURN_COLOR !== 'red' ? 'red' : 'white');
+        // $("#turn-color").empty().html(otherColor + " turn");
       }
     },
     error: function (data, status, er) {}
@@ -156,9 +195,6 @@ function populateBoard(board) {
   clearBoard();
   $.each(board, function (y, row) {
     $.each(row, function (x, piece) {
-// dojoDndItem ui-draggable
-
-
       var image = pieceImages[board[y][x].toString()];
       if (MY_TURN_COLOR === 'red' && board[y][x] > 0) {
         image = pieceDraggableImages[board[y][x].toString()];

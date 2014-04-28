@@ -13,6 +13,7 @@
     </aside>
 	<div class="span8">
     <%= render partial: "board" if @game.waiting? or @game.ongoing? %>
+    
 		<% if false %>
     <%= render partial: "wait_mode" if @game.waiting? %>
 		<%= render partial: "play_mode" if @game.ongoing? %>

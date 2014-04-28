@@ -41,10 +41,6 @@ class Game < ActiveRecord::Base
   end
 
   def my_turn?(user)
-    logger.debug "current's turn: #{self.turn}"
-    logger.debug "my id: #{user.id}"
-    logger.debug "game red id: #{self.red.id}"
-    logger.debug "game white id: #{self.white.id}"
     self.turn == "red" ? self.red == user : self.white == user
   end
 

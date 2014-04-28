@@ -1,6 +1,5 @@
 <%= javascript_tag do %>
 	(function(){
-
 		setImageHash('<%= image_tag @pieceImages['1'] %>','<%= image_tag @pieceImages['2'] %>','<%= image_tag @pieceImages['-1'] %>','<%= image_tag @pieceImages['-2'] %>');
 
 		setDraggableImageHash('<%= image_tag @pieceImages['1'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['2'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['-1'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['-2'], :class => "dojoDndItem" %>');
@@ -12,7 +11,11 @@
 		};
 	})();
 <% end %>
-<h1>Play!</h1>
+
+<h1>Checkers</h1>
+<div id='match-title'><%= render partial: "matchtitle" %></div>
+<%= content_tag(:div, "Wait for your turn", class: "alert alert-warning", id:"game-message") %>
+
 <div id="board-container">
     <table id="board" style="text-align:center;">
 		<% for y in 0..7 %>
@@ -23,9 +26,9 @@
 					<%  @piece = @board[y][x] %>
 					<% if (@piece != 0) %>
 						<% @location = @pieceImages[@piece.to_s]  %>
-						<% if @turn.eql? 'red' and @piece > 0 %>
+						<% if @turn.eql? 'red' and @piece > 0 and @game.ongoing? %>
 							<%= image_tag @location, :class => "dojoDndItem" %>	
-						<% elsif @turn.eql? 'white' and @piece < 0 %>
+						<% elsif @turn.eql? 'white' and @piece < 0 and @game.ongoing? %>
 							<%= image_tag @location, :class => "dojoDndItem" %>
 						<% else %>
 							<%= image_tag @location %>
@@ -40,3 +43,4 @@
 		<% end %>
     </table>
 </div>
+

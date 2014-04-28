@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   include ActionController::Live
   before_action :signed_in_user
   before_action :correct_user,        only: [:index, :show, :update]
-  before_action :find_game,           only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player]
+  before_action :find_game,           only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title]
   before_action :correct_player,      only: [:show, :play, :myturn]
   before_action :correct_turn,        only: :play
   before_action :validate_movetext,   only: :play
@@ -52,7 +52,7 @@ class GamesController < ApplicationController
   def join
     if @game.in_game?(current_user)
       # already in the game
-      # redirect_to @game, flash: {notice: "You are already in this game!"}
+      redirect_to @game#, flash: {notice: "You are already in this game!"}
     elsif !@game.is_full?
       # what if the game is not full??
       if current_user.waiting_and_ongoing_games.count >= 3
@@ -74,12 +74,13 @@ class GamesController < ApplicationController
       flash[:notice] = "game completed, view history!"
       redirect_to :show
     else
-      flash[:success] = "rejoined!"
+      # flash[:success] = "rejoined!"
       redirect_to @game
     end
   end
 
   def play
+=begin
     side = params[:turn].to_i
     currentBoard = JSON.parse(params[:board])
 
@@ -90,9 +91,8 @@ class GamesController < ApplicationController
     myPlays(currentBoard,side)
 
     render :json => @plays
+=end
 
-
-=begin
     from = @movetext[0]
     to = @movetext[1]
     # turn = params[:turn]
@@ -113,25 +113,41 @@ class GamesController < ApplicationController
         if @game.game_over?(@game.turn)
           @game.update(winner:current_user)
           render :json => {valid: true, :board => @board, :turn => @game.turn,
-            :message => "#{@game.winner.name} is declared a winner!"}
+            :message => "#{@game.winner.name} is declared a winner!", :gameover => true}
         else
           # @game.update_next_turn
           render :json => {valid: true, :board => @board, :turn => @game.turn,
             :message => "Valid move/jump!"}
         end
       else
-        render :json => {valid: false, :message => "Invalid move/jump!", :movestring => @movetext}
+        @boardOld = @game.fen_board_as_array
+        render :json => {valid: false, :message => "Invalid move/jump!", :board => @boardOld}
       end
     end
-=end
   end
 
-  def myturn #heartbeat
-    if @game.my_turn?(current_user)
+  def myturn #heartbeat that also blocks if game has not yet started
+    if @game.my_turn?(current_user) and @game.ongoing?
       render :json => {:board => @game.fen_board_as_array, :myturn => true}
     else
       render :json => {:myturn => false}
     end
+  end
+
+  def gameready
+    if @game.ongoing?
+      render :json => {:ready => true}
+    else
+      render :json => {:ready => false}
+    end
+  end
+
+  def update_match_title
+    respond_to do |format|
+      # format.html
+      format.js
+    end
+    # render :partial => 'matchtitle', :content_type => 'text/html'
   end
 
     #redirect_to @game

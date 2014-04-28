@@ -7,6 +7,7 @@ CheckersApp::Application.routes.draw do
       get 'myturn' # myturn_game_path heartbeat
       post :play
       get :join
+      get :update_match_title
       # get 'join', to: 'games#update' # join_game_path
       get 'rejoin'
       # post :test

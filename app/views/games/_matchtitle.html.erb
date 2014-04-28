@@ -1,0 +1,5 @@
+<% if !@game.waiting? %>
+	<%= content_tag(:h3, "Red: #{@game.red.name} Vs. White: #{@game.white.name}", id:"player-vs-player") %>
+<% else%>
+	<%= content_tag(:h3, "No opponent yet", id:"player-vs-player")%>
+<% end %>
