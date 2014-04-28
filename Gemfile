@@ -18,7 +18,6 @@ group :development, :test do
   gem 'rspec-rails', '2.13.1'
   gem 'brakeman', :require => false
   gem 'foreman'
-  gem 'unicorn'
 end
 
 group :test do
@@ -36,6 +35,7 @@ gem 'jquery-rails', '3.0.4'
 gem 'jquery-ui-rails'
 gem 'turbolinks', '1.1.1'
 gem 'jbuilder', '1.0.2'
+gem 'unicorn'
 
 group :doc do
   gem 'sdoc', '0.3.20', require: false
