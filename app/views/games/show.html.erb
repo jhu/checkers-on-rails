@@ -1,6 +1,8 @@
 <% provide(:title, "Game number: #{@game.id}" ) %>
+<% if false %>
 <% content_for :player do %>
   <%= javascript_include_tag "test", "data-turbolinks-track" => true %>
+<% end %>
 <% end %>
 <div class="row">
 	<aside class="span2">
@@ -13,7 +15,7 @@
     </aside>
 	<div class="span8">
     <%= render partial: "board" if @game.waiting? or @game.ongoing? %>
-    
+
 		<% if false %>
     <%= render partial: "wait_mode" if @game.waiting? %>
 		<%= render partial: "play_mode" if @game.ongoing? %>
