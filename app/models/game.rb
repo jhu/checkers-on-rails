@@ -97,6 +97,7 @@ class Game < ActiveRecord::Base
   # otherwise returns fen/board of resulted from this move
   # from/to has to be in notation number (fen)
   def play(from, to)
+
     pieces = self.board.split(",").map{|s| s.to_i}
 
     logger.debug "correct turn?"
@@ -343,7 +344,8 @@ class Game < ActiveRecord::Base
       return if check_for_enemy.nil?
 
       target = pieces[check_for_enemy - 1]
-      valid = !target.nil? && Game.get_color(target) != Game.get_color(jumping)
+      logger.debug "target is at #{check_for_enemy - 1} and its #{target}"
+      valid = target != 0 && Game.get_color(target) != Game.get_color(jumping)
       logger.debug "target is nil? #{target.nil?}"
       logger.debug "target color: #{Game.get_color(target)}"
       logger.debug "jumping color: #{Game.get_color(jumping)}"

@@ -96,31 +96,34 @@ class GamesController < ApplicationController
     from = @movetext[0]
     to = @movetext[1]
     # turn = params[:turn]
-
+    @boardOld = @game.fen_board_as_array
     # check if the game is over
     if @game.has_winner?
       # need to automatically direct to game results?
       render :json => {valid: false, :message => "The game is over! Go see box score for details."}
     elsif @game.must_jump? from, to
-      render :json => {valid: false, :message => "You must make a jump!"}
+      render :json => {valid: false, :message => "You must make a jump!", :board => @boardOld}
     else
       # # call game model play
       @board = @game.play from, to
+      logger.debug "play from:#{from} to:#{to}"
       # if nil, set flash to say its invalid move and rerender the game board
       if !@board.nil?
+
         # @board = @game.fen_board_as_array    
         # flash[:error] = "invalid move or jump!"
         if @game.game_over?(@game.turn)
           @game.update(winner:current_user)
           render :json => {valid: true, :board => @board, :turn => @game.turn,
-            :message => "#{@game.winner.name} is declared a winner!", :gameover => true}
+            :message => "#{@game.winner.name} is declared a winner! Go to here to see results", :gameover => true}
         else
           # @game.update_next_turn
+          logger.debug "that move is right..."
           render :json => {valid: true, :board => @board, :turn => @game.turn,
             :message => "Valid move/jump!"}
         end
       else
-        @boardOld = @game.fen_board_as_array
+        logger.debug "that move isnt right..."
         render :json => {valid: false, :message => "Invalid move/jump!", :board => @boardOld}
       end
     end
