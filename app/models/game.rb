@@ -516,4 +516,22 @@ class Game < ActiveRecord::Base
   	}
   	return possible_jumps_map[from]
   end
+  
+  def must_jumpTest?(from, to)
+    pieces = self.board.split(",").map{|s| s.to_i}
+    # making sure that the proposed move is actual jump
+    return false unless (valid_jump_destination?(from, to, pieces)).nil?
+	
+  	# must loop through for first potential move and return true
+      typeColor = Game.get_color pieces[from - 1]
+  	logger.debug "this from is color #{typeColor}"
+  	pieces.each_with_index do |piece, index|
+  		logger.debug "loop: #{index} #{piece}"
+  		pieceColor = Game.get_color piece
+  		
+  		if typeColor.eql? pieceColor and [-2,2].include? typeColor # this is king
+  			
+  		end
+  	end
+  end
 end
