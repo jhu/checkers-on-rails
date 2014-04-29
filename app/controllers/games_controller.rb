@@ -115,10 +115,10 @@ class GamesController < ApplicationController
         else
           @game.update_next_turn
           render :json => {valid: true, :board => @board, :turn => @game.turn,
-            :message => "Valid move/jump! Try again."}
+            :message => "Valid move/jump!"}
         end
       else
-        render :json => {valid: false, :message => "Invalid move/jump!", :board => @boardOld}
+        render :json => {valid: false, :message => "Invalid move/jump!  Try again.", :board => @boardOld}
       end
     end
   end

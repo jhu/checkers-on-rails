@@ -59,7 +59,6 @@ class Game < ActiveRecord::Base
   # of board with fen coordinates before saving it into Game model
   # i.e. 
   def self.board_to_fen_board(board)
-    logger.debug "hi! fen board"
     map = get_board_to_fen_map
     flat_board = board.flatten
     fen_board=[]
@@ -72,7 +71,6 @@ class Game < ActiveRecord::Base
   # this will convert string representation of board (in fen) into
   # array for view board 
   def fen_board_as_array
-    logger.debug "hi! array"
     map = get_board_to_fen_map
     board=[0]*64
     fen_board = self.board.split(",").map{|s| s.to_i}
@@ -99,7 +97,6 @@ class Game < ActiveRecord::Base
 
     pieces = self.board.split(",").map{|s| s.to_i}
 
-    logger.debug "correct turn?"
     # correct turn?
     return nil unless self.turn == Game.get_color(pieces[from - 1])
      
@@ -123,7 +120,6 @@ class Game < ActiveRecord::Base
     typeColor = Game.get_color pieces[from - 1]
 
     pieces.each_with_index { |piece, index|
-      # logger.debug "#{self.can_jump(index + 1, pieces)}"
       logger.debug "loop: #{index} #{piece}"
       pieceColor = Game.get_color piece
       if (piece != 0) and (typeColor == pieceColor) and can_jump(index + 1, pieces)
