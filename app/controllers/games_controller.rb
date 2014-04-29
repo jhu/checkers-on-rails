@@ -117,7 +117,7 @@ class GamesController < ApplicationController
           render :json => {valid: true, :board => @board, :turn => @game.turn,
             :message => "#{@game.winner.name} is declared a winner! Go to here to see results", :gameover => true}
         else
-          # @game.update_next_turn
+          @game.update_next_turn
           logger.debug "that move is right..."
           render :json => {valid: true, :board => @board, :turn => @game.turn,
             :message => "Valid move/jump!"}
