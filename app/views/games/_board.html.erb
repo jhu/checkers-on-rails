@@ -5,10 +5,6 @@
 		setDraggableImageHash('<%= image_tag @pieceImages['1'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['2'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['-1'], :class => "dojoDndItem" %>','<%= image_tag @pieceImages['-2'], :class => "dojoDndItem" %>');
 
 		setTurnColor('<%= @turn %>');
-		window.onload=function(){
-			sendHeartbeat();
-			window.refreshIntervalId = setInterval(function(){sendHeartbeat();},3000);
-		};
 	})();
 <% end %>
 

@@ -16,6 +16,10 @@
 //= require turbolinks
 //= require_tree .
 //= require jquery.ui.all
+$(function() {
+	sendHeartbeat();
+	window.refreshIntervalId = setInterval(function(){sendHeartbeat();},3000);
+});
 
 var sendMove = function (turn, move) {
   data = {
@@ -158,6 +162,9 @@ function setTurnColor(t) {
 }
 
 function sendHeartbeat() {
+	if(!location.pathname.match(/games\/\d+/)) {
+		return;
+	}
   var request = $.ajax({
     url: location.pathname + '/myturn',
     type: 'GET',
