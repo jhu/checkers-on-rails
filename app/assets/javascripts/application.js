@@ -50,7 +50,7 @@ var sendMove = function (turn, move) {
 
       if (data.valid) {
         // give up turn and start timer
-        $("#game-message").html(data.message + ' Waiting for other player...').attr('class', 'alert alert-success');
+        $("#game-message").html(data.message).attr('class', 'alert alert-success');
         lockTheBoard();
         var otherColor = (MY_TURN_COLOR !== 'red' ? 'red' : 'white');
         $("#turn-color").empty().html(otherColor + " turn");
@@ -60,17 +60,7 @@ var sendMove = function (turn, move) {
         }, 3000);
       } else {
         $("#game-message").html(data.message).attr('class', 'alert alert-danger');
-        // revert until valid move
-        // alert(data.message);
-        // $(".alert").alert();
-
-        // populateBoard(data.board);
-        // unlockTheBoard();
       }
-      // display message?
-      // if (data.message !== undefined) {
-        // alert(data.message);
-      // }
     },
     error: function (data, status, er) {}
   });
@@ -190,14 +180,9 @@ function sendHeartbeat() {
         clearInterval(window.refreshIntervalId);
         populateBoard(o.board);
         // $("#turn-color").empty().html(MY_TURN_COLOR + " turn");
-        // $(".wait-alert").alert('close');
-        // $(".turn-alert").alert();
-        // $(".turn-alert").alert('close');
       } else {
         $("#game-message").html('Wait for your turn').attr('class', 'alert alert-warning');
         // lockTheBoard();
-        // $(".turn-alert").alert('close');
-        // $(".wait-alert").alert();
         // var otherColor = (MY_TURN_COLOR !== 'red' ? 'red' : 'white');
         // $("#turn-color").empty().html(otherColor + " turn");
       }

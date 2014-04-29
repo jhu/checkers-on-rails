@@ -4,7 +4,6 @@ class Game < ActiveRecord::Base
   belongs_to :winner,  class_name: 'User', :foreign_key => 'winner_id'
   has_many :moves
   default_scope -> { order('created_at DESC') }
-  #require_relative 'Utils'
 
   def get_turn_color user
     if self.red.eql? user
@@ -116,16 +115,12 @@ class Game < ActiveRecord::Base
 
   # return true if player is required to jump and its move is not a jump
   def must_jump?(from, to)
-    logger.debug "breaking here? 1"
     pieces = self.board.split(",").map{|s| s.to_i}
-    logger.debug "breaking here? 2"
     # making sure that the proposed move is actual jump
     return false unless (valid_jump_destination?(from, to, pieces)).nil?
-    logger.debug "breaking here? 3"
 
     # must loop through for first potential move and return true
     typeColor = Game.get_color pieces[from - 1]
-    logger.debug "breaking here? 4"
 
     pieces.each_with_index { |piece, index|
       # logger.debug "#{self.can_jump(index + 1, pieces)}"

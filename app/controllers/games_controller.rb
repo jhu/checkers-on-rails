@@ -45,8 +45,6 @@ class GamesController < ApplicationController
 
   def update # intentionally join method
   	# need to join the waiting game
-
-
   end
 
   def join
@@ -106,10 +104,8 @@ class GamesController < ApplicationController
     else
       # # call game model play
       @board = @game.play from, to
-      logger.debug "play from:#{from} to:#{to}"
       # if nil, set flash to say its invalid move and rerender the game board
       if !@board.nil?
-
         # @board = @game.fen_board_as_array    
         # flash[:error] = "invalid move or jump!"
         if @game.game_over?(@game.turn)
@@ -118,12 +114,10 @@ class GamesController < ApplicationController
             :message => "#{@game.winner.name} is declared a winner! Go to here to see results", :gameover => true}
         else
           @game.update_next_turn
-          logger.debug "that move is right..."
           render :json => {valid: true, :board => @board, :turn => @game.turn,
-            :message => "Valid move/jump!"}
+            :message => "Valid move/jump! Try again."}
         end
       else
-        logger.debug "that move isnt right..."
         render :json => {valid: false, :message => "Invalid move/jump!", :board => @boardOld}
       end
     end
@@ -195,14 +189,10 @@ class GamesController < ApplicationController
 
   private
     def find_game
-      logger.debug "game id: #{params[:id]}"
       @game = Game.find(params[:id])
-      logger.debug "game content: #{@game}"
     end
 
     def validate_movetext
-      logger.debug "checking the movetext #{params[:movetext]}"
-
       move_regex = /\A(([1-2][0-9]|[1-9])|3[0-2])(x(([1-2][0-9]|[1-9])|3[0-2]))+\z/
       if !move_regex.match(params[:movetext]).nil? and !defined?(params[:movetext]).nil?
         @movetext = params[:movetext].split('x').map{|s| s.to_i}
@@ -236,7 +226,6 @@ class GamesController < ApplicationController
 
     # TODO: better logic? to check if current player sould be in this game
     def correct_player
-      logger.debug "#{params[:id]}"
       if @game.ongoing? and @game.white != current_user and @game.red != current_user
         render :json => {valid: false, :message => "You are not allowed to be in this game!"}
       end
