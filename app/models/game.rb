@@ -267,19 +267,65 @@ class Game < ActiveRecord::Base
   def self.kinged(piece)
     return piece > 0 ? 2 : -2
   end
+  def must_jump_beta?(from, to)
+    pieces = self.board.split(",").map{|s| s.to_i}
+    # making sure that the proposed move is actual jump
+    return false unless (valid_jump_destination?(from, to, pieces)).nil?
+  
+    # must loop through for first potential move and return true
+    my_color = Game.get_color pieces[from - 1]
+    logger.debug "this from is color #{my_color}"
+    pieces.each_with_index do |piece, coord|
+      logger.debug "loop: #{coord} #{piece}"
+      piece_color = Game.get_color piece
 
+      if my_color.eql? piece_color and my_color.eql? 'red'
+        result = red_must_jump? coord, pieces
+      elsif my_color.eql? piece_color and my_color.eql? 'white'
+        result = white_must_jump? coord, pieces
+      end
+      return !result.nil?
+    end
+  end
   private
-    # mapping from 
-    possible_jumps_map = {
-      1=>[10],2=>[9,11],3=>[10,12],4=>[11],
-      5=>[14],6=>[13,15],7=>[14,16],8=>[15],
-      9=>[2,18],10=>[1,3,17,19],11=>[2,4,18,20],12=>[3,19],
-      13=>[6,22],14=>[5,7,21,23],15=>[6,8,22,24],16=>[7,23],
-      17=>[10,26],18=>[9,11,25,27],19=>[10,12,26,28],20=>[11,27],
-      21=>[14,30],22=>[13,15,29,31],23=>[14,16,30,32],24=>[15,31],
-      25=>[18],26=>[17,19],27=>[18,20],28=>[19],
-      29=>[22],30=>[21,23],31=>[22,24],32=>[23]
-    }
+    def possible_jump_destinations from
+      possible_jumps_map = {
+        1=>[10],2=>[9,11],3=>[10,12],4=>[11],
+        5=>[14],6=>[13,15],7=>[14,16],8=>[15],
+        9=>[2,18],10=>[1,3,17,19],11=>[2,4,18,20],12=>[3,19],
+        13=>[6,22],14=>[5,7,21,23],15=>[6,8,22,24],16=>[7,23],
+        17=>[10,26],18=>[9,11,25,27],19=>[10,12,26,28],20=>[11,27],
+        21=>[14,30],22=>[13,15,29,31],23=>[14,16,30,32],24=>[15,31],
+        25=>[18],26=>[17,19],27=>[18,20],28=>[19],
+        29=>[22],30=>[21,23],31=>[22,24],32=>[23]
+      }
+      return possible_jumps_map[from]
+    end 
+
+    def possible_downward_jump_dests from
+      possible_jumps_map = {
+          1=>[10],2=>[9,11],3=>[10,12],4=>[11],
+          5=>[14],6=>[13,15],7=>[14,16],8=>[15],
+          9=>[18],10=>[17,19],11=>[18,20],12=>[19],
+          13=>[22],14=>[21,23],15=>[22,24],16=>[23],
+          17=>[26],18=>[25,27],19=>[26,28],20=>[27],
+          21=>[30],22=>[29,31],23=>[30,32],24=>[31]
+        }
+      return possible_jumps_map[from]
+    end
+    
+    
+    def possible_upward_jump_dests from
+      possible_jumps_map = {
+          9=>[2],10=>[1,3],11=>[2,4],12=>[3],
+          13=>[6],14=>[5,7],15=>[6,8],16=>[7],
+          17=>[10],18=>[9,11],19=>[10,12],20=>[11],
+          21=>[14],22=>[13,15],23=>[14,16],24=>[15],
+          25=>[18],26=>[17,19],27=>[18,20],28=>[19],
+          29=>[22],30=>[21,23],31=>[22,24],32=>[23]
+      }
+      return possible_jumps_map[from]
+    end
 
     def get_board_to_fen_map
       return board_to_fen_map = {
@@ -492,46 +538,30 @@ class Game < ActiveRecord::Base
     row_index = (piece_index - 1) / 4
   end
   
-  def get_possible_red_jump_dests from
-  	possible_jumps_map = {
-        1=>[10],2=>[9,11],3=>[10,12],4=>[11],
-        5=>[14],6=>[13,15],7=>[14,16],8=>[15],
-        9=>[18],10=>[17,19],11=>[18,20],12=>[19],
-        13=>[22],14=>[21,23],15=>[22,24],16=>[23],
-        17=>[26],18=>[25,27],19=>[26,28],20=>[27],
-        21=>[30],22=>[29,31],23=>[30,32],24=>[31]
-      }
-  	return possible_jumps_map[from]
+
+
+  def red_must_jump?(from, pieces)
+    possible_dest = possible_downward_jump_dests from
+    if pieces[from - 1].eql? 2 # king
+      possible_dest = (possible_dest + possible_upward_jump_dests(from)).uniq
+    end
+    possible_dest.each do |to,i|
+      target = valid_jump_destination?(from, to, pieces)
+      if !target.nil? and Game.get_color(pieces[target - 1]).eql? 'white'
+        return true
+      end
+    end
   end
-  
-  
-  def get_possible_white_jump_dests from
-  	possible_jumps_map = {
-        9=>[2],10=>[1,3],11=>[2,4],12=>[3],
-        13=>[6],14=>[5,7],15=>[6,8],16=>[7],
-        17=>[10],18=>[9,11],19=>[10,12],20=>[11],
-        21=>[14],22=>[13,15],23=>[14,16],24=>[15],
-        25=>[18],26=>[17,19],27=>[18,20],28=>[19],
-        29=>[22],30=>[21,23],31=>[22,24],32=>[23]
-  	}
-  	return possible_jumps_map[from]
-  end
-  
-  def must_jumpTest?(from, to)
-    pieces = self.board.split(",").map{|s| s.to_i}
-    # making sure that the proposed move is actual jump
-    return false unless (valid_jump_destination?(from, to, pieces)).nil?
-	
-  	# must loop through for first potential move and return true
-      typeColor = Game.get_color pieces[from - 1]
-  	logger.debug "this from is color #{typeColor}"
-  	pieces.each_with_index do |piece, index|
-  		logger.debug "loop: #{index} #{piece}"
-  		pieceColor = Game.get_color piece
-  		
-  		if typeColor.eql? pieceColor and [-2,2].include? typeColor # this is king
-  			
-  		end
-  	end
+  def white_must_jump?(from, pieces)
+    possible_dest = possible_upward_jump_dests from
+    if pieces[from - 1].eql? 2 # king
+      possible_dest = (possible_dest + possible_downward_jump_dests(from)).uniq
+    end
+    possible_dest.each do |to,i|
+      target = valid_jump_destination?(from, to, pieces)
+      if !target.nil? and Game.get_color(pieces[target - 1]).eql? 'red'
+        return true
+      end
+    end
   end
 end

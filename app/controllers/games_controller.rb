@@ -99,7 +99,7 @@ class GamesController < ApplicationController
     if @game.has_winner?
       # need to automatically direct to game results?
       render :json => {valid: false, :message => "The game is over! Go see box score for details."}
-    elsif @game.must_jump? from, to
+    elsif @game.must_jump_beta? from, to
       render :json => {valid: false, :message => "You must make a jump!", :board => @boardOld}
     else
       # # call game model play
