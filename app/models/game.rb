@@ -550,7 +550,8 @@ class Game < ActiveRecord::Base
 
   def red_must_jump?(from, pieces)
     possible_dest = possible_downward_jump_dests from
-    if pieces[from - 1].eql? 2 # king
+    possible_dest = [] if possible_dest.nil?
+    if pieces[from - 1].eql? 2 and !possible_upward_jump_dests(from).nil?# king
       possible_dest = (possible_dest + possible_upward_jump_dests(from)).uniq
     end
     possible_dest.each do |to,i|
@@ -559,18 +560,22 @@ class Game < ActiveRecord::Base
         return true
       end
     end
+    return false
   end
+
   def white_must_jump?(from, pieces)
     possible_dest = possible_upward_jump_dests from
-    if pieces[from - 1].eql? -2 # king
+    possible_dest = [] if possible_dest.nil?
+    if pieces[from - 1].eql? -2 and !possible_downward_jump_dests(from).nil?# king
       possible_dest = (possible_dest + possible_downward_jump_dests(from)).uniq
     end
     possible_dest.each do |to,i|
       target = valid_jump_destination?(from, to, pieces)
-      if !target.nil? and Game.get_color(pieces[target - 1]).eql? 'red' and pieces[to - 1].eql? 0
+      # must make sure target piece is oppsoite color and to is empty
+      if !target.nil? and (Game.get_color(pieces[target - 1]).eql? 'red') and (pieces[to - 1] == 0)
         return true
       end
     end
-
+    return false
   end
 end
