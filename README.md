@@ -17,4 +17,6 @@ Still buggy and being tested but the game is live at [Heroku](https://gentle-mea
 
 ### TODO
 1. Add styling to game results
-2. fix the read me
+2. Fix the read me
+3. Add multiple jump capability
+4. Review [Rails Security](http://guides.rubyonrails.org/security.html) and [OWASP Rails Cheatsheet](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet)
