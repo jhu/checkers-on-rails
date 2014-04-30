@@ -1,6 +1,6 @@
 # Checkers game (Rails)
 Final project for SWE 681: Secure Software Design
-==========
+
 ### Current Status
 Still buggy and being tested but the game is live at [Heroku](https://gentle-meadow-9245.herokuapp.com/) cloud platform. 
 
