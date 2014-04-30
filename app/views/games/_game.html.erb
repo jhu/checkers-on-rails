@@ -7,8 +7,11 @@
   	<%= "| Winner: #{game.winner.name}" unless game.winner.nil? %>  
   	<% if !game.has_winner? and game.in_game?(current_user)%>
 	  	<%= link_to "Rejoin", rejoin_game_path(game), class: "btn btn-medium btn-primary" %>
+    <% elsif game.need_player? %>
+      <%= link_to "Join", join_game_path(game), class: "btn btn-medium btn-primary" %>
 	  <% elsif !game.ongoing? %>
 	  	<%= link_to "Boxscore", game, class: "btn btn-medium btn-primary" %>
+    <% else %>
 	  <% end %>
   </span>
   <span class="timestamp">

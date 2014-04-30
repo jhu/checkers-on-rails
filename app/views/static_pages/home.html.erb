@@ -1,7 +1,7 @@
 <% if signed_in? %>
   <div class="row">
-    <h1>Profile for <%= @user.name %></h1>
-    <aside class="span2">
+    <h1>Home of <%= @user.name %></h1>
+    <aside class="span3">
       <% if false %>
       <section>
         <%= render 'shared/user_info' %>
@@ -20,10 +20,12 @@
       <ol class="games">
         <%= render(@waiting_ongoing_games) || "There are no active games at the moment." %>
       </ol>
+      <% if false %>
       <h3>Game History <%="(#{@games.count})" unless @games.empty? %></h3>
       <ol class="games">
         <%= render(@games) || "There are no completed games on record." %>
       </ol>
+      <% end %>
     </div>
   </div>
 <% else %>
