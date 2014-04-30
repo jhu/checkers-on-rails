@@ -34,7 +34,7 @@ var sendMove = function (turn, move) {
     contentType: 'application/json',
     mimeType: 'application/json',
     beforeSend: function (xhr) {
-      $("#game-message").html("Sending...").attr('class', 'alert alert-info');
+      $("#game-message").html("Sending...").attr('class', 'text-center alert alert-info');
       lockTheBoard();
       // return xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
     },
@@ -45,19 +45,15 @@ var sendMove = function (turn, move) {
       }
       
       if (data['gameover'] === true) {
-      	
-      	$("#boxscore-link").append(
-      		'<button type="button" id="boxscore-btn" class="btn btn-primary">Game Results</button>'
-      		);
-      	$("#boxscore-btn").click(function(){
-      		location.reload(); 
-      	});
-        return $("#game-message").html(data.message).attr('class', 'alert alert-success');
+      	$("#game-message").html(data.message +"<div id='boxscore-link'/>").attr('class', 'text-center alert alert-info')
+      	$("#boxscore-link").append('<button type="button" id="boxscore-btn" class="btn btn-primary">Game Results</button>');
+      	$("#boxscore-btn").click(function(){location.reload();});
+        return //$("#game-message").html(data.message).attr('class', 'text-center alert alert-success');
       }
 
       if (data.valid) {
         // give up turn and start timer
-        $("#game-message").html(data.message).attr('class', 'alert alert-success');
+        $("#game-message").html(data.message).attr('class', 'text-center alert alert-success');
         lockTheBoard();
         var otherColor = (MY_TURN_COLOR !== 'red' ? 'red' : 'white');
         $("#turn-color").empty().html(otherColor + " turn");
@@ -66,7 +62,7 @@ var sendMove = function (turn, move) {
           sendHeartbeat();
         }, 3000);
       } else {
-        $("#game-message").html(data.message).attr('class', 'alert alert-danger');
+        $("#game-message").html(data.message).attr('class', 'text-center alert alert-danger');
       }
     },
     error: function (data, status, er) {}
@@ -173,10 +169,8 @@ function sendHeartbeat() {
       console.log(data);
       var o = JSON.parse(data);
       if (o['gameover'] === true) {
-      	$("#game-message").html(o.message).attr('class', 'alert alert-info');
-      	$("#boxscore-link").append(
-      		'<button type="button" id="boxscore-btn" class="btn btn-primary">Game Results</button>'
-      		);
+      	$("#game-message").html(o.message +"<div id='boxscore-link'/>").attr('class', 'text-center alert alert-info');
+      	$("#boxscore-link").append('<button type="button" id="boxscore-btn" class="btn btn-primary">Game Results</button>');
       	$("#boxscore-btn").click(function(){
       		location.reload(); 
       	});
@@ -195,12 +189,12 @@ function sendHeartbeat() {
           });
         }
         // stop the heartbeat
-        $("#game-message").html('Your turn!').attr('class', 'alert alert-info');
+        $("#game-message").html('Your turn!').attr('class', 'text-center alert alert-info');
         clearInterval(window.refreshIntervalId);
         populateBoard(o.board);
         // $("#turn-color").empty().html(MY_TURN_COLOR + " turn");
       } else {
-        $("#game-message").html('Wait for your turn').attr('class', 'alert alert-warning');
+        $("#game-message").html('Wait for your turn').attr('class', 'text-center alert alert-warning');
         // lockTheBoard();
         // var otherColor = (MY_TURN_COLOR !== 'red' ? 'red' : 'white');
         // $("#turn-color").empty().html(otherColor + " turn");
