@@ -423,7 +423,11 @@ class Game < ActiveRecord::Base
         # fen = Game.standard_notation(pieces, from)
         # TODO create move and save
         # self.moves.create({movetext: movetext, fen: fen, startpos: from, endpos: to}) 
-        turn = Game.get_color pieces[from-1]
+        if self.turn.eql? 'red'
+          turn = self.red.name
+        else
+          turn = self.white.name
+        end
         self.moves.create({movetext: movetext, board: board, turn: turn}) 
         return fen_board_as_array
       end

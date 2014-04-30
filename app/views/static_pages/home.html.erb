@@ -13,6 +13,9 @@
     </aside>
     <div class="span8">
       <div><%= "Wins: #{@user.win_count} | Losses: #{@user.loss_count}" %></div>
+      <h3>Create a new game</h3>
+      <%-# create a new game here -%>
+      <%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
       <h3>Ongoing and Waiting Games <%="(#{@waiting_ongoing_games.count})" unless @waiting_ongoing_games.empty? %></h3>
       <ol class="games">
         <%= render(@waiting_ongoing_games) || "There are no active games at the moment." %>
