@@ -45,6 +45,13 @@ var sendMove = function (turn, move) {
       }
       
       if (data['gameover'] === true) {
+      	
+      	$("#boxscore-link").append(
+      		'<button type="button" id="boxscore-btn" class="btn btn-primary">Game Results</button>'
+      		);
+      	$("#boxscore-btn").click(function(){
+      		location.reload(); 
+      	});
         return $("#game-message").html(data.message).attr('class', 'alert alert-success');
       }
 
@@ -165,6 +172,18 @@ function sendHeartbeat() {
     success: function (data) {
       console.log(data);
       var o = JSON.parse(data);
+      if (o['gameover'] === true) {
+      	$("#game-message").html(o.message).attr('class', 'alert alert-info');
+      	$("#boxscore-link").append(
+      		'<button type="button" id="boxscore-btn" class="btn btn-primary">Game Results</button>'
+      		);
+      	$("#boxscore-btn").click(function(){
+      		location.reload(); 
+      	});
+      	populateBoard(o.board);
+      	clearInterval(window.refreshIntervalId);
+      	return;
+      }
       if (o.myturn) {
         if(!started){
           $.ajax({

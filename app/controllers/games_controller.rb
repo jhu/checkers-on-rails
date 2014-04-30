@@ -98,7 +98,7 @@ class GamesController < ApplicationController
     # check if the game is over
     if @game.has_winner?
       # need to automatically direct to game results?
-      render :json => {valid: false, :message => "The game is over! Go see box score for details."}
+      render :json => {valid: false, :message => "The game is over! Go see game page for results."}
     elsif @game.must_jump_beta? from, to
       render :json => {valid: false, :message => "You must make a jump!", :board => @boardOld}
     else
@@ -111,7 +111,7 @@ class GamesController < ApplicationController
         if @game.game_over?(@game.turn)
           @game.update(winner:current_user)
           render :json => {valid: true, :board => @board, :turn => @game.turn,
-            :message => "#{@game.winner.name} is declared a winner! Go to here to see results", :gameover => true}
+            :message => "#{@game.winner.name} is declared a winner! Click button below to see game results.", :gameover => true}
         else
           @game.update_next_turn
           render :json => {valid: true, :board => @board, :turn => @game.turn,
@@ -126,8 +126,10 @@ class GamesController < ApplicationController
   def myturn #heartbeat that also blocks if game has not yet started
     if @game.my_turn?(current_user) and @game.ongoing?
       render :json => {:board => @game.fen_board_as_array, :myturn => true}
-    else
+    elsif @game.ongoing?
       render :json => {:myturn => false}
+    elsif @game.has_winner?
+      render :json => {:board => @game.fen_board_as_array, :message => "#{@game.winner.name} is declared a winner! Click button below to see game results.", :gameover => true}
     end
   end
 

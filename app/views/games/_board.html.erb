@@ -10,7 +10,8 @@
 
 <h1>Checkers</h1>
 <div id='match-title'><%= render partial: "matchtitle" %></div>
-<%= content_tag(:div, "Wait for your turn", class: "alert alert-warning", id:"game-message") %>
+<%= content_tag(:div, "Wait for your turn", class: "text-center alert alert-warning", id:"game-message") %>
+<%= content_tag(:div, "", id:"boxscore-link") %>
 
 <div id="board-container">
     <table id="board" style="text-align:center;">
