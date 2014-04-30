@@ -267,26 +267,34 @@ class Game < ActiveRecord::Base
   def self.kinged(piece)
     return piece > 0 ? 2 : -2
   end
+
   def must_jump_beta?(from, to)
     pieces = self.board.split(",").map{|s| s.to_i}
-    # making sure that the proposed move is actual jump
-    return false unless (valid_jump_destination?(from, to, pieces)).nil?
-  
-    # must loop through for first potential move and return true
     my_color = Game.get_color pieces[from - 1]
+
+    # making sure that the proposed move is actual jump
+    target = valid_jump_destination?(from, to, pieces)
+    if my_color.eql? 'red' and !target.nil?
+      return false if Game.get_color(pieces[target - 1]).eql? 'white'
+    elsif my_color.eql? 'white' and !target.nil?
+      return false if Game.get_color(pieces[target - 1]).eql? 'red'
+    end
+
+    # must loop through for first potential move and return true
     logger.debug "this from is color #{my_color}"
     pieces.each_with_index do |piece, coord|
-      logger.debug "loop: #{coord} #{piece}"
+      logger.debug "loop: #{coord+1} #{piece}"
       piece_color = Game.get_color piece
-
+      logger.debug "possible from color #{piece_color}"
       if my_color.eql? piece_color and my_color.eql? 'red'
-        result = red_must_jump? coord, pieces
-      elsif my_color.eql? piece_color and my_color.eql? 'white'
-        result = white_must_jump? coord, pieces
+        return true if red_must_jump?(coord+1, pieces)
+      elsif !piece_color.nil? and my_color.eql? piece_color and my_color.eql? 'white'
+        return true if white_must_jump?(coord+1, pieces)
       end
-      return !result.nil?
     end
+    return false
   end
+
   private
     def possible_jump_destinations from
       possible_jumps_map = {
@@ -547,21 +555,22 @@ class Game < ActiveRecord::Base
     end
     possible_dest.each do |to,i|
       target = valid_jump_destination?(from, to, pieces)
-      if !target.nil? and Game.get_color(pieces[target - 1]).eql? 'white'
+      if !target.nil? and Game.get_color(pieces[target - 1]).eql? 'white' and pieces[to - 1].eql? 0
         return true
       end
     end
   end
   def white_must_jump?(from, pieces)
     possible_dest = possible_upward_jump_dests from
-    if pieces[from - 1].eql? 2 # king
+    if pieces[from - 1].eql? -2 # king
       possible_dest = (possible_dest + possible_downward_jump_dests(from)).uniq
     end
     possible_dest.each do |to,i|
       target = valid_jump_destination?(from, to, pieces)
-      if !target.nil? and Game.get_color(pieces[target - 1]).eql? 'red'
+      if !target.nil? and Game.get_color(pieces[target - 1]).eql? 'red' and pieces[to - 1].eql? 0
         return true
       end
     end
+
   end
 end
