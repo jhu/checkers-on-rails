@@ -10,7 +10,7 @@ Still buggy and being tested but the game is live at my Heroku cloud platform. E
 2. To install gem packages, run `bundle install`
 3. To intialize the database, run `rake db:setup`
 4. Optional: To generate fake data for the database, run `rake db:populate` use `--trace` tag if it failed.
-5. To start rails server `rails s` (Default port number is 3000 but you can specify port number by using `-p XXXX' flag where XXXX being any value) 
+5. To start rails server `rails s` (Default port number is 3000 but you can specify port number by using `-p X` flag where X being any value) 
 6. Navigate to `localhost:3000` 
 
 *Important*: Be sure to change the `admin` username password as it defaults to `Admin123` when deploying this app for first time!
