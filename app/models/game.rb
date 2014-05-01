@@ -2,7 +2,7 @@ class Game < ActiveRecord::Base
   belongs_to :white, class_name: 'User', :foreign_key => 'white_id'
   belongs_to :red,  class_name: 'User', :foreign_key => 'red_id'
   belongs_to :winner,  class_name: 'User', :foreign_key => 'winner_id'
-  has_many :moves
+  has_many :moves, dependent: :destroy
   default_scope -> { order('created_at DESC') }
 
   def get_turn_color user

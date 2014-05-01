@@ -1,9 +1,9 @@
 <li>
-	<%= link_to user.name, user %>
-	Wins: <%= user.win_count %> 
-	Losses: <%= user.loss_count %> 
+	<%= link_to user.name, user %> | Wins: <%= user.win_count %> | Losses: <%= user.loss_count %> 
+	<% if false %>
 	<% if current_user.admin? && !current_user?(user) %>
   	| <%= link_to "delete", user, method: :delete,
                                   data: { confirm: "You sure?" } %>
+  <% end %>
   <% end %>
 </li>

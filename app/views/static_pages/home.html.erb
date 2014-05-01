@@ -1,6 +1,6 @@
 <% if signed_in? %>
   <div class="row">
-    <h1>Home Room for <%= @user.name %></h1>
+    <h1>Play Room for <%= @user.name %></h1>
     <aside class="span3">
       
       <section>
@@ -11,7 +11,7 @@
       </section>
       
     </aside>
-    <div class="span8">
+    <div class="span9">
       <% if false %><div><%= "Wins: #{@user.win_count} | Losses: #{@user.loss_count}" %></div><% end %>
       <h3>Create a new game</h3>
       <%-# create a new game here -%>

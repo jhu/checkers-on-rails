@@ -1,8 +1,8 @@
 CheckersApp::Application.routes.draw do
-  resources :users
+  resources :users, except: :destroy
   resources :sessions, only: [:new, :create, :destroy]
   #get 'creategame', to: 'games#create', via: 'get'
-  resources :games, except: [:create, :edit, :destroy] do
+  resources :games, except: [:create, :edit] do
     member do
       get 'myturn' # myturn_game_path heartbeat
       post :play

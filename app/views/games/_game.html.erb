@@ -13,6 +13,11 @@
 	  	<%= link_to "Boxscore", game, class: "btn btn-medium btn-primary" %>
     <% else %>
 	  <% end %>
+    <% if current_user.admin? %>
+      <%= link_to "delete", game, method: :delete,
+                                    data: { confirm: "You sure?" },
+                                    class: "btn btn-medium btn-primary" %>
+    <% end %>
   </span>
   <span class="timestamp">
     Started <%= time_ago_in_words(game.created_at) %> ago.

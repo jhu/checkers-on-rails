@@ -1,18 +1,19 @@
 class GamesController < ApplicationController
   include ActionController::Live
-  before_action :signed_in_user
-  before_action :correct_user,        only: [:index, :show, :update]
+  before_action :signed_in_user,      only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title, :destroy]
+  before_action :correct_user,        only: [:index, :show, :update, :destroy]
   before_action :find_game,           only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title]
   before_action :correct_player,      only: [:show, :play, :myturn]
   before_action :correct_turn,        only: :play
   before_action :validate_movetext,   only: :play
+  before_action :admin_user,          only: :destroy
 
   # need to check if it is correct user playing this game
   # otherwise anyone can see played games
   def index
   	# @waitinggames = Game.where("red_id is null or white_id is null")
     # @count = current_user.waiting_and_ongoing_games.count
-    @games = Game.paginate(page: params[:page], per_page: 15).where("winner_id is not null") 
+    @games = Game.paginate(page: params[:page], per_page: 15).where("winner_id is not null").where("white_id is not null").where("red_id is not null")
   end
 
   def new
@@ -40,8 +41,11 @@ class GamesController < ApplicationController
   #def create
   #end
 
-  #def destroy
-  #end
+  def destroy
+    Game.find(params[:id]).destroy
+    flash[:success] = "Game deleted."
+    redirect_to games_url
+  end
 
   def update # intentionally join method
   	# need to join the waiting game
@@ -57,7 +61,7 @@ class GamesController < ApplicationController
         redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"}
       elsif @game.white.nil? ? @game.update(white:current_user, active:true) # todo: fix this
         : @game.update(red:current_user, active:true) 
-        redirect_to @game, flash: {success: "You have joined this game!"}
+        redirect_to @game#, flash: {success: "You have joined this game!"}
       else
         # unable to join
         redirect_to games_path, flash: {error: "can't join!"}
@@ -233,6 +237,10 @@ class GamesController < ApplicationController
       end
     end
 
+    def admin_user
+      redirect_to(root_url) unless current_user.admin?
+    end
+=begin
     #### move/jump valdation
     def makeMoves(board,side)
     @plays = Array.new
@@ -389,5 +397,5 @@ class GamesController < ApplicationController
     puts "Data for moves" + @moves.to_s
     #makeMoves(board) || makeJumps(board)
   end
-
+=end
 end

@@ -11,14 +11,15 @@
     </section>
   </aside>
 
-  <div class="span8">
+  <div class="span9">
   	<%= will_paginate %>
 
 		<ul class="users">
-			<%= render @games %>
+			<%= render @games || "There are no completed games on record." %>
 		</ul>
 
 		<%= will_paginate %>
+
   	<% if false %>
 		<h3>Create a new game</h3>
 		<%-# create a new game here -%>
@@ -44,5 +45,6 @@
 			<h2>No games</h2>
 		<% end %>
 		<% end %>
+
   </div>
 </div>
