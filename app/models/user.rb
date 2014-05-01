@@ -11,8 +11,8 @@ class User < ActiveRecord::Base
   #validates_format_of :name, with: ->(user) { user.admin? ? /\A[a-z0-9][a-z0-9_\-]*\z/i : /\A[a-z][a-z0-9_\-]*\z/i }
 
   validates :name, presence: true,
-                    #format: { with: VALID_USERNAME_REGEX, 
-                    #message: "must be between 6 and 25 characters that contains alphanumeric and must begin with alphabetic"},
+                    format: { with: VALID_USERNAME_REGEX, 
+                    message: "must be between 6 and 25 characters that contains alphanumeric and must begin with alphabetic"},
                     uniqueness: { case_sensitive: false }
 
   has_secure_password

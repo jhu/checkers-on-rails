@@ -10,12 +10,12 @@ namespace :db do
 end
 
 def make_users
-  User.create!(name: "admin",
-               password: "Password1",
-               password_confirmation: "Password1",
-               admin: true)
+  # User.create!(name: "admin",
+  #              password: "Password1",
+  #              password_confirmation: "Password1",
+  #              admin: true)
   25.times do |n|
-    name = Faker::Internet.user_name(nil, %w()) + "#{rand(1..30)}"
+    name = Faker::Internet.user_name(nil, %w()) + "#{rand(100...999)}"
     password  = "Password1"
     User.create!(name: name,
                  password: password,
