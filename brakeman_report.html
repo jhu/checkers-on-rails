@@ -1,0 +1,1974 @@
+<!DOCTYPE HTML SYSTEM>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Brakeman Report</title>
+  <script>
+    function toggle(context) {
+      var elem = document.getElementById(context);
+
+      if (elem.style.display != "block")
+        elem.style.display = "block";
+      else
+        elem.style.display = "none";
+
+      elem.parentNode.scrollIntoView();
+    }
+  </script>
+  <style>
+    /* CSS style used for HTML reports */
+
+body {
+  font-family: sans-serif;
+  color: #161616;
+}
+
+a {
+  color: #161616;
+}
+
+p {
+  font-weight: bold;
+  font-size: 11pt;
+  color: #2D0200;
+ }
+
+ th {
+   background-color: #980905;
+   border-bottom: 5px solid #530200;
+   color: white;
+   font-size: 11pt;
+   padding: 1px 8px 1px 8px;
+ }
+
+ td {
+   border-bottom: 2px solid white;
+   font-family: monospace;
+   padding: 5px 8px 1px 8px;
+ }
+
+ table {
+   background-color: #FCF4D4;
+   border-collapse: collapse;
+ }
+
+ h1 {
+   color: #2D0200;
+   font-size: 14pt;
+ }
+
+ h2 {
+   color: #2D0200;
+   font-size: 12pt;
+ }
+
+ span.high-confidence {
+   font-weight:bold;
+   color: red;
+ }
+
+ span.med-confidence {
+ }
+
+ span.weak-confidence {
+   color:gray;
+ }
+
+ div.warning_message {
+   cursor: pointer;
+ }
+
+ div.warning_message:hover {
+   background-color: white;
+ }
+
+ table caption {
+   background-color: #FFE;
+   padding: 2px;
+ }
+
+ table.context {
+   margin-top: 5px;
+   margin-bottom: 5px;
+   border-left: 1px solid #90e960;
+   color: #212121;
+ }
+
+ tr.context {
+   background-color: white;
+ }
+
+ tr.first {
+   border-top: 1px solid #7ecc54;
+   padding-top: 2px;
+ }
+
+ tr.error {
+  background-color: #f4c1c1 !important
+ }
+
+ tr.near_error {
+  background-color: #f4d4d4 !important
+ }
+
+ tr.alt {
+   background-color: #e8f4d4;
+ }
+
+ td.context {
+   padding: 2px 10px 0px 6px;
+   border-bottom: none;
+ }
+
+ td.context_line {
+   padding: 2px 8px 0px 7px;
+   border-right: 1px solid #b3bda4;
+   border-bottom: none;
+   color: #6e7465;
+ }
+
+ pre.context {
+   margin-bottom: 1px;
+ }
+
+ .user_input {
+   background-color: #fcecab;
+ }
+
+ div.render_path {
+   display: none;
+   background-color: #ffe;
+   padding: 5px;
+   margin: 2px 0px 2px 0px;
+ }
+
+ div.template_name {
+   cursor: pointer;
+ }
+
+ div.template_name:hover {
+   background-color: white;
+ }
+
+  </style>
+</head>
+<body>
+
+<h1>Brakeman Report</h1>
+<table>
+  <tr>
+    <th>Application Path</th>
+    <th>Rails Version</th>
+    <th>Brakeman Version</th>
+    <th>Report Time</th>
+    <th>Checks Performed</th>
+  </tr>
+  <tr>
+    <td>/Users/johnson/workspace/rails-apps/checkers_app</td>
+    <td>4.0.4</td>
+    <td>2.4.3
+    <td>
+      2014-05-01 07:31:02 -0400<br><br>
+      0.772904 seconds
+    </td>
+    <td>BasicAuth, ContentTag, CrossSiteScripting, DefaultRoutes, Deserialize, DetailedExceptions, DigestDoS, EscapeFunction, Evaluation, Execute, FileAccess, FilterSkipping, ForgerySetting, HeaderDoS, I18nXSS, JRubyXML, JSONParsing, LinkTo, LinkToHref, MailTo, MassAssignment, ModelAttrAccessible, ModelAttributes, ModelSerialize, NestedAttributes, NumberToCurrency, QuoteTableName, Redirect, Render, RenderDoS, ResponseSplitting, SQL, SSLVerify, SafeBufferManipulation, SanitizeMethods, SelectTag, SelectVulnerability, Send, SendFile, SessionSettings, SimpleFormat, SingleQuotes, SkipBeforeFilter, StripTags, SymbolDoS, TranslateBug, UnsafeReflection, ValidationRegex, WithoutProtection, YAMLParsing</td>
+  </tr>
+</table>
+<br>
+<h2 id='summary'>Summary</h2>
+<table>
+  <tr>
+    <th>Scanned/Reported</th>
+    <th>Total</th>
+  </tr>
+  <tr>
+    <td>Controllers</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>Models</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>Templates</td>
+    <td>28</td>
+  </tr>
+  <tr>
+    <td>Errors</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>Security Warnings</td>
+    <td>0 <span class='high-confidence'>(0)</span></td>
+  </tr>
+  
+  <tr>
+    <td>Ignored Warnings</td>
+    <td>0</td>
+  </tr>
+  
+</table>
+<br>
+<h2>Controllers</h2>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Parent</th>
+    <th>Includes</th>
+    <th>Routes</th>
+  </tr>
+
+  <tr>
+    <td>ApplicationController</td>
+    <td>ActionController::Base</td>
+    <td>SessionsHelper, GamesHelper</td>
+    <td>[None]</td>
+  </tr>
+
+  <tr>
+    <td>GamesController</td>
+    <td>ApplicationController</td>
+    <td>ActionController::Live</td>
+    <td>destroy, index, join, myturn, new, play, rejoin, show, update, update_match_title</td>
+  </tr>
+
+  <tr>
+    <td>MovesController</td>
+    <td>ApplicationController</td>
+    <td></td>
+    <td>[None]</td>
+  </tr>
+
+  <tr>
+    <td>SessionsController</td>
+    <td>ApplicationController</td>
+    <td></td>
+    <td>create, destroy, new</td>
+  </tr>
+
+  <tr>
+    <td>StaticPagesController</td>
+    <td>ApplicationController</td>
+    <td></td>
+    <td>about, contact, help</td>
+  </tr>
+
+  <tr>
+    <td>UsersController</td>
+    <td>ApplicationController</td>
+    <td></td>
+    <td>create, edit, index, new, show, update</td>
+  </tr>
+
+</table><h2>Templates</h2>
+
+
+
+<p>games/_board</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;1&quot;])</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;2&quot;])</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;-1&quot;])</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;-2&quot;])</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;1&quot;], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;2&quot;], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;-1&quot;], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;-2&quot;], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] @turn</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] javascript_tag do; [Escaped Output] image_tag(@pieceImages[&quot;1&quot;]);[Escaped Output] image_tag(@pieceImages[&quot;2&quot;]);[Escaped Output] image_tag(@pieceImages[&quot;-1&quot;]);[Escaped Output] image_tag(@pieceImages[&quot;-2&quot;]);[Escaped Output] image_tag(@pieceImages[&quot;1&quot;], :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(@pieceImages[&quot;2&quot;], :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(@pieceImages[&quot;-1&quot;], :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(@pieceImages[&quot;-2&quot;], :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] @turn; end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;matchtitle&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:div, &quot;Wait for your turn&quot;, :class =&gt; &quot;text-center alert alert-warning&quot;, :id =&gt; &quot;game-message&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (&quot;y&quot; + (local y).to_s)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (&quot;x&quot; + (local x).to_s)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@location, :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@location, :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@location)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_board.["GamesController#show", "Template:games/show"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(&quot;pr.png&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(&quot;kr.png&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(&quot;pw.png&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(&quot;kw.png&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(&quot;pr.png&quot;, :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(&quot;kr.png&quot;, :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(&quot;pw.png&quot;, :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(&quot;kw.png&quot;, :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] @game.get_turn_color(current_user)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] javascript_tag do; [Escaped Output] image_tag(&quot;pr.png&quot;);[Escaped Output] image_tag(&quot;kr.png&quot;);[Escaped Output] image_tag(&quot;pw.png&quot;);[Escaped Output] image_tag(&quot;kw.png&quot;);[Escaped Output] image_tag(&quot;pr.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;kr.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;pw.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;kw.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] @game.get_turn_color(current_user); end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;matchtitle&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:div, &quot;Wait for your turn&quot;, :class =&gt; &quot;text-center alert alert-warning&quot;, :id =&gt; &quot;game-message&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (&quot;y&quot; + (local y).to_s)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (&quot;x&quot; + (local x).to_s)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[@game.fen_board_as_array[(local y)][(local x)].to_s], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[@game.fen_board_as_array[(local y)][(local x)].to_s], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[@game.fen_board_as_array[(local y)][(local x)].to_s])</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_board.["Template:games/show"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;1&quot;])</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;2&quot;])</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;-1&quot;])</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;-2&quot;])</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;1&quot;], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;2&quot;], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;-1&quot;], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[&quot;-2&quot;], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] @turn</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] javascript_tag do; [Escaped Output] image_tag(@pieceImages[&quot;1&quot;]);[Escaped Output] image_tag(@pieceImages[&quot;2&quot;]);[Escaped Output] image_tag(@pieceImages[&quot;-1&quot;]);[Escaped Output] image_tag(@pieceImages[&quot;-2&quot;]);[Escaped Output] image_tag(@pieceImages[&quot;1&quot;], :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(@pieceImages[&quot;2&quot;], :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(@pieceImages[&quot;-1&quot;], :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(@pieceImages[&quot;-2&quot;], :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] @turn; end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;matchtitle&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:div, &quot;Wait for your turn&quot;, :class =&gt; &quot;text-center alert alert-warning&quot;, :id =&gt; &quot;game-message&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (&quot;y&quot; + (local y).to_s)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (&quot;x&quot; + (local x).to_s)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[@board[(local y)][(local x)].to_s], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[@board[(local y)][(local x)].to_s], :class =&gt; &quot;dojoDndItem&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] image_tag(@pieceImages[@board[(local y)][(local x)].to_s])</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_game</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] game.id</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Red: #{game.red.name}&quot; unless game.red.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;vs.&quot; if game.is_full?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;White: #{game.white.name}&quot; unless game.white.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;| Winner: #{game.winner.name}&quot; unless game.winner.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Rejoin&quot;, rejoin_game_path(game), :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Join&quot;, join_game_path(game), :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Boxscore&quot;, game, :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;delete&quot;, game, :method =&gt; :delete, :data =&gt; ({ :confirm =&gt; &quot;You sure?&quot; }), :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] time_ago_in_words(game.created_at)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_game_results</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] @game.id</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Red: #{@game.red.name}&quot; unless @game.red.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;White: #{@game.white.name}&quot; unless @game.white.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Winner: #{@game.winner.name}&quot; unless @game.winner.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Game Moves&quot; if @moves.any?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(action =&gt; @moves, {})</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_game_results.["GamesController#show", "Template:games/show"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] @game.id</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Red: #{@game.red.name}&quot; unless @game.red.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;White: #{@game.white.name}&quot; unless @game.white.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Winner: #{@game.winner.name}&quot; unless @game.winner.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Game Moves&quot; if @game.moves.any?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(action =&gt; @game.moves, {})</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_game_results.["Template:games/show"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] @game.id</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Red: #{@game.red.name}&quot; unless @game.red.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;White: #{@game.white.name}&quot; unless @game.white.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Winner: #{@game.winner.name}&quot; unless @game.winner.nil?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Game Moves&quot; if @moves.any?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(action =&gt; @moves, {})</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_matchtitle</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h3, &quot;Red: #{@game.red.name} Vs. White: #{@game.white.name}&quot;, :id =&gt; &quot;player-vs-player&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h3, &quot;No opponent yet&quot;, :id =&gt; &quot;player-vs-player&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_matchtitle.["Template:games/_board"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h3, &quot;Red: #{@game.red.name} Vs. White: #{@game.white.name}&quot;, :id =&gt; &quot;player-vs-player&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h3, &quot;No opponent yet&quot;, :id =&gt; &quot;player-vs-player&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_ongoing_game</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Rejoin&quot;, @ongoing_game, :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/index</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] will_paginate</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(action =&gt; (@games or &quot;There are no completed games on record.&quot;), {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] will_paginate</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;New game&quot;, new_game_path, :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local game).id</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local game).red.nil? ? ((local game).white.name) : ((local game).red.name)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Join&quot;, join_game_path((local game).id), :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] time_ago_in_words((local game).created_at)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/index.["GamesController#index"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] will_paginate</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(action =&gt; (Game.paginate(:page =&gt; (params[:page]), :per_page =&gt; 15).where(&quot;winner_id is not null&quot;).where(&quot;white_id is not null&quot;).where(&quot;red_id is not null&quot;) or &quot;There are no completed games on record.&quot;), {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] will_paginate</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/show</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h1, &quot;Game Results&quot;) if @game.has_winner?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h1, &quot;Play!&quot;) if (@game.waiting? or @game.ongoing?)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;board&quot;, {}) if (@game.waiting? or @game.ongoing?)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;game_results&quot;, {}) if @game.has_winner?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;wait_mode&quot;, {}) if @game.waiting?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;play_mode&quot;, {}) if @game.ongoing?</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/show.["GamesController#show"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h1, &quot;Game Results&quot;) if @game.has_winner?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h1, &quot;Play!&quot;) if (@game.waiting? or @game.ongoing?)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;board&quot;, {}) if (@game.waiting? or @game.ongoing?)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;game_results&quot;, {}) if @game.has_winner?</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/update_match_title</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] j(render(partial =&gt; &quot;matchtitle&quot;, {}))</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] escape_javascript(render(partial =&gt; &quot;matchtitle&quot;, {})).html_safe</td>
+  </tr>
+  
+</table>
+
+
+
+<p>layouts/_footer</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Johnson&quot;, contact_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;About&quot;, about_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Contact&quot;, contact_path)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>layouts/_footer.["Template:layouts/application"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Johnson&quot;, contact_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;About&quot;, about_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Contact&quot;, contact_path)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>layouts/_header</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;checkers game app&quot;, root_path, :id =&gt; &quot;logo&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Home&quot;, root_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Help&quot;, help_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Users&quot;, users_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Games&quot;, games_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Profile&quot;, current_user)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Settings&quot;, edit_user_path(current_user))</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Sign out&quot;, signout_path, :method =&gt; &quot;delete&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Sign in&quot;, signin_path)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>layouts/_header.["Template:layouts/application"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;checkers game app&quot;, root_path, :id =&gt; &quot;logo&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Home&quot;, root_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Help&quot;, help_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Users&quot;, users_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Games&quot;, games_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Profile&quot;, current_user)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Sign out&quot;, signout_path, :method =&gt; &quot;delete&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Sign in&quot;, signin_path)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>layouts/application</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] favicon_link_tag</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] full_title(yield(:title))</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] stylesheet_link_tag(&quot;application&quot;, :media =&gt; &quot;all&quot;, &quot;data-turbolinks-track&quot; =&gt; (true))</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] javascript_include_tag(&quot;application&quot;, &quot;data-turbolinks-track&quot; =&gt; (true))</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] yield(:player)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] csrf_meta_tags</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;layouts/shim&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;layouts/header&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local key)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local value)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] yield</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;layouts/footer&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] debug(params) if Rails.env.development?</td>
+  </tr>
+  
+</table>
+
+
+
+<p>layouts/application.["GamesController#index"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] favicon_link_tag</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] full_title(yield(:title))</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] stylesheet_link_tag(&quot;application&quot;, :media =&gt; &quot;all&quot;, &quot;data-turbolinks-track&quot; =&gt; (true))</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] javascript_include_tag(&quot;application&quot;, &quot;data-turbolinks-track&quot; =&gt; (true))</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] yield(:player)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] csrf_meta_tags</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;layouts/shim&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;layouts/header&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local key)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local value)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] yield</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;layouts/footer&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] debug(params) if Rails.env.development?</td>
+  </tr>
+  
+</table>
+
+
+
+<p>moves/_move</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Turn: #{move.turn} | Movetext: #{move.movetext} | Board: #{move.board}&quot;</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] move.created_at</td>
+  </tr>
+  
+</table>
+
+
+
+<p>sessions/new</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).label(:name, &quot;Username&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).text_field(:name)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).label(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).password_field(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).submit(&quot;Sign in&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] form_for(:session, :url =&gt; (sessions_path)) do; [Escaped Output] (local f).label(:name, &quot;Username&quot;);[Escaped Output] (local f).text_field(:name);[Escaped Output] (local f).label(:password);[Escaped Output] (local f).password_field(:password);[Escaped Output] (local f).submit(&quot;Sign in&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Sign up now!&quot;, signup_path)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>sessions/new.["SessionsController#new"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.text_field(:name)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.password_field(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.submit(&quot;Sign in&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] form_for(:session, :url =&gt; (sessions_path)) do; [Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;);[Escaped Output] FormBuilder.new.text_field(:name);[Escaped Output] FormBuilder.new.label(:password);[Escaped Output] FormBuilder.new.password_field(:password);[Escaped Output] FormBuilder.new.submit(&quot;Sign in&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Sign up now!&quot;, signup_path)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_error_messages</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] pluralize(@user.errors.count, &quot;error&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local msg)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_error_messages.["Template:users/edit"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] pluralize(@user.errors.count, &quot;error&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local msg)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_error_messages.["UsersController#create", "Template:users/new"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] pluralize(User.new(user_params).errors.count, &quot;error&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local msg)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_error_messages.["UsersController#new", "Template:users/new"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] pluralize(User.new.errors.count, &quot;error&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local msg)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_stats</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.win_count</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.loss_count</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_stats.["StaticPagesController#home", "Template:static_pages/home"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.win_count</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.loss_count</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_stats.["Template:games/index"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.win_count</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.loss_count</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_stats.["UsersController#show", "Template:users/show"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.win_count</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.loss_count</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_user_info</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.name</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;view my profile&quot;, current_user)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>shared/_user_info.["Template:games/index"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.name</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;view my profile&quot;, current_user)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>static_pages/about</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;wiki&quot;, &quot;http://en.wikipedia.org/wiki/English_draughts&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>static_pages/about.["StaticPagesController#about"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;wiki&quot;, &quot;http://en.wikipedia.org/wiki/English_draughts&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>static_pages/contact</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] mail_to(&quot;#&quot;, &quot;Johnson&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>static_pages/contact.["StaticPagesController#contact"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] mail_to(&quot;#&quot;, &quot;Johnson&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>static_pages/home</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] @user.name</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Wins: #{@user.win_count} | Losses: #{@user.loss_count}&quot;</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;New game&quot;, new_game_path, :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;(#{@waiting_ongoing_games.count})&quot; unless @waiting_ongoing_games.empty?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; @waiting_ongoing_games, {}) or &quot;You do not have any active games at the moment.&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;(#{@games.count})&quot; unless @games.empty?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; @games, {}) or &quot;There are no games you can join.&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;(#{@games.count})&quot; unless @games.empty?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; @games, {}) or &quot;There are no completed games on record.&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Sign up now!&quot;, signup_path, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(image_tag(&quot;Norman_Bethune_checkers_1937.jpg&quot;, :alt =&gt; &quot;Checkers&quot;, :class =&gt; &quot;img-rounded&quot;), &quot;http://simple.wikipedia.org/wiki/Checkers&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>static_pages/home.["StaticPagesController#home"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] current_user.name</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;New game&quot;, new_game_path, :class =&gt; &quot;btn btn-medium btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] unless current_user.waiting_and_ongoing_games.empty? then; &quot;(#{current_user.waiting_and_ongoing_games.count})&quot;;end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; current_user.waiting_and_ongoing_games, {}) or &quot;You do not have any active games at the moment.&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] unless Game.find(:all, :conditions =&gt; ({ :active =&gt; (false), :winner_id =&gt; (nil) })).empty? then; &quot;(#{Game.find(:all, :conditions =&gt; ({ :active =&gt; (false), :winner_id =&gt; (nil) })).count})&quot;;end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; Game.find(:all, :conditions =&gt; ({ :active =&gt; (false), :winner_id =&gt; (nil) })), {}) or &quot;There are no games you can join.&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Sign up now!&quot;, signup_path, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(image_tag(&quot;Norman_Bethune_checkers_1937.jpg&quot;, :alt =&gt; &quot;Checkers&quot;, :class =&gt; &quot;img-rounded&quot;), &quot;http://simple.wikipedia.org/wiki/Checkers&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/_user</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(user.name, user)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] user.win_count</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] user.loss_count</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;delete&quot;, user, :method =&gt; :delete, :data =&gt; ({ :confirm =&gt; &quot;You sure?&quot; }))</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/edit</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).label(:name, &quot;Username&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).text_field(:name)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).label(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).password_field(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).label(:password_confirmation, &quot;Confirm Password&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).password_field(:password_confirmation)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).submit(&quot;Save changes&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] form_for(@user) do; [Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {});[Escaped Output] (local f).label(:name, &quot;Username&quot;);[Escaped Output] (local f).text_field(:name);[Escaped Output] (local f).label(:password);[Escaped Output] (local f).password_field(:password);[Escaped Output] (local f).label(:password_confirmation, &quot;Confirm Password&quot;);[Escaped Output] (local f).password_field(:password_confirmation);[Escaped Output] (local f).submit(&quot;Save changes&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/edit.["UsersController#edit"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.text_field(:name)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.password_field(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:password_confirmation, &quot;Confirm Password&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.password_field(:password_confirmation)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.submit(&quot;Save changes&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] form_for(@user) do; [Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {});[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;);[Escaped Output] FormBuilder.new.text_field(:name);[Escaped Output] FormBuilder.new.label(:password);[Escaped Output] FormBuilder.new.password_field(:password);[Escaped Output] FormBuilder.new.label(:password_confirmation, &quot;Confirm Password&quot;);[Escaped Output] FormBuilder.new.password_field(:password_confirmation);[Escaped Output] FormBuilder.new.submit(&quot;Save changes&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/index</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] will_paginate</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(action =&gt; @users, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] will_paginate</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/index.["UsersController#index"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] will_paginate</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(action =&gt; User.paginate(:page =&gt; (params[:page]), :per_page =&gt; 15).where(:admin =&gt; (false)), {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] will_paginate</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/new</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).label(:name, &quot;Username&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).text_field(:name)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).label(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).password_field(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).label(:password_confirmation, &quot;Confirm Password&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).password_field(:password_confirmation)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (local f).submit(&quot;Create my account&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] form_for(@user) do; [Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {});[Escaped Output] (local f).label(:name, &quot;Username&quot;);[Escaped Output] (local f).text_field(:name);[Escaped Output] (local f).label(:password);[Escaped Output] (local f).password_field(:password);[Escaped Output] (local f).label(:password_confirmation, &quot;Confirm Password&quot;);[Escaped Output] (local f).password_field(:password_confirmation);[Escaped Output] (local f).submit(&quot;Create my account&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/new.["UsersController#create"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.text_field(:name)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.password_field(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:password_confirmation, &quot;Confirm Password&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.password_field(:password_confirmation)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.submit(&quot;Create my account&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] form_for(User.new(user_params)) do; [Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {});[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;);[Escaped Output] FormBuilder.new.text_field(:name);[Escaped Output] FormBuilder.new.label(:password);[Escaped Output] FormBuilder.new.password_field(:password);[Escaped Output] FormBuilder.new.label(:password_confirmation, &quot;Confirm Password&quot;);[Escaped Output] FormBuilder.new.password_field(:password_confirmation);[Escaped Output] FormBuilder.new.submit(&quot;Create my account&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/new.["UsersController#new"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.text_field(:name)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.password_field(:password)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.label(:password_confirmation, &quot;Confirm Password&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.password_field(:password_confirmation)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] FormBuilder.new.submit(&quot;Create my account&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] form_for(User.new) do; [Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {});[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;);[Escaped Output] FormBuilder.new.text_field(:name);[Escaped Output] FormBuilder.new.label(:password);[Escaped Output] FormBuilder.new.password_field(:password);[Escaped Output] FormBuilder.new.label(:password_confirmation, &quot;Confirm Password&quot;);[Escaped Output] FormBuilder.new.password_field(:password_confirmation);[Escaped Output] FormBuilder.new.submit(&quot;Create my account&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/show</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] @user.name</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Wins: #{@user.win_count} | Losses: #{@user.loss_count}&quot;</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;(#{@waiting_ongoing_games.count})&quot; unless @waiting_ongoing_games.empty?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; @waiting_ongoing_games, {}) or &quot;There are no active games at the moment.&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;(#{@games.count})&quot; unless @games.empty?</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; @games, {}) or &quot;There are no completed games on record.&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>users/show.["UsersController#show"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] User.find(params[:id]).name</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/user_info&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] render(partial =&gt; &quot;shared/stats&quot;, {})</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;Wins: #{User.find(params[:id]).win_count} | Losses: #{User.find(params[:id]).loss_count}&quot;</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] unless User.find(params[:id]).waiting_and_ongoing_games.empty? then; &quot;(#{User.find(params[:id]).waiting_and_ongoing_games.count})&quot;;end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; User.find(params[:id]).waiting_and_ongoing_games, {}) or &quot;There are no active games at the moment.&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] unless User.find(params[:id]).completed_games.empty? then; &quot;(#{User.find(params[:id]).completed_games.count})&quot;;end</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (render(action =&gt; User.find(params[:id]).completed_games, {}) or &quot;There are no completed games on record.&quot;)</td>
+  </tr>
+  
+</table>
+
+</body></html>
