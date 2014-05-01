@@ -1,6 +1,6 @@
-<% provide(:title, 'Game Room') %>
+<% provide(:title, 'Games') %>
 <div class="row">
-	<h1>Game Room</h1>
+	<h1>All Completed Games</h1>
 	
 	<aside class="span3">
 		<section>
@@ -12,6 +12,14 @@
   </aside>
 
   <div class="span8">
+  	<%= will_paginate %>
+
+		<ul class="users">
+			<%= render @games %>
+		</ul>
+
+		<%= will_paginate %>
+  	<% if false %>
 		<h3>Create a new game</h3>
 		<%-# create a new game here -%>
 		<%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
@@ -34,6 +42,7 @@
 			</ul>
 		<% else %>
 			<h2>No games</h2>
+		<% end %>
 		<% end %>
   </div>
 </div>

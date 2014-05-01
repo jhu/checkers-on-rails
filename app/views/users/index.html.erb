@@ -1,6 +1,15 @@
 <% provide(:title, 'All users') %>
+<div class="row">
 <h1>All Users</h1>
-
+	<aside class="span3">
+		<section>
+      <%= render 'shared/user_info' %>
+    </section>
+    <section>
+      <%= render 'shared/stats' %>
+    </section>
+  </aside>
+<div class="span8">
 <%= will_paginate %>
 
 <ul class="users">
@@ -8,3 +17,5 @@
 </ul>
 
 <%= will_paginate %>
+  </div>
+</div>

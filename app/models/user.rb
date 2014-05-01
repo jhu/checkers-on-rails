@@ -42,6 +42,10 @@ class User < ActiveRecord::Base
     white_games.where("winner_id is null").where(active: true) + red_games.where("winner_id is null").where(active: true)
   end
 
+  def waiting_games
+    white_games.where("winner_id is null").where(active: false) + red_games.where("winner_id is null").where(active: false)
+  end
+
   def waiting_and_ongoing_games
     white_games.where("winner_id is null") + red_games.where("winner_id is null")
   end

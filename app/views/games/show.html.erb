@@ -1,5 +1,7 @@
 <% provide(:title, "Game number: #{@game.id}" ) %>
 <div class="row">
+  <%= content_tag(:h1, "Game Results") if @game.has_winner? %>
+  <%= content_tag(:h1, "Play!") if @game.waiting? or @game.ongoing? %>
 	<aside class="span3">
       <section>
         <%= render 'shared/user_info' %>
@@ -10,11 +12,11 @@
     </aside>
 	<div class="span8">
     <%= render partial: "board" if @game.waiting? or @game.ongoing? %>
+    <%= render partial: "game_results" if @game.has_winner? %>
 
-		<% if false %>
-    <%= render partial: "wait_mode" if @game.waiting? %>
-		<%= render partial: "play_mode" if @game.ongoing? %>
+    <% if false %>
+      <%= render partial: "wait_mode" if @game.waiting? %>
+      <%= render partial: "play_mode" if @game.ongoing? %>
     <% end %>
-		<%= render partial: "game_results" if @game.has_winner? %>
 	</div>
 </div>

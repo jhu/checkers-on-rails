@@ -1,24 +1,28 @@
 <% if signed_in? %>
   <div class="row">
-    <h1>Home of <%= @user.name %></h1>
+    <h1>Home Room for <%= @user.name %></h1>
     <aside class="span3">
-      <% if false %>
+      
       <section>
         <%= render 'shared/user_info' %>
       </section>
       <section>
         <%= render 'shared/stats' %>
       </section>
-      <% end %>
+      
     </aside>
     <div class="span8">
-      <div><%= "Wins: #{@user.win_count} | Losses: #{@user.loss_count}" %></div>
+      <% if false %><div><%= "Wins: #{@user.win_count} | Losses: #{@user.loss_count}" %></div><% end %>
       <h3>Create a new game</h3>
       <%-# create a new game here -%>
       <%= link_to "New game", new_game_path, class: "btn btn-medium btn-primary" %>
-      <h3>Ongoing and Waiting Games <%="(#{@waiting_ongoing_games.count})" unless @waiting_ongoing_games.empty? %></h3>
+      <h3>Your Active Games <%="(#{@waiting_ongoing_games.count})" unless @waiting_ongoing_games.empty? %></h3>
       <ol class="games">
-        <%= render(@waiting_ongoing_games) || "There are no active games at the moment." %>
+        <%= render(@waiting_ongoing_games) || "You do not have any active games at the moment." %>
+      </ol>
+      <h3>Join a Game <%="(#{@games.count})" unless @games.empty? %></h3>
+      <ol class="games">
+        <%= render(@games) || "There are no games you can join." %>
       </ol>
       <% if false %>
       <h3>Game History <%="(#{@games.count})" unless @games.empty? %></h3>
@@ -33,7 +37,7 @@
   <h1>Checkers Game App</h1>
 
   <p>
-  	Welcome to the home of my SWE 681 school project, Checkers on Rail app.
+  	Welcome to the home of my SWE 681 school project, Checkers on Rails app.
   </p>
 
   <%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>

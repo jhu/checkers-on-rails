@@ -9,10 +9,10 @@ class GamesController < ApplicationController
 
   # need to check if it is correct user playing this game
   # otherwise anyone can see played games
-
   def index
-  	@waitinggames = Game.where("red_id is null or white_id is null")
+  	# @waitinggames = Game.where("red_id is null or white_id is null")
     # @count = current_user.waiting_and_ongoing_games.count
+    @games = Game.paginate(page: params[:page], per_page: 15).where("winner_id is not null") 
   end
 
   def new
@@ -226,7 +226,7 @@ class GamesController < ApplicationController
       end
     end
 
-    # TODO: better logic? to check if current player sould be in this game
+    # TODO: better logic? to check if current player should be in this game
     def correct_player
       if @game.ongoing? and @game.white != current_user and @game.red != current_user
         render :json => {valid: false, :message => "You are not allowed to be in this game!"}
