@@ -166,12 +166,12 @@ p {
   <tr>
     <td>/Users/johnson/workspace/rails-apps/checkers_app</td>
     <td>4.0.4</td>
-    <td>2.4.3
+    <td>2.5.0
     <td>
-      2014-05-01 07:37:22 -0400<br><br>
-      0.772057 seconds
+      2014-05-01 21:25:03 -0400<br><br>
+      0.81903 seconds
     </td>
-    <td>BasicAuth, ContentTag, CrossSiteScripting, DefaultRoutes, Deserialize, DetailedExceptions, DigestDoS, EscapeFunction, Evaluation, Execute, FileAccess, FilterSkipping, ForgerySetting, HeaderDoS, I18nXSS, JRubyXML, JSONParsing, LinkTo, LinkToHref, MailTo, MassAssignment, ModelAttrAccessible, ModelAttributes, ModelSerialize, NestedAttributes, NumberToCurrency, QuoteTableName, Redirect, Render, RenderDoS, ResponseSplitting, SQL, SSLVerify, SafeBufferManipulation, SanitizeMethods, SelectTag, SelectVulnerability, Send, SendFile, SessionSettings, SimpleFormat, SingleQuotes, SkipBeforeFilter, StripTags, SymbolDoS, TranslateBug, UnsafeReflection, ValidationRegex, WithoutProtection, YAMLParsing</td>
+    <td>BasicAuth, ContentTag, CrossSiteScripting, DefaultRoutes, Deserialize, DetailedExceptions, DigestDoS, EscapeFunction, Evaluation, Execute, FileAccess, FilterSkipping, ForgerySetting, HeaderDoS, I18nXSS, JRubyXML, JSONParsing, LinkTo, LinkToHref, MailTo, MassAssignment, ModelAttrAccessible, ModelAttributes, ModelSerialize, NestedAttributes, NumberToCurrency, QuoteTableName, Redirect, RegexDoS, Render, RenderDoS, ResponseSplitting, SQL, SQLCVEs, SSLVerify, SafeBufferManipulation, SanitizeMethods, SelectTag, SelectVulnerability, Send, SendFile, SessionSettings, SimpleFormat, SingleQuotes, SkipBeforeFilter, StripTags, SymbolDoS, TranslateBug, UnsafeReflection, ValidationRegex, WithoutProtection, YAMLParsing</td>
   </tr>
 </table>
 <br>
@@ -382,11 +382,11 @@ p {
   </tr>
   
   <tr>
-    <td>[Escaped Output] @game.get_turn_color(current_user)</td>
+    <td>[Escaped Output] Game.find(params[:id]).get_turn_color(current_user)</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] javascript_tag do; [Escaped Output] image_tag(&quot;pr.png&quot;);[Escaped Output] image_tag(&quot;kr.png&quot;);[Escaped Output] image_tag(&quot;pw.png&quot;);[Escaped Output] image_tag(&quot;kw.png&quot;);[Escaped Output] image_tag(&quot;pr.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;kr.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;pw.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;kw.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] @game.get_turn_color(current_user); end</td>
+    <td>[Escaped Output] javascript_tag do; [Escaped Output] image_tag(&quot;pr.png&quot;);[Escaped Output] image_tag(&quot;kr.png&quot;);[Escaped Output] image_tag(&quot;pw.png&quot;);[Escaped Output] image_tag(&quot;kw.png&quot;);[Escaped Output] image_tag(&quot;pr.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;kr.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;pw.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] image_tag(&quot;kw.png&quot;, :class =&gt; &quot;dojoDndItem&quot;);[Escaped Output] Game.find(params[:id]).get_turn_color(current_user); end</td>
   </tr>
   
   <tr>
@@ -406,15 +406,15 @@ p {
   </tr>
   
   <tr>
-    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[@game.fen_board_as_array[(local y)][(local x)].to_s], :class =&gt; &quot;dojoDndItem&quot;)</td>
+    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[Game.find(params[:id]).fen_board_as_array[(local y)][(local x)].to_s], :class =&gt; &quot;dojoDndItem&quot;)</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[@game.fen_board_as_array[(local y)][(local x)].to_s], :class =&gt; &quot;dojoDndItem&quot;)</td>
+    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[Game.find(params[:id]).fen_board_as_array[(local y)][(local x)].to_s], :class =&gt; &quot;dojoDndItem&quot;)</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[@game.fen_board_as_array[(local y)][(local x)].to_s])</td>
+    <td>[Escaped Output] image_tag({ &quot;1&quot; =&gt; &quot;pr.png&quot;, &quot;2&quot; =&gt; &quot;kr.png&quot;, &quot;-1&quot; =&gt; &quot;pw.png&quot;, &quot;-2&quot; =&gt; &quot;kw.png&quot; }[Game.find(params[:id]).fen_board_as_array[(local y)][(local x)].to_s])</td>
   </tr>
   
 </table>
@@ -590,27 +590,27 @@ p {
   </tr>
   
   <tr>
-    <td>[Escaped Output] @game.id</td>
+    <td>[Escaped Output] Game.find(params[:id]).id</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] &quot;Red: #{@game.red.name}&quot; unless @game.red.nil?</td>
+    <td>[Escaped Output] unless Game.find(params[:id]).red.nil? then; &quot;Red: #{Game.find(params[:id]).red.name}&quot;;end</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] &quot;White: #{@game.white.name}&quot; unless @game.white.nil?</td>
+    <td>[Escaped Output] unless Game.find(params[:id]).white.nil? then; &quot;White: #{Game.find(params[:id]).white.name}&quot;;end</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] &quot;Winner: #{@game.winner.name}&quot; unless @game.winner.nil?</td>
+    <td>[Escaped Output] unless Game.find(params[:id]).winner.nil? then; &quot;Winner: #{Game.find(params[:id]).winner.name}&quot;;end</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] &quot;Game Moves&quot; if @game.moves.any?</td>
+    <td>[Escaped Output] &quot;Game Moves&quot; if Game.find(params[:id]).moves.any?</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] render(action =&gt; @game.moves, {})</td>
+    <td>[Escaped Output] render(action =&gt; Game.find(params[:id]).moves, {})</td>
   </tr>
   
 </table>
@@ -659,6 +659,24 @@ p {
   
   <tr>
     <td>[Escaped Output] content_tag(:h3, &quot;Red: #{@game.red.name} Vs. White: #{@game.white.name}&quot;, :id =&gt; &quot;player-vs-player&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h3, &quot;No opponent yet&quot;, :id =&gt; &quot;player-vs-player&quot;)</td>
+  </tr>
+  
+</table>
+
+
+
+<p>games/_matchtitle.["GamesController#show", "Template:games/show", "Template:games/_board"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] content_tag(:h3, &quot;Red: #{Game.find(params[:id]).red.name} Vs. White: #{Game.find(params[:id]).white.name}&quot;, :id =&gt; &quot;player-vs-player&quot;)</td>
   </tr>
   
   <tr>
@@ -830,11 +848,11 @@ p {
   </tr>
   
   <tr>
-    <td>[Escaped Output] content_tag(:h1, &quot;Game Results&quot;) if @game.has_winner?</td>
+    <td>[Escaped Output] content_tag(:h1, &quot;Game Results&quot;) if Game.find(params[:id]).has_winner?</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] content_tag(:h1, &quot;Play!&quot;) if (@game.waiting? or @game.ongoing?)</td>
+    <td>[Escaped Output] if (Game.find(params[:id]).waiting? or Game.find(params[:id]).ongoing?) then; content_tag(:h1, &quot;Play!&quot;);end</td>
   </tr>
   
   <tr>
@@ -846,11 +864,11 @@ p {
   </tr>
   
   <tr>
-    <td>[Escaped Output] render(partial =&gt; &quot;board&quot;, {}) if (@game.waiting? or @game.ongoing?)</td>
+    <td>[Escaped Output] if (Game.find(params[:id]).waiting? or Game.find(params[:id]).ongoing?) then; render(partial =&gt; &quot;board&quot;, {});end</td>
   </tr>
   
   <tr>
-    <td>[Escaped Output] render(partial =&gt; &quot;game_results&quot;, {}) if @game.has_winner?</td>
+    <td>[Escaped Output] render(partial =&gt; &quot;game_results&quot;, {}) if Game.find(params[:id]).has_winner?</td>
   </tr>
   
 </table>
@@ -930,7 +948,15 @@ p {
   </tr>
   
   <tr>
+    <td>[Escaped Output] &quot;active&quot; if current_page?(root_path)</td>
+  </tr>
+  
+  <tr>
     <td>[Escaped Output] link_to(&quot;Home&quot;, root_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;active&quot; if current_page?(help_path)</td>
   </tr>
   
   <tr>
@@ -938,11 +964,23 @@ p {
   </tr>
   
   <tr>
+    <td>[Escaped Output] &quot;active&quot; if current_page?(users_path)</td>
+  </tr>
+  
+  <tr>
     <td>[Escaped Output] link_to(&quot;Users&quot;, users_path)</td>
   </tr>
   
   <tr>
+    <td>[Escaped Output] &quot;active&quot; if current_page?(games_path)</td>
+  </tr>
+  
+  <tr>
     <td>[Escaped Output] link_to(&quot;Games&quot;, games_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] if (current_page?(edit_user_path(current_user)) or current_page?(user_path(current_user))) then; &quot;active&quot;;end</td>
   </tr>
   
   <tr>
@@ -976,7 +1014,15 @@ p {
   </tr>
   
   <tr>
+    <td>[Escaped Output] &quot;active&quot; if current_page?(root_path)</td>
+  </tr>
+  
+  <tr>
     <td>[Escaped Output] link_to(&quot;Home&quot;, root_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;active&quot; if current_page?(help_path)</td>
   </tr>
   
   <tr>
@@ -984,7 +1030,15 @@ p {
   </tr>
   
   <tr>
+    <td>[Escaped Output] &quot;active&quot; if current_page?(users_path)</td>
+  </tr>
+  
+  <tr>
     <td>[Escaped Output] link_to(&quot;Users&quot;, users_path)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] &quot;active&quot; if current_page?(games_path)</td>
   </tr>
   
   <tr>
@@ -992,7 +1046,15 @@ p {
   </tr>
   
   <tr>
+    <td>[Escaped Output] if (current_page?(edit_user_path(current_user)) or current_page?(user_path(current_user))) then; &quot;active&quot;;end</td>
+  </tr>
+  
+  <tr>
     <td>[Escaped Output] link_to(&quot;Profile&quot;, current_user)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] link_to(&quot;Settings&quot;, edit_user_path(current_user))</td>
   </tr>
   
   <tr>
@@ -1279,6 +1341,24 @@ p {
 
 
 
+<p>shared/_error_messages.["UsersController#edit", "Template:users/edit"]</p>
+<table>
+  <tr>
+    <th>Output</th>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] pluralize(User.find(params[:id]).errors.count, &quot;error&quot;)</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] (Unresolved Model).new</td>
+  </tr>
+  
+</table>
+
+
+
 <p>shared/_error_messages.["UsersController#new", "Template:users/new"]</p>
 <table>
   <tr>
@@ -1315,7 +1395,7 @@ p {
 
 
 
-<p>shared/_stats.["StaticPagesController#home", "Template:static_pages/home"]</p>
+<p>shared/_stats.["GamesController#index", "Template:games/index"]</p>
 <table>
   <tr>
     <th>Output</th>
@@ -1684,7 +1764,7 @@ p {
   </tr>
   
   <tr>
-    <td>[Escaped Output] form_for(@user) do; [Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {});[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;);[Escaped Output] FormBuilder.new.text_field(:name);[Escaped Output] FormBuilder.new.label(:password);[Escaped Output] FormBuilder.new.password_field(:password);[Escaped Output] FormBuilder.new.label(:password_confirmation, &quot;Confirm Password&quot;);[Escaped Output] FormBuilder.new.password_field(:password_confirmation);[Escaped Output] FormBuilder.new.submit(&quot;Save changes&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
+    <td>[Escaped Output] form_for(User.find(params[:id])) do; [Escaped Output] render(partial =&gt; &quot;shared/error_messages&quot;, {});[Escaped Output] FormBuilder.new.label(:name, &quot;Username&quot;);[Escaped Output] FormBuilder.new.text_field(:name);[Escaped Output] FormBuilder.new.label(:password);[Escaped Output] FormBuilder.new.password_field(:password);[Escaped Output] FormBuilder.new.label(:password_confirmation, &quot;Confirm Password&quot;);[Escaped Output] FormBuilder.new.password_field(:password_confirmation);[Escaped Output] FormBuilder.new.submit(&quot;Save changes&quot;, :class =&gt; &quot;btn btn-large btn-primary&quot;); end</td>
   </tr>
   
 </table>

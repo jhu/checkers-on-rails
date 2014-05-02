@@ -4,4 +4,5 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   include SessionsHelper
   include GamesHelper
+  before_action :check_session
 end

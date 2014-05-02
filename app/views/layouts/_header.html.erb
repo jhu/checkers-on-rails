@@ -9,15 +9,15 @@
           <% if signed_in? %>
             <li class="<%= 'active' if current_page?(users_path) %>"><%= link_to "Users", users_path %></li>
             <li class="<%= 'active' if current_page?(games_path) %>"><%= link_to "Games", games_path %></li>
-            <li id="fat-menu" class="dropdown">
+            <li class="<%= 'active' if current_page?(edit_user_path(current_user)) or current_page?(user_path current_user) %>" id="fat-menu" class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 Account <b class="caret"></b>
               </a>
               <ul class="dropdown-menu">
                 <li><%= link_to "Profile", current_user %></li>
-                <% if false %>
+                
                 <li><%= link_to "Settings", edit_user_path(current_user) %></li>
-                <% end %>
+                <% if false %><% end %>
                 <li class="divider"></li>
                 <li>
                   <%= link_to "Sign out", signout_path, method: "delete" %>

@@ -2,7 +2,7 @@
 
 | Application path                                 | Rails version | Brakeman version | Started at                | Duration         |
 |--------------------------------------------------|---------------|------------------|---------------------------|------------------|
-| /Users/johnson/workspace/rails-apps/checkers_app | 4.0.4         | 2.5.0            | 2014-05-01 07:42:49 -0400 | 0.800026 seconds |
+| /Users/johnson/workspace/rails-apps/checkers_app | 4.0.4         | 2.5.0            | 2014-05-01 21:24:48 -0400 | 0.815099 seconds |
 
 | Checks performed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -248,30 +248,41 @@ layouts/_footer.["Template:layouts/application"]
 
 layouts/_header
 
-| Output                                                                  |
-|-------------------------------------------------------------------------|
-| [Escaped Output] link_to("checkers game app", root_path, :id => "logo") |
-| [Escaped Output] link_to("Home", root_path)                             |
-| [Escaped Output] link_to("Help", help_path)                             |
-| [Escaped Output] link_to("Users", users_path)                           |
-| [Escaped Output] link_to("Games", games_path)                           |
-| [Escaped Output] link_to("Profile", current_user)                       |
-| [Escaped Output] link_to("Settings", edit_user_path(current_user))      |
-| [Escaped Output] link_to("Sign out", signout_path, :method => "delete") |
-| [Escaped Output] link_to("Sign in", signin_path)                        |
+| Output                                                                                                                         |
+|--------------------------------------------------------------------------------------------------------------------------------|
+| [Escaped Output] link_to("checkers game app", root_path, :id => "logo")                                                        |
+| [Escaped Output] "active" if current_page?(root_path)                                                                          |
+| [Escaped Output] link_to("Home", root_path)                                                                                    |
+| [Escaped Output] "active" if current_page?(help_path)                                                                          |
+| [Escaped Output] link_to("Help", help_path)                                                                                    |
+| [Escaped Output] "active" if current_page?(users_path)                                                                         |
+| [Escaped Output] link_to("Users", users_path)                                                                                  |
+| [Escaped Output] "active" if current_page?(games_path)                                                                         |
+| [Escaped Output] link_to("Games", games_path)                                                                                  |
+| [Escaped Output] if (current_page?(edit_user_path(current_user)) or current_page?(user_path(current_user))) then; "active";end |
+| [Escaped Output] link_to("Profile", current_user)                                                                              |
+| [Escaped Output] link_to("Settings", edit_user_path(current_user))                                                             |
+| [Escaped Output] link_to("Sign out", signout_path, :method => "delete")                                                        |
+| [Escaped Output] link_to("Sign in", signin_path)                                                                               |
 
 layouts/_header.["Template:layouts/application"]
 
-| Output                                                                  |
-|-------------------------------------------------------------------------|
-| [Escaped Output] link_to("checkers game app", root_path, :id => "logo") |
-| [Escaped Output] link_to("Home", root_path)                             |
-| [Escaped Output] link_to("Help", help_path)                             |
-| [Escaped Output] link_to("Users", users_path)                           |
-| [Escaped Output] link_to("Games", games_path)                           |
-| [Escaped Output] link_to("Profile", current_user)                       |
-| [Escaped Output] link_to("Sign out", signout_path, :method => "delete") |
-| [Escaped Output] link_to("Sign in", signin_path)                        |
+| Output                                                                                                                         |
+|--------------------------------------------------------------------------------------------------------------------------------|
+| [Escaped Output] link_to("checkers game app", root_path, :id => "logo")                                                        |
+| [Escaped Output] "active" if current_page?(root_path)                                                                          |
+| [Escaped Output] link_to("Home", root_path)                                                                                    |
+| [Escaped Output] "active" if current_page?(help_path)                                                                          |
+| [Escaped Output] link_to("Help", help_path)                                                                                    |
+| [Escaped Output] "active" if current_page?(users_path)                                                                         |
+| [Escaped Output] link_to("Users", users_path)                                                                                  |
+| [Escaped Output] "active" if current_page?(games_path)                                                                         |
+| [Escaped Output] link_to("Games", games_path)                                                                                  |
+| [Escaped Output] if (current_page?(edit_user_path(current_user)) or current_page?(user_path(current_user))) then; "active";end |
+| [Escaped Output] link_to("Profile", current_user)                                                                              |
+| [Escaped Output] link_to("Settings", edit_user_path(current_user))                                                             |
+| [Escaped Output] link_to("Sign out", signout_path, :method => "delete")                                                        |
+| [Escaped Output] link_to("Sign in", signin_path)                                                                               |
 
 layouts/application
 

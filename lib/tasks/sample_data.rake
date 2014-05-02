@@ -21,10 +21,10 @@ def make_users
                  password: password,
                  password_confirmation: password)
   end
-  User.create!(name: "johnson",
-                 password: "Password1",
-                 password_confirmation: "Password1",
-                 admin: true)
+  # User.create!(name: "johnson",
+  #                password: "Password1",
+  #                password_confirmation: "Password1",
+  #                admin: true)
 end
 
 def make_games
