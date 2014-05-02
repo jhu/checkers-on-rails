@@ -1,5 +1,5 @@
 class StaticPagesController < ApplicationController
-  before_action :static_check_session
+  before_action :static_check_session, only: :home
 
   def home
   	if signed_in?
