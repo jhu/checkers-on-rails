@@ -5,7 +5,7 @@
       <nav>
         <ul class="nav pull-right">
           <li class="<%= 'active' if current_page?(root_path) %>"><%= link_to "Home", root_path %></li>
-          <li class="<%= 'active' if current_page?(help_path) %>"><%= link_to "Help", help_path %></li>
+          <li class="<%= 'active' if current_page?(help_path) %>"><%= link_to "Rules", help_path %></li>
           <% if signed_in? %>
             <li class="<%= 'active' if current_page?(users_path) %>"><%= link_to "Users", users_path %></li>
             <li class="<%= 'active' if current_page?(games_path) %>"><%= link_to "Games", games_path %></li>
