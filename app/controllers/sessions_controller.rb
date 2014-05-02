@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
-  rescue_from ActionController::InvalidAuthenticityToken, :with => :go_to_root
+  # rescue_from ActionController::InvalidAuthenticityToken, :with => :go_to_root
+  before_action :check_session
 
   def new
   end
