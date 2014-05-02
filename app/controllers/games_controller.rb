@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   include ActionController::Live
   before_action :check_session
-  before_action :signed_in_user#,      only: [:index, :show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title, :destroy]
+  before_action :signed_in_user
   before_action :correct_user,        only: [:index, :show, :update, :destroy]
   before_action :find_game,           only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title]
   before_action :correct_player,      only: [:show, :play, :myturn]
@@ -104,7 +104,7 @@ class GamesController < ApplicationController
     if @game.has_winner?
       # need to automatically direct to game results?
       render :json => {valid: false, :message => "The game is over! Go see game page for results."}
-    elsif @game.must_jump_beta? from, to
+    elsif @game.must_jump? from, to
       render :json => {valid: false, :message => "You must make a jump!", :board => @boardOld}
     else
       # # call game model play
@@ -154,21 +154,18 @@ class GamesController < ApplicationController
     # render :partial => 'matchtitle', :content_type => 'text/html'
   end
 
-    #redirect_to @game
-        # respond_to do |format|
-        #   format.html { redirect_to @game }
-        # end
-        
-          # render :json => {:message => "the game is over!"}
-          # render :json => {:message => "the game is over!"}
-        # @game.update(winner:current_user)
-        # redirect_to root_url, flash: {success: "you are the winner!"}
+  # this handles the invalid authenticity token (CSRF), this will 
+  # simply raise exception if theres mime type, if not then returns 
+  # the sign in page
   def handle_unverified_request
+    logger.debug "yeah i caught that..."
     content_mime_type = request.respond_to?(:content_mime_type) ? request.content_mime_type : request.content_type
     if content_mime_type && content_mime_type.verify_request?
+      logger.debug "eh raising the exception"
       raise ActionController::InvalidAuthenticityToken
     else
       super
+      logger.debug "signing you out!"
       sign_out
       redirect_to root_url
     end
