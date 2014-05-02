@@ -2,7 +2,7 @@
 
 | Application path                                 | Rails version | Brakeman version | Started at                | Duration         |
 |--------------------------------------------------|---------------|------------------|---------------------------|------------------|
-| /Users/johnson/workspace/rails-apps/checkers_app | 4.0.4         | 2.5.0            | 2014-05-01 21:24:48 -0400 | 0.815099 seconds |
+| /Users/johnson/workspace/rails-apps/checkers_app | 4.0.4         | 2.5.0            | 2014-05-02 17:05:47 -0400 | 0.857735 seconds |
 
 | Checks performed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -123,6 +123,7 @@ games/_game_results
 | [Escaped Output] "White: #{@game.white.name}" unless @game.white.nil?    |
 | [Escaped Output] "Winner: #{@game.winner.name}" unless @game.winner.nil? |
 | [Escaped Output] "Game Moves" if @moves.any?                             |
+| [Escaped Output] render(action => @moves, {})                            |
 | [Escaped Output] render(action => @moves, {})                            |
 
 games/_game_results.["GamesController#show", "Template:games/show"]
@@ -254,7 +255,7 @@ layouts/_header
 | [Escaped Output] "active" if current_page?(root_path)                                                                          |
 | [Escaped Output] link_to("Home", root_path)                                                                                    |
 | [Escaped Output] "active" if current_page?(help_path)                                                                          |
-| [Escaped Output] link_to("Help", help_path)                                                                                    |
+| [Escaped Output] link_to("Rules", help_path)                                                                                   |
 | [Escaped Output] "active" if current_page?(users_path)                                                                         |
 | [Escaped Output] link_to("Users", users_path)                                                                                  |
 | [Escaped Output] "active" if current_page?(games_path)                                                                         |
@@ -273,7 +274,7 @@ layouts/_header.["Template:layouts/application"]
 | [Escaped Output] "active" if current_page?(root_path)                                                                          |
 | [Escaped Output] link_to("Home", root_path)                                                                                    |
 | [Escaped Output] "active" if current_page?(help_path)                                                                          |
-| [Escaped Output] link_to("Help", help_path)                                                                                    |
+| [Escaped Output] link_to("Rules", help_path)                                                                                   |
 | [Escaped Output] "active" if current_page?(users_path)                                                                         |
 | [Escaped Output] link_to("Users", users_path)                                                                                  |
 | [Escaped Output] "active" if current_page?(games_path)                                                                         |
@@ -325,6 +326,10 @@ moves/_move
 | Output                                                                                  |
 |-----------------------------------------------------------------------------------------|
 | [Escaped Output] "Turn: #{move.turn} | Movetext: #{move.movetext} | Board: #{move.board}" |
+| [Escaped Output] move.created_at                                                        |
+| [Escaped Output] move.turn                                                              |
+| [Escaped Output] move.movetext                                                          |
+| [Escaped Output] move.board                                                             |
 | [Escaped Output] move.created_at                                                        |
 
 sessions/new

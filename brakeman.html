@@ -168,8 +168,8 @@ p {
     <td>4.0.4</td>
     <td>2.5.0
     <td>
-      2014-05-01 21:25:03 -0400<br><br>
-      0.81903 seconds
+      2014-05-02 17:05:55 -0400<br><br>
+      0.856186 seconds
     </td>
     <td>BasicAuth, ContentTag, CrossSiteScripting, DefaultRoutes, Deserialize, DetailedExceptions, DigestDoS, EscapeFunction, Evaluation, Execute, FileAccess, FilterSkipping, ForgerySetting, HeaderDoS, I18nXSS, JRubyXML, JSONParsing, LinkTo, LinkToHref, MailTo, MassAssignment, ModelAttrAccessible, ModelAttributes, ModelSerialize, NestedAttributes, NumberToCurrency, QuoteTableName, Redirect, RegexDoS, Render, RenderDoS, ResponseSplitting, SQL, SQLCVEs, SSLVerify, SafeBufferManipulation, SanitizeMethods, SelectTag, SelectVulnerability, Send, SendFile, SessionSettings, SimpleFormat, SingleQuotes, SkipBeforeFilter, StripTags, SymbolDoS, TranslateBug, UnsafeReflection, ValidationRegex, WithoutProtection, YAMLParsing</td>
   </tr>
@@ -579,6 +579,10 @@ p {
     <td>[Escaped Output] render(action =&gt; @moves, {})</td>
   </tr>
   
+  <tr>
+    <td>[Escaped Output] render(action =&gt; @moves, {})</td>
+  </tr>
+  
 </table>
 
 
@@ -960,7 +964,7 @@ p {
   </tr>
   
   <tr>
-    <td>[Escaped Output] link_to(&quot;Help&quot;, help_path)</td>
+    <td>[Escaped Output] link_to(&quot;Rules&quot;, help_path)</td>
   </tr>
   
   <tr>
@@ -1026,7 +1030,7 @@ p {
   </tr>
   
   <tr>
-    <td>[Escaped Output] link_to(&quot;Help&quot;, help_path)</td>
+    <td>[Escaped Output] link_to(&quot;Rules&quot;, help_path)</td>
   </tr>
   
   <tr>
@@ -1201,6 +1205,22 @@ p {
   
   <tr>
     <td>[Escaped Output] &quot;Turn: #{move.turn} | Movetext: #{move.movetext} | Board: #{move.board}&quot;</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] move.created_at</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] move.turn</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] move.movetext</td>
+  </tr>
+  
+  <tr>
+    <td>[Escaped Output] move.board</td>
   </tr>
   
   <tr>

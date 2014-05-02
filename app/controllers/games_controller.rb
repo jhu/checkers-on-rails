@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   include ActionController::Live
   before_action :check_session
-  before_action :signed_in_user,      #only: [:index, :show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title, :destroy]
+  before_action :signed_in_user#,      only: [:index, :show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title, :destroy]
   before_action :correct_user,        only: [:index, :show, :update, :destroy]
   before_action :find_game,           only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title]
   before_action :correct_player,      only: [:show, :play, :myturn]
@@ -22,13 +22,13 @@ class GamesController < ApplicationController
     @game = rand(0..1) == 0 ? Game.new(white:current_user) : Game.new(red:current_user)
 
     if current_user.waiting_and_ongoing_games.count >= 3
-      redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"} 
+      redirect_to root_path, flash: {error: "You can only be in 3 incompleted games at once!"} 
     elsif @game.save
       @board = @game.fen_board_as_array
       @pieceImages = {'1'=>'pr.png','2'=>'kr.png','-1'=>'pw.png','-2'=>'kw.png'}
       redirect_to @game#, flash: {success: "Game has been created. Waiting for a player."}
     else
-      redirect_to games_path
+      redirect_to root_path
     end
   end
 
@@ -59,16 +59,16 @@ class GamesController < ApplicationController
     elsif !@game.is_full?
       # what if the game is not full??
       if current_user.waiting_and_ongoing_games.count >= 3
-        redirect_to games_path, flash: {error: "can only be in 3 incompleted games at once!"}
+        redirect_to root_path, flash: {error: "You can only be in 3 incompleted games at once!"}
       elsif @game.white.nil? ? @game.update(white:current_user, active:true) # todo: fix this
         : @game.update(red:current_user, active:true) 
         redirect_to @game#, flash: {success: "You have joined this game!"}
       else
         # unable to join
-        redirect_to games_path, flash: {error: "can't join!"}
+        redirect_to root_path, flash: {error: "You can't join!"}
       end
     else
-      redirect_to games_path, flash: {error: "game is full!"}
+      redirect_to root_path, flash: {error: "The game is full!"}
     end
   end
 
