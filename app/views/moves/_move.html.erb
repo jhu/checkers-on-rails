@@ -1,4 +1,8 @@
+<% if false %>
 <li>
   <span class="content"><%= "Turn: #{move.turn} | Movetext: #{move.movetext} | Board: #{move.board}" %></span>
   <span class="timestamp">Performed at <%= move.created_at %></span>
 </li>
+<% end %>
+
+<tr class="danger"><td><%=move.turn%></td><td><%=move.movetext%></td><td><%=move.board%></td></td><td><%=move.created_at%></td></tr>

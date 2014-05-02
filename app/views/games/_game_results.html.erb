@@ -6,6 +6,15 @@
 	<%= "Winner: #{@game.winner.name}" unless @game.winner.nil? %></p>
 	<div>
 		<h3><%= "Game Moves" if @moves.any? %></h3>
-		<ol><%= render @moves %></ol>
+		<% if false %><ol><%= render @moves %></ol><% end %>
+		<table class="table table-hover table-condensed">
+			<tr>
+				<th>Turn Color</th>
+				<th>Movetext</th>
+				<th>Board State (after move/jump)</th>
+				<th>Timestamp</th>
+			</tr>
+			<%= render @moves %>
+		</table>
 	</div>
 </div>

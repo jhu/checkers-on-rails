@@ -1,6 +1,6 @@
 class StaticPagesController < ApplicationController
-  before_action :check_session
-  
+  before_action :static_check_session
+
   def home
   	if signed_in?
   		@user = current_user
@@ -17,5 +17,12 @@ class StaticPagesController < ApplicationController
   end
 
   def contact
+  end
+
+  private
+  def static_check_session
+    if cookies[:_checkers_app_session].nil?
+      sign_out
+    end
   end
 end

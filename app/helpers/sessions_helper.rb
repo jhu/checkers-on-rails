@@ -32,10 +32,12 @@ module SessionsHelper
   end
 
   def sign_out
-    current_user.update_attribute(:remember_token,
-                                  User.hash(User.new_remember_token))
-    cookies.delete(:remember_token)
-    self.current_user = nil
+    unless current_user.nil?
+      current_user.update_attribute(:remember_token,
+                                    User.hash(User.new_remember_token))
+      cookies.delete(:remember_token)
+      self.current_user = nil
+    end
   end
 
   def redirect_back_or(default)
@@ -48,10 +50,9 @@ module SessionsHelper
   end
 
   def check_session
-    logger.debug "checking session... #{cookies[:_checkers_app_session]}"
     if cookies[:_checkers_app_session].nil?
       sign_out
-      # redirect_to signin_url, notice: "expired session!"
+      redirect_to signin_url, notice: "expired session!"
     end
   end
 end
