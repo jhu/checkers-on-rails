@@ -1,5 +1,6 @@
 class GamesController < ApplicationController
   include ActionController::Live
+  before_action :check_session
   before_action :signed_in_user,      only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title, :destroy]
   before_action :correct_user,        only: [:index, :show, :update, :destroy]
   before_action :find_game,           only: [:show, :join, :rejoin, :play, :myturn, :correct_turn, :correct_player, :update_match_title]

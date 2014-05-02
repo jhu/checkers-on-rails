@@ -51,7 +51,7 @@ module SessionsHelper
     logger.debug "checking session... #{cookies[:_checkers_app_session]}"
     if cookies[:_checkers_app_session].nil?
       sign_out
-      redirect_to signin_url, notice: "expired session!"
+      # redirect_to signin_url, notice: "expired session!"
     end
   end
 end
