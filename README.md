@@ -13,14 +13,12 @@ Still buggy and being tested but the game is live at my Heroku cloud platform. E
 5. To start rails server `rails s` (Default port number is 3000 but you can specify port number by using `-p X` flag where X being any value) 
 6. Navigate to `localhost:3000` 
 
-*Important*: Be sure to change the `admin` username password as it defaults to `Admin123` when deploying this app for first time!
+**Important**: Be sure to change the `sysadmin` username password as it defaults to `Admin123` when deploying this app for first time!
 
 ### Ruby 2.1.x Installation
 - [Ruby Installation Information](https://www.ruby-lang.org/en/downloads/) 
 - [Recommended installer for Windows](http://rubyinstaller.org/)
 
 ### TODO
-1. Add styling to game results
-2. Fix the read me
-3. Add multiple jump capability
-4. Review [Rails Security](http://guides.rubyonrails.org/security.html) and [OWASP Rails Cheatsheet](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet)
+1. Add multiple jump capability
+2. Review [Rails Security](http://guides.rubyonrails.org/security.html) and [OWASP Rails Cheatsheet](https://www.owasp.org/index.php/Ruby_on_Rails_Cheatsheet)
