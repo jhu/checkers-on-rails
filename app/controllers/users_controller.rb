@@ -42,7 +42,7 @@ class UsersController < ApplicationController
     if @user.save
       sign_in @user
       flash[:success] = "Welcome to the Checkers App! Please go to Home to see available games."
-      redirect_to @user
+      redirect_to root_path
     else
       render 'new'
     end
