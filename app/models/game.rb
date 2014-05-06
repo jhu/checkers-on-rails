@@ -128,13 +128,9 @@ class Game < ActiveRecord::Base
   end
 
   def self.at_kingrow?(piece, pos)
-    logger.debug "is it at kingrow piece #{piece} pos: #{pos}"
     if Game.is_red? piece
-      logger.debug "it is red piece at kingrow?"
       return Game.index_to_row(pos) == 7
     elsif Game.is_white? piece
-      logger.debug "it is white piece at kingrow? #{Game.index_to_row(pos)}"
-
       return Game.index_to_row(pos) == 0
     end
   end
@@ -157,11 +153,8 @@ class Game < ActiveRecord::Base
     end
 
     # must loop through for first potential move and return true
-    logger.debug "this from is color #{my_color}"
     pieces.each_with_index do |piece, coord|
-      logger.debug "loop: #{coord+1} #{piece}"
       piece_color = Game.get_color piece
-      logger.debug "possible from color #{piece_color}"
       if my_color.eql? piece_color and my_color.eql? 'red'
         return true if red_must_jump?(coord+1, pieces)
       elsif !piece_color.nil? and my_color.eql? piece_color and my_color.eql? 'white'

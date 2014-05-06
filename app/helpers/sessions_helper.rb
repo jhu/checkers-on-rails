@@ -32,7 +32,6 @@ module SessionsHelper
   end
 
   def sign_out
-    logger.debug "current user is null? #{current_user.nil?}"
     unless current_user.nil?
       current_user.update_attribute(:remember_token,
                                     User.hash(User.new_remember_token))

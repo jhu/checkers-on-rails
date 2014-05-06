@@ -158,14 +158,11 @@ class GamesController < ApplicationController
   # simply raise exception if theres mime type, if not then returns 
   # the sign in page
   def handle_unverified_request
-    logger.debug "yeah i caught that..."
     content_mime_type = request.respond_to?(:content_mime_type) ? request.content_mime_type : request.content_type
     if content_mime_type && content_mime_type.verify_request?
-      logger.debug "eh raising the exception"
       raise ActionController::InvalidAuthenticityToken
     else
       super
-      logger.debug "signing you out!"
       sign_out
       redirect_to root_url
     end
