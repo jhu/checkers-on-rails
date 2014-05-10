@@ -35,7 +35,7 @@ gem 'jquery-rails', '3.0.4'
 gem 'jquery-ui-rails'
 gem 'turbolinks', '1.1.1'
 gem 'jbuilder', '1.0.2'
-# gem 'unicorn'
+gem 'unicorn'
 
 group :doc do
   gem 'sdoc', '0.3.20', require: false
@@ -44,7 +44,7 @@ end
 group :production do
   gem 'pg', '0.15.1'
   gem 'rails_12factor', '0.0.2'
-  gem 'unicorn'
+  # gem 'unicorn'
 end
 
 # Use unicorn as the app server

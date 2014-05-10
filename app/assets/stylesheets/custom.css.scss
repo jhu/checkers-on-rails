@@ -145,12 +145,12 @@ aside {
 .stats {
   overflow: auto;
   div {
-    float: left;
+    float: right;
     padding: 0 10px;
-    border-left: 1px solid $grayLighter;
+    border-right: 1px solid $grayLighter;
     color: gray;
     &:first-child {
-      padding-left: 0;
+      padding-right: 0;
       border: 0;
     }
     /*&:hover {

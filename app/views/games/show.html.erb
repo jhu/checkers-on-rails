@@ -6,11 +6,11 @@
       <section>
         <%= render 'shared/user_info' %>
       </section>
-      <section>
+      <section class="text-right">
         <%= render 'shared/stats' %>
       </section>
     </aside>
-	<div class="span8">
+	<div class="span9">
     <%= render partial: "board" if @game.waiting? or @game.ongoing? %>
     <%= render partial: "game_results" if @game.has_winner? %>
 
